@@ -73,6 +73,8 @@ the `src.core.settings` module.
 This class accepts default values, so in cases where default values are sufficient, you do not
 need to define these variables in the `.env` files.
 
+An example of the `.env` file is provided in the `.env.example` file.
+
 ## Usage
 
 This project uses a Makefile to streamline various development tasks.
