@@ -48,7 +48,8 @@ cc:
 
 ## dev: Run the development server.
 dev:
-	set -e &&export ENVIRONMENT='development' && uvicorn $(SRC_DIRS).main:app --host 0.0.0.0  --reload
+	set -e &&export ENVIRONMENT='development' && uvicorn $(SRC_DIRS).adapter.driver.api:app
+	--host 0.0.0.0  --reload
 
 ## run: Run the production server.
 run:
