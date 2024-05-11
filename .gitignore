@@ -343,3 +343,4 @@ scripts/playground.py
 scripts/_test.*
 
 .tool-versions
+.poetry.lock

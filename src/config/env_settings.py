@@ -30,6 +30,21 @@ class Settings(BaseSettings):
     REDOC_URL: str = ""
     """The URL for the API documentation."""
 
+    DB_HOST: str
+    """The database host."""
+
+    DB_PORT: int
+    """The database port."""
+
+    DB_NAME: str
+    """The database name."""
+
+    DB_USER: str
+    """The database user."""
+
+    DB_PASSWORD: str
+    """The database password."""
+
 
 class EnvFileSettings(BaseSettings):
     """Configuration class for loading application environment file settings."""
