@@ -38,6 +38,8 @@ lint.ignore = [
     "ANN102", # Missing type cls
     'ANN003', # Missing type kwargs
     "RUF100", # unused-noqaw
+    "COM812", # conflits with the formatter
+    "ISC001", # conflits with the formatter
 ]
 
 lint.unfixable = ["B"]
