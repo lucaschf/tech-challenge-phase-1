@@ -1,9 +1,30 @@
-# Order Management API 
+# Order Management API
 
 ## Description
 
 This is an Order Management API designed to help businesses manage their order efficiently.
 
+## Table of Contents
+
+<!-- TOC -->
+* [Order Management API](#order-management-api)
+  * [Description](#description)
+  * [Table of Contents](#table-of-contents)
+  * [Technologies](#technologies)
+  * [Installation](#installation)
+      * [1.Clone the Repository](#1clone-the-repository)
+      * [2. Setup Virtual Environment with Poetry](#2-setup-virtual-environment-with-poetry)
+      * [3. Install Dependencies](#3-install-dependencies)
+      * [4. Setup Environment Variables](#4-setup-environment-variables)
+  * [Project Structure](#project-structure)
+  * [Usage](#usage)
+    * [General Commands](#general-commands)
+    * [Setup and Installation](#setup-and-installation)
+    * [Linting](#linting)
+    * [Code Complexity and Quality](#code-complexity-and-quality)
+    * [Development and Testing](#development-and-testing)
+    * [Production](#production)
+<!-- TOC -->
 
 ## Technologies
 
@@ -75,6 +96,54 @@ need to define these variables in the `.env` files.
 
 An example of the `.env` file is provided in the `.env.example` file.
 
+## Project Structure
+
+O projeto segue a **arquitetura hexagonal**, promovendo flexibilidade e testabilidade ao desacoplar
+a lógica de negócio de detalhes de implementação específicos.
+Abaixo, detalhamos a estrutura de diretórios e o papel de cada componente:
+
+- `src`: Diretório raiz do código-fonte do projeto.
+    - `core`: Coração da aplicação, contendo a lógica de negócio e regras do domínio.
+        - `application` Orquestra as ações do sistema.
+            - `use_cases`: Casos de uso que definem as interações do usuário com o sistema e
+              coordenam a execução das regras de negócio.
+        - `domain`: Modelo do domínio do problema, independente de detalhes técnicos.
+            - `base`:  Classes-base e utilitários que dão suporte às entidades do domínio.
+            - `entities`: Representações dos objetos reais relevantes para o domínio, com seus
+              atributos e comportamentos.
+            - `exceptions`: Exceções personalizadas que capturam violações das regras de negócio,
+              facilitando o tratamento de erros.
+            - `repositories`: Interfaces que definem como as entidades do domínio são persistidas e
+              recuperadas, permitindo a troca da implementação do armazenamento de dados sem afetar
+              o domínio.
+            - `value_objects`: Objetos imutáveis que representam conceitos do domínio, como
+              dinheiro,
+              datas ou documentos.
+        - `adapter`:Adaptadores que conectam o domínio a tecnologias externas.
+            - `driven`: Adaptadores que o sistema usa, como bancos de dados, serviços de mensageiria
+              ou APIs externas.
+            - `driver`: Adaptadores que usam o sistema, como interfaces de usuário, APIs REST ou
+              CLIs.
+                - `api`: Implementação da API REST do sistema.
+                    - `controllers`: Controladores que recebem as requisições HTTP, interagem com os
+                      casos de uso e retornam as respostas.
+        - `config`: Configurações do projeto, como strings de conexão com o banco de dados, chaves
+          de API e outras variáveis de ambiente.
+- `tests`: Diretório que contém os testes automatizados do projeto.
+    - (Subdiretórios e arquivos de teste organizados de forma espelhada à estrutura do código em
+      src, para facilitar a localização e manutenção dos testes.)
+
+Essa estrutura hexagonal oferece diversas vantagens:
+
+- `Testabilidade`: A lógica de negócio é isolada, facilitando a criação de testes unitários e de
+  integração.
+- `Flexibilidade`: A substituição de tecnologias é facilitada, pois as regras de negócio não
+  dependem de detalhes de implementação.
+- `Manutenibilidade`: A separação de responsabilidades torna o código mais organizado e fácil de
+  entender, facilitando a manutenção e evolução do sistema.
+- `Confiabilidade`: Os testes automatizados garantem que o sistema funcione conforme o esperado,
+  mesmo após modificações no código.
+
 ## Usage
 
 This project uses a Makefile to streamline various development tasks.
@@ -93,7 +162,7 @@ Below are the available make commands and their descriptions:
 ### Linting
 
 - **`make lint-check`**: Lints source files without modifying them.
-  It checks the code using ruff, 
+  It checks the code using ruff,
 - **`make lint-fix`**: Formats and fixes linting issues in source files using the same tools.
 - **`make lint-check-tests`**: Lints test files without modifying them.
 - **`make lint-fix-tests`**: Formats and fixes linting issues in test files.
