@@ -26,7 +26,7 @@ repos:
           - --max-average=B
         description: Analyze code complexity with Xenon
 
-#  - repo: https://github.com/jorisroovers/gitlint
-#    rev: v0.19.1
-#    hooks:
-#      - id: gitlint
+  - repo: https://github.com/jorisroovers/gitlint
+    rev: v0.19.1
+    hooks:
+      - id: gitlint
