@@ -77,20 +77,16 @@ make install
 The project uses different `.env` files for different environments (test, dev, prod).
 Create these files at the root of the project and fill them with the necessary variables.
 
-| Env file  | Target environment |
-|-----------|--------------------|
-| .env      | development        |
-| .env.dev  | development        |
-| .env.test | test               |
-| .env.prod | production         |
+| Env file  | Target environment  |
+|-----------|---------------------|
+| .env      | production          |
+| .env.dev  | development         |
+| .env.test | test                |
 
-As you can see, there are four environment file names accepted.
-You can use either `.env.dev` or `.env` to development environment.
-But for prod and test environments only one `.env` file name is allowed
 
 The necessary variables
 to be placed in the `.env` files should be defined in the `Settings` class in
-the `src.core.settings` module.
+the `src.config.env_settings` module.
 This class accepts default values, so in cases where default values are sufficient, you do not
 need to define these variables in the `.env` files.
 

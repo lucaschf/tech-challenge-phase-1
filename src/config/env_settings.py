@@ -12,8 +12,8 @@ class Environment(StrEnum):
 
 
 ENV_FILENAMES = {
-    Environment.DEVELOPMENT.value: (".env.dev", ".env"),
-    Environment.PRODUCTION.value: (".env.prod",),
+    Environment.DEVELOPMENT.value: (".env.dev",),
+    Environment.PRODUCTION.value: (".env",),
     Environment.TEST.value: (".env.test",),
 }
 
