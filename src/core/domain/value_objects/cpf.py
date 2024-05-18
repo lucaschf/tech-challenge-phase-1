@@ -21,7 +21,7 @@ class CPF(ValueObject):
             cpf (str): The CPF number to be validated and stored.
 
         Raises:
-            ValueError: If the input CPF number is invalid.
+            InvalidCpfError: If the input CPF number is invalid.
         """
         if not self._is_valid(cpf):
             raise InvalidCpfError(cpf=cpf)

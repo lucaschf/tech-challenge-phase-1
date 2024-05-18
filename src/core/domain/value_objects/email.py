@@ -20,7 +20,7 @@ class Email(ValueObject):
             email_address (str): The email to be validated and stored.
 
         Raises:
-            ValueError: If the input email is invalid.
+            InvalidEmailError: If the input email is invalid.
         """
         if not self._is_valid(email_address):
             raise InvalidEmailError(email_address)
