@@ -12,8 +12,10 @@ promoting code consistency and domain integrity.
 from src.core.domain.base import ValueObject
 
 from .cpf import CPF
+from .email import Email
 
 __all__ = [
     "CPF",
-    "ValueObject"
+    "Email",
+    "ValueObject",
 ]
