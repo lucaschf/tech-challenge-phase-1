@@ -10,6 +10,9 @@ exception types, enhancing error handling and debugging processes.
 
 from src.core.domain.base import DomainError
 
+from .email_error import InvalidEmailError
+
 __all__ = [
     "DomainError",
+    "InvalidEmailError",
 ]
