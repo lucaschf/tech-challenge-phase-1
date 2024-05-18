@@ -60,11 +60,11 @@ class CPFStr(str):
         json_schema = handler(schema)
         json_schema.update(
             type='string',
-            example='108.564.466-96',
+            example='10856446696',
         )
         return json_schema
 
-    def __new__(cls: Type['CPFStr'], cpf: str) -> str:
+    def __new__(cls: Type['CPFStr'], cpf: str) -> 'CPFStr':
         """Create a new instance of CPFStr.
 
         Args:
@@ -73,7 +73,7 @@ class CPFStr(str):
         Returns:
             A new CPFStr instance with the validated and cleaned CPF string.
         """
-        return super(CPFStr, cls).__new__(cls, cls._validate_and_remove_mask(cpf))
+        return super(CPFStr, cls).__new__(cls, cls._validate_and_remove_mask(cpf))  # type: ignore
 
 
 __all__ = ['CPFStr']
