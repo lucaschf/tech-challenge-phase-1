@@ -25,9 +25,7 @@ class PersistentModel(DeclarativeBase):
     id: Mapped[int] = Column(Integer, primary_key=True)
     """An auto-incrementing integer primary key."""
 
-    external_id: Mapped[uuid.UUID] = Column(
-        UUID(as_uuid=True), default=uuid4, unique=True, index=True
-    )
+    uuid: Mapped[uuid.UUID] = Column(UUID(as_uuid=True), default=uuid4, unique=True, index=True)
     """A UUID field with a default value generated using `uuid4`."""
 
     created_at: Mapped[datetime] = Column(DateTime(timezone=True), server_default=func.now())
