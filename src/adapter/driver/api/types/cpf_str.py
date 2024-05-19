@@ -17,7 +17,7 @@ class CPFStr(str):
 
     @classmethod
     def __get_pydantic_core_schema__(
-        cls: Type['CPFStr'],
+        cls: Type["CPFStr"],
         *_args: Tuple[()],
         **_kwargs: Dict[str, Any],
     ) -> core_schema.CoreSchema:
@@ -29,7 +29,7 @@ class CPFStr(str):
 
     @classmethod
     def _validate_and_remove_mask(
-        cls: Type['CPFStr'],
+        cls: Type["CPFStr"],
         __input_value: str,
         _: core_schema.ValidationInfo | None = None,
     ) -> str:
@@ -59,12 +59,12 @@ class CPFStr(str):
     ) -> JsonSchemaValue:
         json_schema = handler(schema)
         json_schema.update(
-            type='string',
-            example='10856446696',
+            type="string",
+            example="10856446696",
         )
         return json_schema
 
-    def __new__(cls: Type['CPFStr'], cpf: str) -> 'CPFStr':
+    def __new__(cls: Type["CPFStr"], cpf: str) -> "CPFStr":
         """Create a new instance of CPFStr.
 
         Args:
@@ -76,4 +76,4 @@ class CPFStr(str):
         return super(CPFStr, cls).__new__(cls, cls._validate_and_remove_mask(cpf))  # type: ignore
 
 
-__all__ = ['CPFStr']
+__all__ = ["CPFStr"]
