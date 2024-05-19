@@ -1,9 +1,8 @@
-import uuid
 from datetime import datetime
-from uuid import uuid4
+from uuid import UUID, uuid4
 
 from sqlalchemy import Column, DateTime, Integer, func
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.orm import DeclarativeBase, Mapped
 
 
@@ -25,13 +24,15 @@ class PersistentModel(DeclarativeBase):
     id: Mapped[int] = Column(Integer, primary_key=True)
     """An auto-incrementing integer primary key."""
 
-    uuid: Mapped[uuid.UUID] = Column(UUID(as_uuid=True), default=uuid4, unique=True, index=True)
+    uuid: Mapped[UUID] = Column(PG_UUID(as_uuid=True), default=uuid4, unique=True, index=True)
     """A UUID field with a default value generated using `uuid4`."""
 
     created_at: Mapped[datetime] = Column(DateTime(timezone=True), server_default=func.now())
     """A DateTime field with the current timestamp when an instance is created."""
 
-    updated_at: Mapped[datetime] = Column(DateTime(timezone=True), onupdate=func.now())
+    updated_at: Mapped[datetime] = Column(
+        DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
+    )
     """A DateTime field with the current timestamp when an instance is updated."""
 
 
