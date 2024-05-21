@@ -14,19 +14,12 @@ from src.core.domain.value_objects.email import Email
 )
 def test_creation_of_valid_email(valid_email: str) -> None:
     email = Email(valid_email)
-    assert email.email == valid_email
+    assert email.address == valid_email
 
 
 @pytest.mark.parametrize(
     "invalid_email",
-    [
-        "test@example",
-        "user.name@.org",
-        "@subdomain.example.com",
-        "invalid_email",
-        "test",
-        "123"
-    ],
+    ["test@example", "user.name@.org", "@subdomain.example.com", "invalid_email", "test", "123"],
 )
 def test_creation_of_invalid_email(invalid_email: str) -> None:
     with pytest.raises(DomainError):
@@ -36,7 +29,7 @@ def test_creation_of_invalid_email(invalid_email: str) -> None:
 def test_access_email_property() -> None:
     email_str = "test@example.com"
     email = Email(email_str)
-    assert email.email == email_str
+    assert email.address == email_str
 
 
 def test_get_equality_components() -> None:
@@ -77,10 +70,7 @@ def test_static_method_is_valid(email: str, expected: bool) -> None:
 
 @pytest.mark.parametrize(
     "email_address",
-    [
-        'test@example.com',
-        'test@example.org'
-    ],
+    ["test@example.com", "test@example.org"],
 )
 def test_str(email_address: str) -> None:
     email = Email(email_address)

@@ -33,10 +33,10 @@ class Email(ValueObject):
         Returns:
             Tuple[str]: A tuple containing the email address.
         """
-        return (self.email,)
+        return (self.address,)
 
     @property
-    def email(self) -> str:
+    def address(self) -> str:
         """Gets the email address.
 
         Returns:
@@ -58,7 +58,7 @@ class Email(ValueObject):
 
     def __str__(self) -> str:
         """Returns the email address as a string."""
-        return self.email
+        return self.address
 
 
 __all__ = ["Email"]
