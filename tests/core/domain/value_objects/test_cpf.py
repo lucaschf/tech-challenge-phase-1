@@ -58,12 +58,6 @@ def test_access_number_property() -> None:
     assert cpf.number == cpf_str
 
 
-def test_access_formatted_property() -> None:
-    cpf_str = "10856446696"
-    cpf = CPF(cpf_str)
-    assert cpf.formatted == "108.564.466-96"
-
-
 def test_get_equality_components() -> None:
     cpf_str = "10856446696"
     cpf = CPF(cpf_str)

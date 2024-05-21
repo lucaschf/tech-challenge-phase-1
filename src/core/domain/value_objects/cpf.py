@@ -45,15 +45,6 @@ class CPF(ValueObject):
         """
         return self._number
 
-    @property
-    def formatted(self) -> str:
-        """Gets the CPF number with the format mask.
-
-        Returns:
-            str: The CPF number with the format mask.
-        """
-        return f"{self._number[:3]}.{self._number[3:6]}.{self._number[6:9]}-{self._number[9:]}"
-
     @classmethod
     def _is_valid(cls, cpf: str) -> bool:
         """Validates the input CPF number using the official Brazilian algorithm.
