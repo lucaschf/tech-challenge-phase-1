@@ -28,13 +28,16 @@ class Customer(AggregateRoot):
         self.name = name
         self.cpf = cpf
         self.email = email
+
+        # Call the base class constructor after initializing the subclass attributes
+        # to ensure that the validate() method has access to all attributes
         super().__init__(_id, uuid, created_at, updated_at)
 
     def validate(self) -> None:
         """Validates the customer's attributes.
 
         This method checks if the customer's name, CPF, and email are not null or empty.
-        If any of these conditions are not met, an AssertionError will be raised
+        If any of these conditions are not met, a DomainError will be raised
          with a relevant message.
 
         Raises:
@@ -44,3 +47,6 @@ class Customer(AggregateRoot):
         AssertionConcern.assert_argument_not_empty(self.name, "Name is required")
         AssertionConcern.assert_argument_not_null(self.cpf, "CPF is required")
         AssertionConcern.assert_argument_not_null(self.email, "Email is required")
+
+
+__all__ = ["Customer"]
