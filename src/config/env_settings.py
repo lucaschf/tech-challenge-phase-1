@@ -45,6 +45,9 @@ class Settings(BaseSettings):
     DB_PASSWORD: str
     """The database password."""
 
+    DB_DRIVER: str
+    """The database driver."""
+
 
 class EnvFileSettings(BaseSettings):
     """Configuration class for loading application environment file settings."""
