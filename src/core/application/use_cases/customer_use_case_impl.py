@@ -5,7 +5,7 @@ from src.core.domain.repositories import CustomerRepository
 from src.core.domain.value_objects import CPF, Email
 
 
-class CustomerUserCaseImpl(CustomerUseCase):
+class CustomerUseCaseImpl(CustomerUseCase):
     """Implementation of the customer use case.
 
     Attributes:
@@ -15,7 +15,7 @@ class CustomerUserCaseImpl(CustomerUseCase):
     def __init__(self, customer_repository: CustomerRepository) -> None:
         self.customer_repository = customer_repository
 
-    def create_customer(self, name: str, cpf: CPF, email: Email) -> Customer:
+    def create_customer(self, name: str, cpf: str, email: str) -> Customer:
         """Create a new customer.
 
         Args:
@@ -29,7 +29,7 @@ class CustomerUserCaseImpl(CustomerUseCase):
         Raises:
             DomainError: If the customer already exists.
         """
-        customer: Customer = Customer(name=name, cpf=cpf, email=email)
+        customer: Customer = Customer(name=name, cpf=CPF(cpf), email=Email(email))
         if self.customer_repository.exists(customer.cpf, customer.email):
             raise DomainError(message="Customer already exists")
         return self.customer_repository.add(customer)
@@ -46,4 +46,4 @@ class CustomerUserCaseImpl(CustomerUseCase):
         return self.customer_repository.get_by_cpf(CPF(cpf))
 
 
-__all__ = ["CustomerUserCaseImpl"]
+__all__ = ["CustomerUseCaseImpl"]
