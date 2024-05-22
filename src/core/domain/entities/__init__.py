@@ -4,3 +4,7 @@ Entities are unique objects identified not by their attributes, but by their con
 distinct identity.
 They form the core of the domain model, encapsulating both behavior and data.
 """
+
+from .customer import Customer
+
+__all__ = ["Customer"]

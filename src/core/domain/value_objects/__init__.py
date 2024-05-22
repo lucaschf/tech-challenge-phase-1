@@ -8,3 +8,14 @@ that form a conceptual whole within the domain model.
 This module provides a declaration of such objects,
 promoting code consistency and domain integrity.
 """
+
+from src.core.domain.base import ValueObject
+
+from .cpf import CPF
+from .email import Email
+
+__all__ = [
+    "CPF",
+    "Email",
+    "ValueObject",
+]
