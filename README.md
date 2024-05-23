@@ -56,7 +56,7 @@ Ensure that Poetry is installed on your system.
 Then, create a virtual environment for the project using the command.
 
 ```bash
-poetry env use 3.1*.*
+poetry env use 3.12.*
 poetry shell
 ```
 
@@ -80,15 +80,15 @@ Create these files at the root of the project and fill them with the necessary v
 | Env file  | Target environment  |
 |-----------|---------------------|
 | .env      | production          |
-| .env.dev  | development         |
+| .env      | development         |
 | .env.test | test                |
 
 
 The necessary variables
 to be placed in the `.env` files should be defined in the `Settings` class in
 the `src.config.env_settings` module.
-This class accepts default values, so in cases where default values are sufficient, you do not
-need to define these variables in the `.env` files.
+This class accepts default values, so in cases where default values are enough, you do not
+need to define these variables in the `.env` file.
 
 An example of the `.env` file is provided in the `.env.example` file.
 
@@ -170,9 +170,8 @@ Below are the available make commands and their descriptions:
 
 ### Development and Testing
 
-- **`make dev`**: Runs the development server.
-  It sets the environment to 'development' and starts
-  the server with uvicorn, allowing auto-reload on changes.
+- **`make dev`**: Runs the api server.
+  It starts the server with uvicorn, allowing auto-reload on changes.
 
 - **`make test`**: Runs tests in the test environment.
   It uses pytest for testing and coverage for
