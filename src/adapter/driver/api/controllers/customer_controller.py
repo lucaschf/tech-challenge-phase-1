@@ -6,7 +6,6 @@ from src.adapter.driver.api.schemas import CustomerCreationIn, CustomerOut
 from src.core.application.use_cases.customer_use_case import CustomerUseCase
 from src.core.domain.base import DomainError
 from src.core.domain.entities.customer import Customer
-from src.core.domain.value_objects import CPF, Email
 
 
 class CustomerController:
@@ -38,7 +37,7 @@ class CustomerController:
         """
         try:
             created_customer: Customer = self._customer_use_case.create_customer(
-                name=customer.name, cpf=CPF(customer.cpf), email=Email(customer.email)
+                name=customer.name, cpf=customer.cpf, email=customer.email
             )
 
             return CustomerOut.from_entity(created_customer)

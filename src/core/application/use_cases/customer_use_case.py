@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
 
 from src.core.domain.entities.customer import Customer
-from src.core.domain.value_objects import CPF, Email
 
 
 class CustomerUseCase(ABC):
@@ -12,7 +11,7 @@ class CustomerUseCase(ABC):
     """
 
     @abstractmethod
-    def create_customer(self, name: str, cpf: CPF, email: Email) -> Customer:
+    def create_customer(self, name: str, cpf: str, email: str) -> Customer:
         """Abstract method representing the creation of a new customer in the system.
 
         Args:

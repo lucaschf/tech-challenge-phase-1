@@ -1,4 +1,4 @@
 from .customer_use_case import CustomerUseCase
-from .customer_user_case_impl import CustomerUserCaseImpl
+from .customer_use_case_impl import CustomerUseCaseImpl
 
-__all__ = ["CustomerUseCase", "CustomerUserCaseImpl"]
+__all__ = ["CustomerUseCase", "CustomerUseCaseImpl"]

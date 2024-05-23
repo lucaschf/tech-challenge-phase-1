@@ -1,26 +1,14 @@
 from http import HTTPStatus
 
 from fastapi import APIRouter, Depends, Response
-from sqlalchemy.orm import Session
-
-from src.adapter.driven.infra.config import get_db_session
-from src.adapter.driven.infra.repositories import SQACustomerRepository
-from src.core.application.use_cases import CustomerUserCaseImpl
 
 from ..controllers import CustomerController
+from ..dependencies import injector
 from ..schemas import CustomerCreationIn, CustomerOut
 from ..schemas.http_error import HttpErrorOut
 from ..types import CPFStr
 
 router = APIRouter(tags=["Customer"], prefix="/customer")
-
-
-def customer_controller_dependency(
-    db_session: Session = Depends(get_db_session),  # noqa: B008
-) -> CustomerController:
-    customer_repository = SQACustomerRepository(db_session)
-    customer_use_case = CustomerUserCaseImpl(customer_repository)
-    return CustomerController(customer_use_case)
 
 
 @router.post(
@@ -33,7 +21,9 @@ def customer_controller_dependency(
 def create_customer(
     response: Response,
     inputs: CustomerCreationIn,
-    controller: CustomerController = Depends(customer_controller_dependency),  # noqa: B008
+    controller: CustomerController = Depends(  # noqa: B008
+        lambda: injector.get(CustomerController)
+    ),
 ) -> CustomerOut:
     customer = controller.create_customer(inputs)
     response.headers["Location"] = f"{router.prefix}/{customer.cpf}"
@@ -48,7 +38,9 @@ def create_customer(
 )
 def get_by_cpf(
     cpf: CPFStr,
-    controller: CustomerController = Depends(customer_controller_dependency),  # noqa: B008
+    controller: CustomerController = Depends(  # noqa: B008
+        lambda: injector.get(CustomerController)
+    ),
 ) -> CustomerOut:
     return controller.get_by_cpf(cpf)
 
