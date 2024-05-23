@@ -4,7 +4,6 @@ from fastapi import HTTPException
 
 from src.adapter.driver.api.schemas import CustomerCreationIn, CustomerOut
 from src.core.application.use_cases.customer_use_case import CustomerUseCase
-from src.core.domain.base import DomainError
 from src.core.domain.entities.customer import Customer
 
 
@@ -35,14 +34,11 @@ class CustomerController:
         Raises:
             HTTPException: If there's any business rule violation defined in DomainError.
         """
-        try:
-            created_customer: Customer = self._customer_use_case.create_customer(
-                name=customer.name, cpf=customer.cpf, email=customer.email
-            )
+        created_customer: Customer = self._customer_use_case.create_customer(
+            name=customer.name, cpf=customer.cpf, email=customer.email
+        )
 
-            return CustomerOut.from_entity(created_customer)
-        except DomainError as e:
-            raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail=e.message) from e
+        return CustomerOut.from_entity(created_customer)
 
     def get_by_cpf(self, cpf: str) -> CustomerOut:
         """Retrieves a customer from the system using their CPF.
@@ -57,14 +53,11 @@ class CustomerController:
             HTTPException: If a customer with the provided CPF could not be found or there's any
             business rule violation defined in DomainError.
         """
-        try:
-            customer: Customer | None = self._customer_use_case.get_by_cpf(cpf)
-            if customer is None:
-                raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Customer not found")
+        customer: Customer | None = self._customer_use_case.get_by_cpf(cpf)
+        if customer is None:
+            raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Customer not found")
 
-            return CustomerOut.from_entity(customer)
-        except DomainError as e:
-            raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail=e.message) from e
+        return CustomerOut.from_entity(customer)
 
 
 __all__ = ["CustomerController"]
