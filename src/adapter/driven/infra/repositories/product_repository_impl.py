@@ -1,4 +1,5 @@
 from typing import List
+from uuid import UUID
 
 from sqlalchemy import delete, update
 from sqlalchemy.future import select
@@ -7,6 +8,7 @@ from sqlalchemy.orm import Session
 from src.adapter.driven.infra.sqa_models.product_persistent_model import ProductPersistentModel
 from src.core.domain.entities.product import Product
 from src.core.domain.repositories.product_repository import ProductRepository
+from src.core.domain.value_objects.category import Category
 
 
 class SQLAlchemyProductRepository(ProductRepository):
@@ -48,37 +50,60 @@ class SQLAlchemyProductRepository(ProductRepository):
             product.uuid = db_product.uuid
             return product
 
-    def update(self, product_id: int, product: Product) -> Product:
+    def update(self, product_uuid: UUID, product: Product) -> Product:
         """Updates an existing product in the repository.
 
         Args:
-            product_id (int): The ID of the product to be updated.
+            product_uuid (uuid): The ID of the product to be updated.
             product (Product): The product data to update.
 
         Returns:
             Product: The updated product.
         """
+        product_dict = {
+            "name": product.name,
+            "category": product.category
+            if isinstance(product.category, str)
+            else product.category.category,
+            "price": product.price,
+            "description": product.description,
+            "images": product.images,
+        }
         with self._session as session:
             session.execute(
                 update(ProductPersistentModel)
-                .where(ProductPersistentModel.id == product_id)
-                .values(product)
+                .where(ProductPersistentModel.uuid == product_uuid)
+                .values(product_dict)
             )
             session.commit()
-            return product
+            updated_product = session.execute(
+                select(ProductPersistentModel).where(ProductPersistentModel.uuid == product_uuid)
+            ).scalar_one()
 
-    def delete(self, product_id: int) -> None:
+        return Product(
+            _id=updated_product.id,
+            uuid=updated_product.uuid,
+            name=updated_product.name,
+            category=Category(updated_product.category),
+            price=updated_product.price,
+            description=updated_product.description,
+            images=updated_product.images,
+            created_at=updated_product.created_at,
+            updated_at=updated_product.updated_at,
+        )
+
+    def delete(self, product_uuid: UUID) -> None:
         """Deletes a product from the repository.
 
         Args:
-            product_id (int): The ID of the product to be deleted.
+            product_uuid (uuid): The ID of the product to be deleted.
 
         Returns:
             None
         """
         with self._session as session:
             session.execute(
-                delete(ProductPersistentModel).where(ProductPersistentModel.id == product_id)
+                delete(ProductPersistentModel).where(ProductPersistentModel.uuid == product_uuid)
             )
             session.commit()
 
