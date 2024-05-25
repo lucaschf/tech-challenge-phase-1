@@ -1,4 +1,4 @@
-from typing import Iterable
+from typing import Any, Union
 
 from .domain_error import DomainError
 
@@ -65,38 +65,35 @@ class AssertionConcern:
     @classmethod
     def assert_argument_not_empty(
         cls: "AssertionConcern",
-        iterable_value: Iterable,
+        value: Union[str, list, tuple],
         message: str,
     ) -> None:
-        """Asserts iterable is not None, empty, or has only False-like values or whitespace strings.
+        """Asserts that a string or a list/tuple is not null or empty after trimming if it's a string.
 
         Args:
-            iterable_value: The iterable to be validated.
+            value: The value to be validated.
             message: The error message to raise if the validation fails.
 
         Raises:
-            DomainError: If the iterable is None, empty, contains only False-like values,
-             or is a whitespace string.
+            DomainError: If the value is null or empty.
         """
-        try:
-            is_valid = any(iterable_value) and (
-                not isinstance(iterable_value, str) or iterable_value.strip()
-            )
-        except TypeError:  # Handle case where iterable_value is not iterable
-            is_valid = False
-
-        cls._assert(is_valid, message)
+        if isinstance(value, str):
+            cls._assert(bool(value and value.strip()), message)
+        elif isinstance(value, (list, tuple)):
+            cls._assert(bool(value), message)
+        else:
+            cls._assert(False, "assert_argument_not_empty only supports str, list, and tuple")
 
     @classmethod
     def assert_argument_not_null(
         cls: "AssertionConcern",
-        obj: object | None,
+        obj: Any,  # noqa: ANN401
         message: str,
     ) -> None:
         """Asserts that an object is not None.
 
         Args:
-            obj: The object to be validated.
+            obj: Any: The object to be validated.
             message: The error message to raise if the validation fails.
 
         Raises:

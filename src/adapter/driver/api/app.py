@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from src.adapter.driver.api.routers import customer_router
+from src.adapter.driver.api.routers import customer_router, product_router
 from src.config import settings
 
 app = FastAPI(
@@ -10,6 +10,7 @@ app = FastAPI(
 )
 
 app.include_router(customer_router, prefix="/api")
+app.include_router(product_router, prefix="/api")
 
 
 @app.get("/", tags=["Health Check"])
