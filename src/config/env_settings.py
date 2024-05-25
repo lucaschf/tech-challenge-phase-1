@@ -12,7 +12,7 @@ class Environment(StrEnum):
 
 
 ENV_FILENAMES = {
-    Environment.DEVELOPMENT.value: (".env.dev",),
+    Environment.DEVELOPMENT.value: (".env",),
     Environment.PRODUCTION.value: (".env",),
     Environment.TEST.value: (".env.test",),
 }
@@ -21,7 +21,7 @@ ENV_FILENAMES = {
 class Settings(BaseSettings):
     """A class to manage the application settings."""
 
-    ENVIRONMENT: Environment = Environment.TEST
+    ENVIRONMENT: Environment = Environment.DEVELOPMENT
     """The type of the environment."""
 
     DOCS_URL: str = ""
@@ -52,7 +52,7 @@ class Settings(BaseSettings):
 class EnvFileSettings(BaseSettings):
     """Configuration class for loading application environment file settings."""
 
-    ENVIRONMENT: Environment = Environment.TEST
+    ENVIRONMENT: Environment = Environment.DEVELOPMENT
 
     def load_settings(self) -> Settings:
         """Creates an instance of Settings based on the environment.
