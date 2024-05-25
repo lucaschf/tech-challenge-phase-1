@@ -1,6 +1,7 @@
 from src.core.application.use_cases.customer_use_case import CustomerUseCase
 from src.core.domain.base import DomainError
 from src.core.domain.entities import Customer
+from src.core.domain.exceptions import CustomerNotFoundError
 from src.core.domain.repositories import CustomerRepository
 from src.core.domain.value_objects import CPF, Email
 
@@ -43,7 +44,11 @@ class CustomerUseCaseImpl(CustomerUseCase):
         Returns:
             Customer: The customer data if found.
         """
-        return self.customer_repository.get_by_cpf(CPF(cpf))
+        customer = self.customer_repository.get_by_cpf(CPF(cpf))
+        if not customer:
+            raise CustomerNotFoundError(cpf=cpf)
+
+        return customer
 
 
 __all__ = ["CustomerUseCaseImpl"]
