@@ -40,7 +40,7 @@ def test_customer_creation_with_id_uuid_timestamps() -> None:
     assert customer.updated_at == updated_at
 
 
-@pytest.mark.parametrize("name", [None, ""])
+@pytest.mark.parametrize("name", [None, "", "    "])
 def test_customer_creation_with_missing_name(name: str | None) -> None:
     cpf_str = CPFProvider.generate_cpf_number()
 
