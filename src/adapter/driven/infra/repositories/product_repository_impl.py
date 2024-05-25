@@ -12,14 +12,14 @@ from src.core.domain.repositories.product_repository import ProductRepository
 class SQLAlchemyProductRepository(ProductRepository):
     """Implementation of the ProductRepository using SQLAlchemy.
 
-    This repository uses an asynchronous SQLAlchemy session to perform CRUD operations on products.
+    This repository uses an SQLAlchemy session to perform CRUD operations on products.
     """
 
     def __init__(self, session: Session) -> None:
         """Initializes the SQLAlchemyProductRepository with a given session.
 
         Args:
-            session (AsyncSession): The SQLAlchemy session to use for database operations.
+            session (Session): The SQLAlchemy session to use for database operations.
         """
         self._session = session
 

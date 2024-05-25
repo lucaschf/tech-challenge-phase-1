@@ -1,10 +1,8 @@
-import pytest
 from fastapi.testclient import TestClient
-from httpx import AsyncClient
+from httpx import Client
 
 
-@pytest.mark.asyncio
-async def test_create_product(client: TestClient) -> None:
+def test_create_product(client: TestClient) -> None:
     product_data = {
         "name": "Sandwich",
         "category": "Lanche",
@@ -12,14 +10,13 @@ async def test_create_product(client: TestClient) -> None:
         "description": "A delicious sandwich",
         "images": ["http://example.com/sandwich.jpg"],
     }
-    async with AsyncClient(app=client.app, base_url="http://test") as ac:
-        response = await ac.post("/api/products", json=product_data)
+    with Client(app=client.app, base_url="http://test") as ac:
+        response = ac.post("/api/products", json=product_data)
     assert response.status_code == 200
     assert response.json()["name"] == product_data["name"]
 
 
-@pytest.mark.asyncio
-async def test_update_product(client: TestClient) -> None:
+def test_update_product(client: TestClient) -> None:
     # First, create a product to update
     product_data = {
         "name": "Sandwich",
@@ -28,8 +25,8 @@ async def test_update_product(client: TestClient) -> None:
         "description": "A delicious sandwich",
         "images": ["http://example.com/sandwich.jpg"],
     }
-    async with AsyncClient(app=client.app, base_url="http://test") as ac:
-        create_response = await ac.post("/api/products", json=product_data)
+    with Client(app=client.app, base_url="http://test") as ac:
+        create_response = ac.post("/api/products", json=product_data)
         product_id = create_response.json()["id"]
 
     # Update the product
@@ -40,14 +37,13 @@ async def test_update_product(client: TestClient) -> None:
         "description": "An updated delicious sandwich",
         "images": ["http://example.com/updated_sandwich.jpg"],
     }
-    async with AsyncClient(app=client.app, base_url="http://test") as ac:
-        update_response = await ac.put(f"/api/products/{product_id}", json=updated_product_data)
+    with Client(app=client.app, base_url="http://test") as ac:
+        update_response = ac.put(f"/api/products/{product_id}", json=updated_product_data)
     assert update_response.status_code == 200
     assert update_response.json()["name"] == updated_product_data["name"]
 
 
-@pytest.mark.asyncio
-async def test_delete_product(client: TestClient) -> None:
+def test_delete_product(client: TestClient) -> None:
     # First, create a product to delete
     product_data = {
         "name": "Sandwich",
@@ -56,19 +52,18 @@ async def test_delete_product(client: TestClient) -> None:
         "description": "A delicious sandwich",
         "images": ["http://example.com/sandwich.jpg"],
     }
-    async with AsyncClient(app=client.app, base_url="http://test") as ac:
-        create_response = await ac.post("/api/products", json=product_data)
+    with Client(app=client.app, base_url="http://test") as ac:
+        create_response = ac.post("/api/products", json=product_data)
         product_id = create_response.json()["id"]
 
     # Delete the product
-    async with AsyncClient(app=client.app, base_url="http://test") as ac:
-        delete_response = await ac.delete(f"/api/products/{product_id}")
+    with Client(app=client.app, base_url="http://test") as ac:
+        delete_response = ac.delete(f"/api/products/{product_id}")
     assert delete_response.status_code == 200
     assert delete_response.json()["detail"] == "Product deleted"
 
 
-@pytest.mark.asyncio
-async def test_get_products_by_category(client: TestClient) -> None:
+def test_get_products_by_category(client: TestClient) -> None:
     product_data = {
         "name": "Sandwich",
         "category": "Lanche",
@@ -76,11 +71,11 @@ async def test_get_products_by_category(client: TestClient) -> None:
         "description": "A delicious sandwich",
         "images": ["http://example.com/sandwich.jpg"],
     }
-    async with AsyncClient(app=client.app, base_url="http://test") as ac:
+    with Client(app=client.app, base_url="http://test") as ac:
         # Create a product to ensure there is data
-        await ac.post("/api/products", json=product_data)
+        ac.post("/api/products", json=product_data)
         # Retrieve products by category
-        response = await ac.get("/api/products", params={"category": "Lanche"})
+        response = ac.get("/api/products", params={"category": "Lanche"})
     assert response.status_code == 200
     assert len(response.json()) > 0
     assert response.json()[0]["category"] == "Lanche"

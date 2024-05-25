@@ -11,7 +11,7 @@ class ProductRepository(ABC):
     """
 
     @abstractmethod
-    async def create(self, product: Product) -> Product:
+    def create(self, product: Product) -> Product:
         """Persists a new product in the repository.
 
         Args:
@@ -23,7 +23,7 @@ class ProductRepository(ABC):
         pass
 
     @abstractmethod
-    async def update(self, product_id: int, product: Product) -> Product:
+    def update(self, product_id: int, product: Product) -> Product:
         """Updates an existing product in the repository.
 
         Args:
@@ -36,7 +36,7 @@ class ProductRepository(ABC):
         pass
 
     @abstractmethod
-    async def delete(self, product_id: int) -> None:
+    def delete(self, product_id: int) -> None:
         """Deletes a product from the repository.
 
         Args:
@@ -48,7 +48,7 @@ class ProductRepository(ABC):
         pass
 
     @abstractmethod
-    async def get_by_category(self, category: str) -> List[Product]:
+    def get_by_category(self, category: str) -> List[Product]:
         """Retrieves all products in a given category.
 
         Args:
