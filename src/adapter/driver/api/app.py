@@ -1,4 +1,5 @@
 from http import HTTPStatus
+from typing import Callable, Coroutine
 
 from fastapi import FastAPI, Request, Response
 from starlette.responses import JSONResponse
@@ -14,8 +15,22 @@ app = FastAPI(
 )
 
 
-async def _exception_middleware(request: Request, call_next):  # noqa: ANN001, ANN202
-    """Captura erros, envia-os ao Sentry e retorna um status HTTP para o usuário."""
+async def _exception_middleware(
+    request: Request, call_next: Callable[[Request], Coroutine[None, None, Response]]
+) -> Response:
+    """Asynchronous middleware function to handle exceptions in the FastAPI application.
+
+    This function catches exceptions raised during the processing of a request and
+    returns an appropriate HTTP response.
+
+    Args:
+        request: The FastAPI Request object representing the incoming request.
+        call_next: A coroutine function that, when awaited, will call the next middleware or
+         endpoint.
+
+    Returns:
+        A Response object containing the HTTP response to be sent back to the client.
+    """
     try:
         return await call_next(request)
     except Exception as e:
@@ -23,18 +38,21 @@ async def _exception_middleware(request: Request, call_next):  # noqa: ANN001, A
 
 
 def handle_error(e: Exception) -> Response:
-    """Handle errors, report them to Sentry, and return an HTTP response.
+    """Handle exceptions that are raised during the processing of a request.
 
-    Errors that are instances of ApiResponseError or HTTPException with a status code in the 400
-    range are mapped and returned with their own message and status code.
+    This function checks if the exception is an instance of `DomainError`.
+    If it is, it returns a JSON response with a
+    status code of `BAD_REQUEST` and a detail message from the exception.
 
-    If an unhandled exception is raised, return a 500-status code.
+    If the exception is not a `DomainError`, it returns a JSON response with a status code of
+    `INTERNAL_SERVER_ERROR` and a generic detail message.
 
     Args:
-         e: The exception to handle.
+        e (Exception): The exception that was raised.
 
     Returns:
-         The JSONResponse containing the appropriate status code and detail.
+        Response:
+        A FastAPI Response object containing the HTTP response to be sent back to the client.
     """
     if isinstance(e, DomainError):
         return JSONResponse(
