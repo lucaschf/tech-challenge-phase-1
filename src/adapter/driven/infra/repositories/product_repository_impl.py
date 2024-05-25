@@ -60,7 +60,9 @@ class SQLAlchemyProductRepository(ProductRepository):
         """
         with self._session as session:
             session.execute(
-                update(ProductPersistentModel).where(Product.id == product_id).values(product)
+                update(ProductPersistentModel)
+                .where(ProductPersistentModel.id == product_id)
+                .values(product)
             )
             session.commit()
             return product
@@ -75,7 +77,9 @@ class SQLAlchemyProductRepository(ProductRepository):
             None
         """
         with self._session as session:
-            session.execute(delete(ProductPersistentModel).where(Product.id == product_id))
+            session.execute(
+                delete(ProductPersistentModel).where(ProductPersistentModel.id == product_id)
+            )
             session.commit()
 
     def get_by_category(self, category: str) -> List[Product]:
@@ -89,6 +93,6 @@ class SQLAlchemyProductRepository(ProductRepository):
         """
         with self._session as session:
             result = session.execute(
-                select(ProductPersistentModel).where(Product.category == category)
+                select(ProductPersistentModel).where(ProductPersistentModel.category == category)
             )
             return result.scalars().all()

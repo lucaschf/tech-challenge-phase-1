@@ -18,7 +18,7 @@ class ProductUseCase:
         """
         self.repository = repository
 
-    async def create_product(self, product: Product) -> Product:
+    def create_product(self, product: Product) -> Product:
         """Creates a new product.
 
         Args:
@@ -27,9 +27,9 @@ class ProductUseCase:
         Returns:
             Product: The created product with its ID and other persistence details populated.
         """
-        return await self.repository.create(product)
+        return self.repository.create(product)
 
-    async def update_product(self, product_id: int, product: Product) -> Product:
+    def update_product(self, product_id: int, product: Product) -> Product:
         """Updates an existing product.
 
         Args:
@@ -39,9 +39,9 @@ class ProductUseCase:
         Returns:
             Product: The updated product.
         """
-        return await self.repository.update(product_id, product)
+        return self.repository.update(product_id, product)
 
-    async def delete_product(self, product_id: int) -> None:
+    def delete_product(self, product_id: int) -> None:
         """Deletes a product.
 
         Args:
@@ -50,9 +50,9 @@ class ProductUseCase:
         Returns:
             None
         """
-        await self.repository.delete(product_id)
+        self.repository.delete(product_id)
 
-    async def get_products_by_category(self, category: str) -> List[Product]:
+    def get_products_by_category(self, category: str) -> List[Product]:
         """Retrieves products by category.
 
         Args:
@@ -61,4 +61,4 @@ class ProductUseCase:
         Returns:
             List[Product]: A list of products in the specified category.
         """
-        return await self.repository.get_by_category(category)
+        return self.repository.get_by_category(category)

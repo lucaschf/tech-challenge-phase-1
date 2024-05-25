@@ -15,7 +15,7 @@ class ProductController:
     def __init__(self, use_case: ProductUseCase) -> None:
         self.use_case = use_case
 
-    async def create_product(self, product_in: ProductCreationIn) -> ProductOut:
+    def create_product(self, product_in: ProductCreationIn) -> ProductOut:
         """Registers a new product in the system from the provided product data."""
         product = Product(
             name=product_in.name,
@@ -24,10 +24,10 @@ class ProductController:
             description=product_in.description,
             images=product_in.images,
         )
-        created_product = await self.use_case.create_product(product)
+        created_product = self.use_case.create_product(product)
         return ProductOut.from_entity(created_product)
 
-    async def update_product(self, product_id: int, product_in: ProductCreationIn) -> ProductOut:
+    def update_product(self, product_id: int, product_in: ProductCreationIn) -> ProductOut:
         """Update a product in the system from the provided product data and id."""
         product = Product(
             name=product_in.name,
@@ -36,14 +36,14 @@ class ProductController:
             description=product_in.description,
             images=product_in.images,
         )
-        updated_product = await self.use_case.update_product(product_id, product)
+        updated_product = self.use_case.update_product(product_id, product)
         return ProductOut.from_entity(updated_product)
 
-    async def delete_product(self, product_id: int) -> None:
+    def delete_product(self, product_id: int) -> None:
         """Delete a product in the system from the provided product id."""
-        await self.use_case.delete_product(product_id)
+        self.use_case.delete_product(product_id)
 
-    async def get_products_by_category(self, category: str) -> List[ProductOut]:
+    def get_products_by_category(self, category: str) -> List[ProductOut]:
         """Get a list of products in the system from the provided product category."""
-        products = await self.use_case.get_products_by_category(category)
+        products = self.use_case.get_products_by_category(category)
         return [ProductOut.from_entity(product) for product in products]
