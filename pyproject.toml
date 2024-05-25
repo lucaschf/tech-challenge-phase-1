@@ -27,6 +27,7 @@ gitlint = "~0.19.1"
 coverage = "~7.4.4"
 radon = "^6.0.1"
 xenon = "^0.9.1"
+injector = "^0.21.0"
 
 [build-system]
 requires = ["poetry-core"]
