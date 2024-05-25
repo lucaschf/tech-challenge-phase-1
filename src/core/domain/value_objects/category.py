@@ -1,7 +1,7 @@
 from typing import ClassVar
 
 from src.core.domain.base import ValueObject
-from src.core.domain.exceptions import InvalidCategoryError
+from src.core.domain.exceptions.category_error import InvalidCategoryError
 
 
 class Category(ValueObject):

@@ -6,5 +6,6 @@ They form the core of the domain model, encapsulating both behavior and data.
 """
 
 from .customer import Customer
+from .product import Product
 
-__all__ = ["Customer"]
+__all__ = ["Customer", "Product"]

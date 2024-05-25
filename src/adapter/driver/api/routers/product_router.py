@@ -1,80 +1,51 @@
 from typing import List
+from uuid import UUID
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Response, status
 
 from src.adapter.driver.api.controllers.product_controller import ProductController
 from src.adapter.driver.api.dependencies import get_product_controller
-from src.core.domain.entities.product import Product
 
-router = APIRouter()
+from ..schemas.product_schema import ProductCreationIn, ProductOut
+
+router = APIRouter(tags=["Product"])
 
 
-@router.post("/products", response_model=Product)
+@router.post("/products", response_model=ProductOut, status_code=status.HTTP_201_CREATED)
 async def create_product(
-    product: Product,
+    product: ProductCreationIn,
     controller: ProductController = Depends(get_product_controller),  # noqa: B008
-) -> Product:
-    """Creates a new product.
-
-    Args:
-        product (Product): The product to be created.
-        controller (ProductController): The controller to handle the request.
-
-    Returns:
-        Product: The created product.
-    """
-    return await controller.create_product(product)
+) -> ProductOut:
+    created_product = await controller.create_product(product)
+    return ProductOut.from_entity(created_product)
 
 
-@router.put("/products/{product_id}", response_model=Product)
+@router.put("/products/{product_id}", response_model=ProductOut)
 async def update_product(
-    product_id: int,
-    product: Product,
+    product_id: UUID,
+    product: ProductCreationIn,
     controller: ProductController = Depends(get_product_controller),  # noqa: B008
-) -> Product:
-    """Updates an existing product.
-
-    Args:
-        product_id (int): The ID of the product to be updated.
-        product (Product): The updated product data.
-        controller (ProductController): The controller to handle the request.
-
-    Returns:
-        Product: The updated product.
-    """
-    return await controller.update_product(product_id, product)
+) -> ProductOut:
+    updated_product = await controller.update_product(product_id, product)
+    return ProductOut.from_entity(updated_product)
 
 
-@router.delete("/products/{product_id}")
+@router.delete("/products/{product_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_product(
-    product_id: int,
+    product_id: UUID,
     controller: ProductController = Depends(get_product_controller),  # noqa: B008
 ) -> None:
-    """Deletes a product.
-
-    Args:
-        product_id (int): The ID of the product to be deleted.
-        controller (ProductController): The controller to handle the request.
-
-    Returns:
-        None
-    """
     await controller.delete_product(product_id)
-    return {"detail": "Product deleted"}
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
-@router.get("/products", response_model=List[Product])
+@router.get("/products", response_model=List[ProductOut])
 async def get_products_by_category(
     category: str,
     controller: ProductController = Depends(get_product_controller),  # noqa: B008
-) -> List[Product]:
-    """Retrieves products by category.
+) -> List[ProductOut]:
+    products = await controller.get_products_by_category(category)
+    return [ProductOut.from_entity(product) for product in products]
 
-    Args:
-        category (str): The category to filter products by.
-        controller (ProductController): The controller to handle the request.
 
-    Returns:
-        List[Product]: A list of products in the specified category.
-    """
-    return await controller.get_products_by_category(category)
+__all__ = ["router"]
