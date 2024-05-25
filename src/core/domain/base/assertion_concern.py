@@ -1,3 +1,5 @@
+from typing import Iterable
+
 from .domain_error import DomainError
 
 
@@ -63,19 +65,27 @@ class AssertionConcern:
     @classmethod
     def assert_argument_not_empty(
         cls: "AssertionConcern",
-        string_value: str,
+        iterable_value: Iterable,
         message: str,
     ) -> None:
-        """Asserts that a string is not null or empty after trimming.
+        """Asserts iterable is not None, empty, or has only False-like values or whitespace strings.
 
         Args:
-            string_value: The string to be validated.
+            iterable_value: The iterable to be validated.
             message: The error message to raise if the validation fails.
 
         Raises:
-            DomainError: If the string is null or empty after trimming.
+            DomainError: If the iterable is None, empty, contains only False-like values,
+             or is a whitespace string.
         """
-        cls._assert(bool(string_value and string_value.strip()), message)
+        try:
+            is_valid = any(iterable_value) and (
+                not isinstance(iterable_value, str) or iterable_value.strip()
+            )
+        except TypeError:  # Handle case where iterable_value is not iterable
+            is_valid = False
+
+        cls._assert(is_valid, message)
 
     @classmethod
     def assert_argument_not_null(
