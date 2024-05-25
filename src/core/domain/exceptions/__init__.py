@@ -11,10 +11,14 @@ exception types, enhancing error handling and debugging processes.
 from src.core.domain.base import DomainError
 
 from .cpf_error import InvalidCpfError
+from .customer_error import CustomerNotFoundError
 from .email_error import InvalidEmailError
+from .not_found_error import NotFoundError
 
 __all__ = [
+    "CustomerNotFoundError",
     "DomainError",
     "InvalidCpfError",
     "InvalidEmailError",
+    "NotFoundError",
 ]

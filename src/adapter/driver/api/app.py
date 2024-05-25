@@ -6,7 +6,7 @@ from starlette.responses import JSONResponse
 
 from src.adapter.driver.api.routers import customer_router, product_router
 from src.config import settings
-from src.core.domain.base import DomainError
+from src.core.domain.exceptions import DomainError, NotFoundError
 
 app = FastAPI(
     docs_url=settings.DOCS_URL,
@@ -54,6 +54,12 @@ def handle_error(e: Exception) -> Response:
         Response:
         A FastAPI Response object containing the HTTP response to be sent back to the client.
     """
+    if isinstance(e, NotFoundError):
+        return JSONResponse(
+            status_code=HTTPStatus.NOT_FOUND,
+            content={"detail": e.message},
+        )
+
     if isinstance(e, DomainError):
         return JSONResponse(
             status_code=HTTPStatus.BAD_REQUEST,

@@ -1,7 +1,3 @@
-from http import HTTPStatus
-
-from fastapi import HTTPException
-
 from src.adapter.driver.api.schemas import CustomerCreationIn, CustomerOut
 from src.core.application.use_cases.customer_use_case import CustomerUseCase
 from src.core.domain.entities.customer import Customer
@@ -54,9 +50,6 @@ class CustomerController:
             business rule violation defined in DomainError.
         """
         customer: Customer | None = self._customer_use_case.get_by_cpf(cpf)
-        if customer is None:
-            raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Customer not found")
-
         return CustomerOut.from_entity(customer)
 
 
