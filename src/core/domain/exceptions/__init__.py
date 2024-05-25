@@ -12,9 +12,11 @@ from src.core.domain.base import DomainError
 
 from .cpf_error import InvalidCpfError
 from .email_error import InvalidEmailError
+from .not_found_error import NotFoundError
 
 __all__ = [
     "DomainError",
     "InvalidCpfError",
     "InvalidEmailError",
+    "NotFoundError",
 ]
