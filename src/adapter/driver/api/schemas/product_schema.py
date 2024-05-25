@@ -6,6 +6,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from src.adapter.driver.api.types.category_str import CategoryStr
 from src.core.domain.entities.product import Product
+from src.core.domain.value_objects.category import Category
 
 
 class _BaseProduct(BaseModel):
@@ -34,7 +35,11 @@ class ProductOut(ProductCreationIn):
         """Creates a ProductOut instance from a Product entity."""
         return ProductOut(
             name=entity.name,
-            category=CategoryStr(entity.category),
+            category=CategoryStr(
+                entity.category.category
+                if isinstance(entity.category, Category)
+                else entity.category
+            ),
             price=entity.price,
             description=entity.description,
             images=list(entity.images),
