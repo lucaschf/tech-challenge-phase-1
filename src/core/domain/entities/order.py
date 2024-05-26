@@ -3,10 +3,10 @@ from datetime import datetime
 from typing import List, Optional
 from uuid import UUID, uuid4
 
-from core.domain.entities.order_product import OrderProduct
-from core.domain.value_objects.order_status import OrderStatus
 from src.core.domain.base import AggregateRoot, AssertionConcern
+from src.core.domain.entities.order_product import OrderProduct
 from src.core.domain.exceptions.order_status_error import InvalidOrderStatusError
+from src.core.domain.value_objects.order_status import OrderStatus
 
 
 @dataclass(kw_only=True)

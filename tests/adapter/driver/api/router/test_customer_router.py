@@ -5,7 +5,7 @@ from fastapi.testclient import TestClient
 
 from src.adapter.driver.api.schemas import CustomerCreationIn
 from tests.factories import CPFProvider
-from tests.factories.adpter.driver.api.schemas import CustomerCreationInFactory
+from tests.factories.adapter.driver.api.schemas import CustomerCreationInFactory
 
 
 def test_create_customer_should_create(client: TestClient) -> None:

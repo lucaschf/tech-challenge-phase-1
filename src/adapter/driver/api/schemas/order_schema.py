@@ -38,7 +38,7 @@ class OrderIn(BaseModel):
     user_id: UUID = Field(description="The user ID")
     products: List[OrderProductIn] = Field(description="List of products in the order")
 
-    model_config = ConfigDict(str_strip_whitespace=True)
+    model_config = ConfigDict(str_strip_whitespace=True, arbitrary_types_allowed=True)
 
 
 class OrderOut(OrderIn):
@@ -67,4 +67,4 @@ class OrderStatusUpdate(BaseModel):
 
     status: OrderStatus = Field(description="The new status of the order")
 
-    model_config = ConfigDict(str_strip_whitespace=True)
+    model_config = ConfigDict(str_strip_whitespace=True, arbitrary_types_allowed=True)
