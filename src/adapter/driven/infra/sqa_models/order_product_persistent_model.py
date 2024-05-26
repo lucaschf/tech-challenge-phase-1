@@ -1,18 +1,16 @@
 from sqlalchemy import Column, ForeignKey, Integer, String
-from sqlalchemy.dialects.postgresql import UUID as SA_UUID
 from sqlalchemy.orm import relationship
 
-from src.adapter.driven.infra.config.database import Base
 from src.core.domain.entities.order_product import OrderProduct as OrderProductEntity
 
+from ..sqa_models.persistent_model import PersistentModel
 
-class OrderProductPersistentModel(Base):
+
+class OrderProductPersistentModel(PersistentModel):
     """SQLAlchemy model for persisting OrderProduct entities."""
 
     __tablename__ = "order_products"
 
-    id = Column(Integer, primary_key=True, index=True)
-    uuid = Column(SA_UUID(as_uuid=True), unique=True, index=True, nullable=False)
     order_id = Column(ForeignKey("orders.id"), nullable=False)
     product_id = Column(String, nullable=False)
     quantity = Column(Integer, nullable=False)

@@ -1,23 +1,18 @@
-from sqlalchemy import Column, DateTime, Enum, Integer, String
-from sqlalchemy.dialects.postgresql import UUID as SA_UUID
+from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
 
-from src.adapter.driven.infra.config.database import Base
 from src.core.domain.entities.order import Order as OrderEntity
-from src.core.domain.value_objects.order_status import OrderStatus
+
+from ..sqa_models.persistent_model import PersistentModel
 
 
-class OrderPersistentModel(Base):
+class OrderPersistentModel(PersistentModel):
     """SQLAlchemy model for persisting Order entities."""
 
     __tablename__ = "orders"
 
-    id = Column(Integer, primary_key=True, index=True)
-    uuid = Column(SA_UUID(as_uuid=True), unique=True, index=True, nullable=False)
     user_id = Column(String, nullable=False)
-    status = Column(Enum(OrderStatus), nullable=False)
-    created_at = Column(DateTime, nullable=False)
-    updated_at = Column(DateTime, nullable=False)
+    status = Column(String, nullable=False)
     products = relationship("OrderProductPersistentModel", back_populates="order")
 
     def to_entity(self) -> OrderEntity:
