@@ -15,7 +15,7 @@ def test_customer_creation_successful() -> None:
     cpf = CPF(CPFProvider.generate_cpf_number())
     email = Email("john.doe@example.com")
 
-    customer = Customer(name, cpf, email)
+    customer = Customer(name=name, cpf=cpf, email=email)
 
     assert customer.name == name
     assert customer.cpf == cpf
@@ -32,9 +32,17 @@ def test_customer_creation_with_id_uuid_timestamps() -> None:
     created_at = datetime.now()
     updated_at = datetime.now()
 
-    customer = Customer(name, cpf, email, _id, uuid, created_at, updated_at)
+    customer = Customer(
+        name=name,
+        cpf=cpf,
+        email=email,
+        _id=_id,
+        uuid=uuid,
+        created_at=created_at,
+        updated_at=updated_at,
+    )
 
-    assert customer.id == _id
+    assert customer._id == _id
     assert customer.uuid == uuid
     assert customer.created_at == created_at
     assert customer.updated_at == updated_at
@@ -45,7 +53,7 @@ def test_customer_creation_with_missing_name(name: str | None) -> None:
     cpf_str = CPFProvider.generate_cpf_number()
 
     with pytest.raises(DomainError) as exec_info:
-        Customer(name, CPF(cpf_str), Email("john.doe@example.com"))
+        Customer(name=name, cpf=CPF(cpf_str), email=Email("john.doe@example.com"))
 
     assert exec_info.value.message == "Name is required"
 
@@ -53,9 +61,9 @@ def test_customer_creation_with_missing_name(name: str | None) -> None:
 def test_customer_creation_with_missing_cpf() -> None:
     with pytest.raises(DomainError) as exec_info:
         Customer(
-            "John Doe",
-            None,  # type: ignore
-            Email("john.doe@example.com"),
+            name="John Doe",
+            cpf=None,  # type: ignore
+            email=Email("john.doe@example.com"),
         )
 
     assert exec_info.value.message == "CPF is required"
@@ -64,9 +72,9 @@ def test_customer_creation_with_missing_cpf() -> None:
 def test_customer_creation_with_missing_email() -> None:
     with pytest.raises(DomainError) as exec_info:
         Customer(
-            "John Doe",
-            CPF(CPFProvider.generate_cpf_number()),
-            None,  # type: ignore
+            name="John Doe",
+            cpf=CPF(CPFProvider.generate_cpf_number()),
+            email=None,  # type: ignore
         )
 
     assert exec_info.value.message == "Email is required"

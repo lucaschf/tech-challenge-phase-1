@@ -1,31 +1,17 @@
 from abc import ABC, abstractmethod
+from dataclasses import dataclass, field
 from datetime import datetime
 from uuid import UUID
 
 
-class AggregateRoot(ABC):  # noqa: B024
+@dataclass(kw_only=True)
+class AggregateRoot(ABC):
     """Base class for aggregate roots."""
 
-    def __init__(
-        self,
-        _id: int | None = None,
-        uuid: UUID | None = None,
-        created_at: datetime | None = None,
-        updated_at: datetime | None = None,
-    ) -> None:
-        self.id = _id
-        """The aggregate root ID."""
-
-        self.uuid = uuid
-        """The aggregate root UUID used in external systems."""
-
-        self.created_at = created_at
-        """The aggregate root creation date and time."""
-
-        self.updated_at = updated_at
-        """The aggregate root last update date and time."""
-
-        self.validate()
+    _id: int | None = field(default=None)
+    uuid: UUID | None = field(default=None)
+    created_at: datetime | None = field(default=None)
+    updated_at: datetime | None = field(default=None)
 
     @abstractmethod
     def validate(self) -> None:
@@ -35,6 +21,9 @@ class AggregateRoot(ABC):  # noqa: B024
            DomainError: If the validation fails.
         """
         pass
+
+    def __post_init__(self) -> None:
+        self.validate()
 
 
 __all__ = ["AggregateRoot"]
