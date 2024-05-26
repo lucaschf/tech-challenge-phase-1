@@ -11,11 +11,11 @@ class ProductPersistentModel(PersistentModel):
 
     __tablename__ = "products"
 
-    name: Mapped[str] = Column(String(100), nullable=False)
+    name: Mapped[str] = Column(String(100), nullable=False, unique=True)
     category: Mapped[str] = Column(String(100), nullable=False)
     price: Mapped[float] = Column(Float, nullable=False)
-    description: Mapped[str] = Column(String(255), nullable=True)
-    images: Mapped[List[str]] = Column(ARRAY(String), nullable=True)
+    description: Mapped[str] = Column(String(255), nullable=False)
+    images: Mapped[List[str]] = Column(ARRAY(String), nullable=False)
 
 
 __all__ = ["ProductPersistentModel"]
