@@ -18,6 +18,7 @@ from src.core.domain.repositories import CustomerRepository
 from src.core.domain.repositories.order_repository import OrderRepository
 from src.core.domain.repositories.product_repository import ProductRepository
 
+from ...driven.infra.repositories.order_repository_impl import SQLAlchemyOrderRepository
 from .controllers import ProductController
 
 
@@ -101,7 +102,7 @@ class AppModule(Module):
 
     @provider
     def provide_order_repository(self, session: Session = Depends()) -> OrderRepository:  # noqa: B008
-        return OrderRepository(session)
+        return SQLAlchemyOrderRepository(session)
 
     @provider
     def provide_checkout_use_case(
