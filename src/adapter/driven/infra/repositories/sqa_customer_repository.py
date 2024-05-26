@@ -2,7 +2,6 @@ from sqlalchemy import or_, select
 from sqlalchemy.orm import Session
 
 from src.adapter.driven.infra.sqa_models import CustomerPersistentModel
-from src.core.domain.base import DomainError
 from src.core.domain.entities.customer import Customer
 from src.core.domain.repositories import CustomerRepository
 from src.core.domain.value_objects import CPF, Email
@@ -31,9 +30,6 @@ class SQACustomerRepository(CustomerRepository):
         Raises:
            DomainError: If both CPF and email are not provided.
         """
-        if not cpf and not email:
-            raise DomainError(message="CPF and email are required to check if a customer exists")
-
         query = select(CustomerPersistentModel).where(
             or_(
                 CustomerPersistentModel.cpf == cpf.number,

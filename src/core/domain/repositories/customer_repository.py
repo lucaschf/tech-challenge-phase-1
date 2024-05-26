@@ -18,7 +18,6 @@ class CustomerRepository(ABC):
         Returns:
             bool: True if the customer exists, False otherwise.
         """
-        pass
 
     @abstractmethod
     def get_by_cpf(self, cpf: CPF) -> Customer | None:
@@ -30,7 +29,6 @@ class CustomerRepository(ABC):
         Returns:
             Customer: The customer data if found, None otherwise.
         """
-        pass
 
     @abstractmethod
     def add(self, customer: Customer) -> Customer:
@@ -42,7 +40,6 @@ class CustomerRepository(ABC):
         Returns:
            Customer: The added customer data.
         """
-        pass
 
 
 __all__ = ["CustomerRepository"]
