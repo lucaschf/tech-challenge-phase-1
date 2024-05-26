@@ -1,10 +1,10 @@
-from datetime import datetime
-from uuid import UUID
+from dataclasses import dataclass
 
 from src.core.domain.base import AggregateRoot, AssertionConcern
 from src.core.domain.value_objects.category import Category
 
 
+@dataclass(kw_only=True)
 class Product(AggregateRoot):
     """Represents a product in the system.
 
@@ -16,27 +16,11 @@ class Product(AggregateRoot):
     images: The product's images.
     """
 
-    def __init__(
-        self,
-        name: str,
-        category: Category,
-        price: float,
-        description: str,
-        images: list[str],
-        _id: int | None = None,
-        uuid: UUID | None = None,
-        created_at: datetime | None = None,
-        updated_at: datetime | None = None,
-    ) -> None:
-        """Initializes a new Product instance."""
-        self.name = name
-        self.category = category
-        self.price = price
-        self.description = description
-        self.images = images
-
-        super().__init__(_id, uuid, created_at, updated_at)
-        self.validate()
+    name: str
+    category: Category
+    price: float
+    description: str
+    images: list[str]
 
     def validate(self) -> None:
         """Validates the product's attributes.
