@@ -24,14 +24,18 @@ class PersistentModel(DeclarativeBase):
     id: Mapped[int] = Column(Integer, primary_key=True)
     """An auto-incrementing integer primary key."""
 
-    uuid: Mapped[UUID] = Column(PG_UUID(as_uuid=True), default=uuid4, unique=True, index=True)
+    uuid: Mapped[UUID] = Column(
+        PG_UUID(as_uuid=True), default=uuid4, unique=True, index=True, nullable=False
+    )
     """A UUID field with a default value generated using `uuid4`."""
 
-    created_at: Mapped[datetime] = Column(DateTime(timezone=True), server_default=func.now())
+    created_at: Mapped[datetime] = Column(
+        DateTime(timezone=True), server_default=func.now(), nullable=False
+    )
     """A DateTime field with the current timestamp when an instance is created."""
 
     updated_at: Mapped[datetime] = Column(
-        DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
+        DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False
     )
     """A DateTime field with the current timestamp when an instance is updated."""
 

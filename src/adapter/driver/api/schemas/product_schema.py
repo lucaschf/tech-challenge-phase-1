@@ -12,9 +12,11 @@ from src.core.domain.value_objects.category import Category
 class _BaseProduct(BaseModel):
     name: str = Field(description="The product name", min_length=1, max_length=100)
     category: CategoryStr = Field(description="The product category")
-    price: float = Field(description="The product price")
-    description: str = Field(description="The product description", max_length=255)
-    images: List[str] = Field(description="List of image URLs for the product")
+    price: float = Field(description="The product price", gt=0)
+    description: str = Field(description="The product description", max_length=255, min_length=10)
+    images: List[str] = Field(
+        description="List of image URLs for the product", min_items=1, max_items=50
+    )
 
 
 class ProductCreationIn(_BaseProduct):

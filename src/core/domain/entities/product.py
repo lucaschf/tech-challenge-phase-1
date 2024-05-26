@@ -39,6 +39,9 @@ class Product(AggregateRoot):
         AssertionConcern.assert_argument_not_empty(self.description, "Description is required")
         AssertionConcern.assert_argument_not_null(self.images, "Images are required")
         AssertionConcern.assert_argument_not_empty(self.images, "Images are required")
+        AssertionConcern.assert_argument_greater_than_zero(
+            self.price, "Price must be greater than zero"
+        )
 
 
 __all__ = ["Product"]
