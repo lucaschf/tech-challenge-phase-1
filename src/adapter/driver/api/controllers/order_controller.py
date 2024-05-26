@@ -23,5 +23,11 @@ class OrderController:
 
         return OrderOut.model_validate(*created_out.__dict__)
 
+    def get_orders(self) -> list[OrderOut]:
+        """Get all orders."""
+        orders: list[Order] = self._order_use_case.get_orders()
+
+        return [OrderOut.model_validate(*order.__dict__) for order in orders]
+
 
 __all__ = ["OrderController"]

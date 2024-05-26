@@ -17,5 +17,13 @@ class OrderRepository(ABC):
             Order: The added order data.
         """
 
+    @abstractmethod
+    def get_all(self) -> list[Order]:
+        """Get all orders in the database.
+
+        Returns:
+            list[Order]: A list of Order objects.
+        """
+
 
 __all__ = ["OrderRepository"]

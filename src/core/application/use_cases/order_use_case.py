@@ -18,5 +18,13 @@ class OrderUseCase(ABC):
             Order: An Order object representing the newly created order.
         """
 
+    @abstractmethod
+    def get_orders(self) -> list[Order]:
+        """Get all orders in the system.
+
+        Returns:
+            list[Order]: A list of Order objects.
+        """
+
 
 __all__ = ["OrderUseCase"]

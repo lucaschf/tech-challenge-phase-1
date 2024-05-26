@@ -16,7 +16,7 @@ router = APIRouter(tags=["Order"], prefix="/order")
     responses={400: {"model": HttpErrorOut}},
     description="Creates a new order in the system.",
 )
-def create_customer(
+def create_order(
     response: Response,
     inputs: OrderCreationIn,
     controller: OrderController = Depends(  # noqa: B008
@@ -26,6 +26,20 @@ def create_customer(
     order = controller.create_order(inputs)
     response.headers["Location"] = f"{router.prefix}/{order.uuid}"
     return order
+
+
+@router.get(
+    "/",
+    status_code=HTTPStatus.OK,
+    responses={400: {"model": HttpErrorOut}},
+    description="Get all orders in the system.",
+)
+def get_orders(
+    controller: OrderController = Depends(  # noqa: B008
+        lambda: injector.get(OrderController)
+    ),
+) -> list[OrderOut]:
+    return controller.get_orders()
 
 
 __all__ = ["router"]

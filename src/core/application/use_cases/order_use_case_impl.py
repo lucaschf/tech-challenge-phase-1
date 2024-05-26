@@ -33,7 +33,7 @@ class OrderUseCaseImpl(OrderUseCase):
         customer = self._customer_repository.get_by_cpf(cpf)
 
         if not customer:
-            raise CustomerNotFoundError(cpf=order_data.customer_cpf.number)
+            raise CustomerNotFoundError(cpf=order_data.customer_cpf)
 
         order_items = []
 
@@ -50,3 +50,14 @@ class OrderUseCaseImpl(OrderUseCase):
         )
 
         return self._order_repository.add(order)
+
+    def get_orders(self) -> list[Order]:
+        """Get all orders in the system.
+
+        Returns:
+            list[Order]: A list of Order objects.
+        """
+        return self._order_repository.get_all()
+
+
+__all__ = ["OrderUseCaseImpl"]
