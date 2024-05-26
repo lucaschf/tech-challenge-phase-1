@@ -7,7 +7,7 @@ from tests.factories.adapter.driver.api.schemas import OrderInFactory
 def test_checkout(client: TestClient) -> None:
     order_data: OrderIn = OrderInFactory()
 
-    response = client.post("/orders/checkout", json=order_data.model_dump())
+    response = client.post("/api/orders/checkout", json=order_data.model_dump(mode="json"))
 
     assert response.status_code == 201
     assert response.json()["user_id"] == str(order_data.user_id)
@@ -17,9 +17,9 @@ def test_checkout(client: TestClient) -> None:
 
 def test_list_orders(client: TestClient) -> None:
     order_data: OrderIn = OrderInFactory()
-    client.post("/orders/checkout", json=order_data.model_dump())
+    client.post("/api/orders/checkout", json=order_data.model_dump(mode="json"))
 
-    response = client.get("/orders")
+    response = client.get("/api/orders")
 
     assert response.status_code == 200
     assert len(response.json()) > 0
@@ -29,7 +29,7 @@ def test_list_orders(client: TestClient) -> None:
 
 def test_update_order_status(client: TestClient) -> None:
     order_data: OrderIn = OrderInFactory()
-    create_response = client.post("/orders/checkout", json=order_data.model_dump())
+    create_response = client.post("/api/orders/checkout", json=order_data.model_dump(mode="json"))
     order_id = create_response.json()["id"]
 
     update_response = client.put(f"/orders/{order_id}/status", json={"status": "completed"})

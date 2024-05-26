@@ -7,7 +7,7 @@ from src.adapter.driver.api.controllers.order_controller import OrderController
 from src.adapter.driver.api.dependencies import injector
 from src.adapter.driver.api.schemas.order_schema import OrderIn, OrderOut, OrderStatusUpdate
 
-router = APIRouter(tags=["Order"])
+router = APIRouter(tags=["Order"], prefix="/orders")
 
 
 @router.post("/checkout", response_model=OrderOut)
@@ -20,7 +20,7 @@ def checkout(
     return OrderOut.from_entity(order)
 
 
-@router.get("/orders", response_model=List[OrderOut])
+@router.get("/", response_model=List[OrderOut])
 def list_orders(
     controller: OrderController = Depends(lambda: injector.get(OrderController)),  # noqa: B008
 ) -> List[OrderOut]:
@@ -29,7 +29,7 @@ def list_orders(
     return [OrderOut.from_entity(order) for order in orders]
 
 
-@router.put("/orders/{order_id}/status", response_model=OrderOut)
+@router.put("/{order_id}/status", response_model=OrderOut)
 def update_order_status(
     order_id: UUID,
     status_update: OrderStatusUpdate,
