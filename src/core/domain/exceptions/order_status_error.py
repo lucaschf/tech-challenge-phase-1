@@ -1,4 +1,7 @@
-class InvalidOrderStatusError(Exception):
+from src.core.domain.base import DomainError
+
+
+class InvalidOrderStatusError(DomainError):
     """Exception raised for invalid order status.
 
     Attributes:
@@ -7,9 +10,8 @@ class InvalidOrderStatusError(Exception):
     """
 
     def __init__(self, status: str, message: str = "Invalid order status") -> None:
+        super().__init__(message)
         self.status = status
-        self.message = message
-        super().__init__(self.message)
 
     def __str__(self) -> str:
         return f"{self.status} -> {self.message}"
