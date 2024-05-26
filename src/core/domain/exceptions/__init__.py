@@ -14,6 +14,7 @@ from .cpf_error import InvalidCpfError
 from .customer_error import CustomerNotFoundError
 from .email_error import InvalidEmailError
 from .not_found_error import NotFoundError
+from .product_error import ProductNotFoundError
 
 __all__ = [
     "CustomerNotFoundError",
@@ -21,4 +22,5 @@ __all__ = [
     "InvalidCpfError",
     "InvalidEmailError",
     "NotFoundError",
+    "ProductNotFoundError",
 ]

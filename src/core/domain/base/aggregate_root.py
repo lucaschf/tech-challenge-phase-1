@@ -13,6 +13,11 @@ class AggregateRoot(ABC):
     created_at: datetime | None = field(default=None)
     updated_at: datetime | None = field(default=None)
 
+    @property
+    def id(self) -> int:
+        """Get the aggregate root's ID."""
+        return self._id
+
     @abstractmethod
     def validate(self) -> None:
         """Validate the aggregate root.

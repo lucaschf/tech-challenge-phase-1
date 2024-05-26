@@ -7,7 +7,14 @@ They provide a high-level API for SQL operations, abstracting the underlying dat
 """
 
 from .customer_persistent_model import CustomerPersistentModel
+from .order_persistent_model import OrderItemPersistentModel, OrderPersistentModel
 from .persistent_model import PersistentModel
 from .product_persistent_model import ProductPersistentModel
 
-__all__ = ["CustomerPersistentModel", "PersistentModel", "ProductPersistentModel"]
+__all__ = [
+    "CustomerPersistentModel",
+    "OrderItemPersistentModel",
+    "OrderPersistentModel",
+    "PersistentModel",
+    "ProductPersistentModel",
+]

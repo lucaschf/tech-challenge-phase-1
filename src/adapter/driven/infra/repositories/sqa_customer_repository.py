@@ -59,7 +59,7 @@ class SQACustomerRepository(CustomerRepository):
         self._session.add(db_customer)
         self._session.commit()
 
-        customer.id = db_customer.id
+        customer._id = db_customer.id
         customer.created_at = db_customer.created_at
         customer.updated_at = db_customer.updated_at
         customer.uuid = db_customer.uuid

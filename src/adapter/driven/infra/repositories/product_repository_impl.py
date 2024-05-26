@@ -44,7 +44,7 @@ class SQLAlchemyProductRepository(ProductRepository):
         with self._session as session:
             session.add(db_product)
             session.commit()
-            product.id = db_product.id
+            product._id = db_product.id
             product.created_at = db_product.created_at
             product.updated_at = db_product.updated_at
             product.uuid = db_product.uuid
@@ -121,3 +121,20 @@ class SQLAlchemyProductRepository(ProductRepository):
                 select(ProductPersistentModel).where(ProductPersistentModel.category == category)
             )
             return result.scalars().all()
+
+    def get_by_uuid(self, product_uuid: UUID) -> Product:
+        """Retrieves a product by its UUID.
+
+        Args:
+            product_uuid (UUID): The UUID of the product to retrieve.
+
+        Returns:
+            Product: The product with the specified UUID.
+        """
+        result = self._session.execute(
+            select(ProductPersistentModel).where(ProductPersistentModel.uuid == product_uuid)
+        )
+        return result.scalar_one()
+
+
+__all__ = ["SQLAlchemyProductRepository"]

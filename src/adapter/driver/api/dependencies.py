@@ -9,11 +9,15 @@ from src.adapter.driven.infra.repositories.product_repository_impl import (
 )
 from src.adapter.driver.api.controllers import CustomerController
 from src.core.application.use_cases import CustomerUseCase, CustomerUseCaseImpl
+from src.core.application.use_cases.order_use_case import OrderUseCase
+from src.core.application.use_cases.order_use_case_impl import OrderUseCaseImpl
 from src.core.application.use_cases.product_use_case import ProductUseCase
-from src.core.domain.repositories import CustomerRepository
+from src.core.domain.repositories import CustomerRepository, OrderRepository
 from src.core.domain.repositories.product_repository import ProductRepository
 
+from ...driven.infra.repositories.sqa_order_repository import SQAOrderRepository
 from .controllers import ProductController
+from .controllers.order_controller import OrderController
 
 
 class AppModule(Module):
@@ -93,6 +97,45 @@ class AppModule(Module):
         It depends on a ProductUseCase, which is injected by FastAPI's "Depends" mechanism.
         """
         return ProductController(product_use_case)
+
+    @provider
+    def provide_order_repository(
+        self,
+        session: Session = Depends(),  # noqa: B008
+    ) -> OrderRepository:
+        """Provides an OrderRepository instance.
+
+        It depends on an SQLAlchemy session, which is injected by FastAPI's "Depends" mechanism.
+        """
+        return SQAOrderRepository(session)
+
+    @provider
+    def provide_order_use_case(
+        self,
+        order_repository: OrderRepository = Depends(),  # noqa: B008
+        product_repository: ProductRepository = Depends(),  # noqa: B008
+        customer_repository: CustomerRepository = Depends(),  # noqa: B008
+    ) -> OrderUseCase:
+        """Provides an OrderUseCase instance.
+
+        It depends on an OrderRepository, which is injected by FastAPI's "Depends" mechanism.
+        """
+        return OrderUseCaseImpl(
+            order_repository=order_repository,
+            customer_repository=customer_repository,
+            product_repository=product_repository,
+        )
+
+    @provider
+    def provide_order_controller(
+        self,
+        order_use_case: OrderUseCase = Depends(),  # noqa: B008
+    ) -> OrderController:
+        """Provides an OrderController instance.
+
+        It depends on an OrderUseCase, which is injected by FastAPI's "Depends" mechanism.
+        """
+        return OrderController(order_use_case)
 
 
 def configure_injector(binder) -> None:  # noqa: ANN001
