@@ -3,7 +3,7 @@ from dataclasses import dataclass, field
 from src.core.domain.base import AggregateRoot, AssertionConcern
 
 from .customer import Customer
-from .enums import OrderStatus
+from .enums import OrderStatus, PaymentMethod
 from .product import Product
 
 
@@ -28,6 +28,7 @@ class Order(AggregateRoot):
     customer: Customer
     items: list[OrderItem]
     status: OrderStatus = field(default=OrderStatus.CREATED)
+    payment_method: PaymentMethod = field(default=PaymentMethod.MERCADO_PAGO)
     total_price: float = field(init=False)
 
     def __post_init__(self) -> None:
