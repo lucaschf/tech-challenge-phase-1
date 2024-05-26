@@ -24,7 +24,7 @@ def test_update_product(client: TestClient) -> None:
         "images": ["http://example.com/sandwich.jpg"],
     }
     create_response = client.post("/api/products", json=product_data)
-    product_id = create_response.json()["uuid"]
+    product_uuid = create_response.json()["uuid"]
 
     updated_product_data = {
         "name": "Updated Sandwich",
@@ -33,7 +33,8 @@ def test_update_product(client: TestClient) -> None:
         "description": "An updated delicious sandwich",
         "images": ["http://example.com/updated_sandwich.jpg"],
     }
-    update_response = client.put(f"/api/products/{product_id}", json=updated_product_data)
+    update_response = client.put(f"/api/products/{product_uuid}", json=updated_product_data)
+
     assert update_response.status_code == 200
     assert update_response.json()["name"] == updated_product_data["name"]
 

@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import List
+from uuid import UUID
 
 from src.core.domain.entities.product import Product
 
@@ -23,11 +24,11 @@ class ProductRepository(ABC):
         pass
 
     @abstractmethod
-    def update(self, product_id: int, product: Product) -> Product:
+    def update(self, product_uuid: UUID, product: Product) -> Product:
         """Updates an existing product in the repository.
 
         Args:
-            product_id (int): The ID of the product to be updated.
+            product_uuid (UUID): The ID of the product to be updated.
             product (Product): The product data to update.
 
         Returns:
@@ -36,11 +37,11 @@ class ProductRepository(ABC):
         pass
 
     @abstractmethod
-    def delete(self, product_id: int) -> None:
+    def delete(self, product_uuid: UUID) -> None:
         """Deletes a product from the repository.
 
         Args:
-            product_id (int): The ID of the product to be deleted.
+            product_uuid (UUID): The ID of the product to be deleted.
 
         Returns:
             None

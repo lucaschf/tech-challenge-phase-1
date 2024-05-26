@@ -42,7 +42,7 @@ class ProductOut(ProductCreationIn):
             ),
             price=entity.price,
             description=entity.description,
-            images=list(entity.images),
+            images=entity.images,
             uuid=entity.uuid,
             created_at=entity.created_at,
             updated_at=entity.updated_at,
