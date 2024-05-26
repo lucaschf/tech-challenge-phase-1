@@ -1,4 +1,7 @@
-class InvalidCategoryError(Exception):
+from src.core.domain.base import DomainError
+
+
+class InvalidCategoryError(DomainError):
     """Exception raised for invalid product category.
 
     Attributes:
@@ -7,9 +10,8 @@ class InvalidCategoryError(Exception):
     """
 
     def __init__(self, category: str, message: str = "Invalid category") -> None:
+        super().__init__(message)
         self.category = category
-        self.message = message
-        super().__init__(self.message)
 
     def __str__(self) -> str:
         return f"{self.category} -> {self.message}"
