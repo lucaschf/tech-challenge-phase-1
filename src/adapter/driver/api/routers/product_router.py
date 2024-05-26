@@ -19,21 +19,21 @@ def create_product(
     return controller.create_product(product)
 
 
-@router.put("/products/{product_id}", response_model=ProductOut)
+@router.put("/products/{product_uuid}", response_model=ProductOut)
 def update_product(
-    product_id: UUID,
+    product_uuid: UUID,
     product: ProductCreationIn,
     controller: ProductController = Depends(lambda: injector.get(ProductController)),  # noqa: B008
 ) -> ProductOut:
-    return controller.update_product(product_id, product)
+    return controller.update_product(product_uuid, product)
 
 
-@router.delete("/products/{product_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/products/{product_uuid}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_product(
-    product_id: UUID,
+    product_uuid: UUID,
     controller: ProductController = Depends(lambda: injector.get(ProductController)),  # noqa: B008
 ) -> None:
-    controller.delete_product(product_id)
+    controller.delete_product(product_uuid)
 
 
 @router.get("/products", response_model=List[ProductOut])

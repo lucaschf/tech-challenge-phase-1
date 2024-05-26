@@ -1,4 +1,5 @@
 from typing import List
+from uuid import UUID
 
 from src.core.domain.entities.product import Product
 from src.core.domain.repositories.product_repository import ProductRepository
@@ -29,28 +30,28 @@ class ProductUseCase:
         """
         return self.repository.create(product)
 
-    def update_product(self, product_id: int, product: Product) -> Product:
+    def update_product(self, product_uuid: UUID, product: Product) -> Product:
         """Updates an existing product.
 
         Args:
-            product_id (int): The ID of the product to be updated.
+            product_uuid (int): The ID of the product to be updated.
             product (Product): The product data to update.
 
         Returns:
             Product: The updated product.
         """
-        return self.repository.update(product_id, product)
+        return self.repository.update(product_uuid, product)
 
-    def delete_product(self, product_id: int) -> None:
+    def delete_product(self, product_uuid: UUID) -> None:
         """Deletes a product.
 
         Args:
-            product_id (int): The ID of the product to be deleted.
+            product_uuid (int): The ID of the product to be deleted.
 
         Returns:
             None
         """
-        self.repository.delete(product_id)
+        self.repository.delete(product_uuid)
 
     def get_products_by_category(self, category: str) -> List[Product]:
         """Retrieves products by category.

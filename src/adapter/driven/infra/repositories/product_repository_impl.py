@@ -36,7 +36,7 @@ class SQLAlchemyProductRepository(ProductRepository):
         """
         db_product = ProductPersistentModel(
             name=product.name,
-            category=product.category,
+            category=product.category.category,
             price=product.price,
             description=product.description,
             images=product.images,

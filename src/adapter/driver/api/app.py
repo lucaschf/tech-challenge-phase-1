@@ -1,3 +1,4 @@
+import traceback
 from http import HTTPStatus
 from typing import Callable, Coroutine
 
@@ -66,6 +67,7 @@ def handle_error(e: Exception) -> Response:
             content={"detail": e.message},
         )
 
+    traceback.print_exc()
     return JSONResponse(
         status_code=HTTPStatus.INTERNAL_SERVER_ERROR,
         content={"detail": "Internal server error."},
