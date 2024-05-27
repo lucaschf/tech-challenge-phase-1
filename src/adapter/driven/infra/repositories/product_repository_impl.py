@@ -121,3 +121,33 @@ class SQLAlchemyProductRepository(ProductRepository):
                 select(ProductPersistentModel).where(ProductPersistentModel.category == category)
             )
             return result.scalars().all()
+
+    def get_by_name(self, name: str) -> Product | None:
+        """Retrieves a product by its name.
+
+        Args:
+            name (str): The name of the product to retrieve.
+
+        Returns:
+            Product: The product with the specified name.
+        """
+        result = (
+            self._session.query(ProductPersistentModel)
+            .filter(ProductPersistentModel.name.ilike(name))
+            .first()
+        )
+
+        if result is None:
+            return None
+
+        return Product(
+            _id=result.id,
+            uuid=result.uuid,
+            name=result.name,
+            category=Category(result.category),
+            price=result.price,
+            description=result.description,
+            images=result.images,
+            created_at=result.created_at,
+            updated_at=result.updated_at,
+        )

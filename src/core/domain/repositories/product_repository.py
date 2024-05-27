@@ -59,3 +59,14 @@ class ProductRepository(ABC):
             List[Product]: A list of products in the specified category.
         """
         pass
+
+    @abstractmethod
+    def get_by_name(self, name: str) -> Product | None:
+        """Retrieves a product by its name.
+
+        Args:
+            name (str): The name of the product to retrieve.
+
+        Returns:
+            Product: The product with the specified name.
+        """

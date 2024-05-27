@@ -1,6 +1,7 @@
 from typing import List
 from uuid import UUID
 
+from src.core.domain.base import DomainError
 from src.core.domain.entities.product import Product
 from src.core.domain.repositories.product_repository import ProductRepository
 
@@ -28,6 +29,9 @@ class ProductUseCase:
         Returns:
             Product: The created product with its ID and other persistence details populated.
         """
+        if self.repository.get_by_name(product.name):
+            raise DomainError(message="Product already exists")
+
         return self.repository.create(product)
 
     def update_product(self, product_uuid: UUID, product: Product) -> Product:
@@ -40,6 +44,10 @@ class ProductUseCase:
         Returns:
             Product: The updated product.
         """
+        db_product = self.repository.get_by_name(product.name)
+        if db_product and db_product.uuid != product_uuid:
+            raise DomainError(message="Product already exists")
+
         return self.repository.update(product_uuid, product)
 
     def delete_product(self, product_uuid: UUID) -> None:
