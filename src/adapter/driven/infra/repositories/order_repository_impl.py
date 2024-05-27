@@ -35,36 +35,27 @@ class SQLAlchemyOrderRepository(OrderRepository):
             order (Order): The order to be created.
 
         Returns:
-            Order: The created order with its ID and other persistence details populated.
+            Order: The created order with its uuid and other persistence details populated.
         """
-        db_order = OrderPersistentModel(
-            user_id=order.user_id,
-            status=order.status,
-            created_at=order.created_at,
-            updated_at=order.updated_at,
-        )
+        db_order = OrderPersistentModel.from_entity(order)
         with self._session as session:
             session.add(db_order)
-            session.flush()  # Ensures the order gets an ID before adding products
+            session.flush()
             for product in order.products:
                 db_order_product = OrderProductPersistentModel(
-                    order_id=db_order.id,
-                    product_id=product.product_id,
+                    order_uuid=db_order.uuid,
+                    product_uuid=product.product_uuid,
                     quantity=product.quantity,
                 )
                 session.add(db_order_product)
             session.commit()
-            order.id = db_order.id
-            order.created_at = db_order.created_at
-            order.updated_at = db_order.updated_at
-            order.uuid = db_order.uuid
-            return order
+            return db_order.to_entity()
 
     def update_status(self, order_uuid: UUID, status: OrderStatus) -> Order:
         """Updates the status of an existing order in the repository.
 
         Args:
-            order_uuid (UUID): The ID of the order to be updated.
+            order_uuid (UUID): The uuid of the order to be updated.
             status (OrderStatus): The new status for the order.
 
         Returns:

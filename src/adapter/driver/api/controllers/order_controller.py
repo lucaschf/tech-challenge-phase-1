@@ -28,9 +28,9 @@ class OrderController:
     def checkout(self, order_in: OrderIn) -> OrderOut:
         """Registers a new order in the system from the provided order data."""
         order = self.checkout_use_case.checkout(
-            order_in.user_id,
+            order_in.user_uuid,
             [
-                OrderProduct(product_id=product.product_id, quantity=product.quantity)
+                OrderProduct(product_uuid=product.product_uuid, quantity=product.quantity)
                 for product in order_in.products
             ],
         )
@@ -41,7 +41,7 @@ class OrderController:
         orders = self.list_orders_use_case.list_orders()
         return [OrderOut.from_entity(order) for order in orders]
 
-    def update_order_status(self, order_id: UUID, status_update: OrderStatusUpdate) -> OrderOut:
+    def update_status(self, order_uuid: UUID, status_update: OrderStatusUpdate) -> OrderOut:
         """Update the status of an order in the system from the provided order ID and status."""
-        order = self.update_order_status_use_case.update_status(order_id, status_update.status)
+        order = self.update_order_status_use_case.update_status(order_uuid, status_update)
         return OrderOut.from_entity(order)

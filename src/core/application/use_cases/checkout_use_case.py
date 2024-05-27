@@ -16,15 +16,15 @@ class CheckoutUseCase:
         """
         self.repository = repository
 
-    def checkout(self, user_id: UUID, products: List[OrderProduct]) -> Order:
+    def checkout(self, user_uuid: UUID, products: List[OrderProduct]) -> Order:
         """Creates a new order.
 
         Args:
-            user_id (UUID): The ID of the user making the order.
+            user_uuid (UUID): The uuid of the user making the order.
             products (List[OrderProduct]): The list of products in the order.
 
         Returns:
-            Order: The created order with its ID and other persistence details populated.
+            Order: The created order with its uuid and other persistence details populated.
         """
-        order = Order(user_id=user_id, products=products)
+        order = Order(user_uuid=user_uuid, products=products)
         return self.repository.create(order)

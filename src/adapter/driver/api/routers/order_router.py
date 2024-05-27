@@ -29,12 +29,12 @@ def list_orders(
     return [OrderOut.from_entity(order) for order in orders]
 
 
-@router.put("/{order_id}/status", response_model=OrderOut)
+@router.put("/{order_uuid}/status", response_model=OrderOut)
 def update_order_status(
-    order_id: UUID,
+    order_uuid: UUID,
     status_update: OrderStatusUpdate,
     controller: OrderController = Depends(lambda: injector.get(OrderController)),  # noqa: B008
 ) -> OrderOut:
     """Update the status of an existing order."""
-    order = controller.update_status(order_id, status_update.status)
+    order = controller.update_status(order_uuid, status_update.status)
     return OrderOut.from_entity(order)

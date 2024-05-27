@@ -20,7 +20,7 @@ class OrderRepository(ABC):
             order (Order): The order to be created.
 
         Returns:
-            Order: The created order with its ID and other persistence details populated.
+            Order: The created order with its uuid and other persistence details populated.
         """
         pass
 
@@ -29,7 +29,7 @@ class OrderRepository(ABC):
         """Updates the status of an existing order in the repository.
 
         Args:
-            order_uuid (UUID): The ID of the order to be updated.
+            order_uuid (UUID): The uuid of the order to be updated.
             status (OrderStatus): The new status for the order.
 
         Returns:

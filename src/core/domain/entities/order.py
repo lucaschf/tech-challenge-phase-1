@@ -14,19 +14,19 @@ class Order(AggregateRoot):
     """Represents an order in the system.
 
     Attributes:
-    user_id: The UUID of the user who placed the order.
+    user_uuid: The UUID of the user who placed the order.
     products: The list of products in the order.
-    status: The current status of the order.
+    status: OrderStatus
     created_at: The timestamp when the order was created.
     updated_at: The timestamp when the order was last updated.
     """
 
-    user_id: UUID
+    user_uuid: UUID
     products: List[OrderProduct]
-    status: str = field(default="pending")
+    status: OrderStatus = field(default_factory=lambda: OrderStatus("pending"))
     created_at: datetime = field(default_factory=datetime.utcnow)
     updated_at: Optional[datetime] = field(default=None)
-    id: UUID = field(default_factory=uuid4)
+    uuid: UUID = field(default_factory=uuid4)
 
     def __post_init__(self):  # noqa: ANN204
         self.validate()
@@ -36,19 +36,19 @@ class Order(AggregateRoot):
     def validate(self) -> None:
         """Validates the order's attributes.
 
-        This method checks if the user_id, products, and status are valid.
+        This method checks if the user_uuid, products, and status are valid.
         If any of these conditions are not met, a DomainError will be raised with a relevant message.
 
         Raises:
             DomainError: If any of the order's attributes are invalid.
         """
-        AssertionConcern.assert_argument_not_null(self.user_id, "User ID is required")
+        AssertionConcern.assert_argument_not_null(self.user_uuid, "User uuid is required")
         AssertionConcern.assert_argument_not_null(self.products, "Products are required")
-        AssertionConcern.assert_argument_not_empty(self.products, "Products are required")
+        if isinstance(self.products, (list, tuple)):
+            AssertionConcern.assert_argument_not_empty(self.products, "Products are required")
         AssertionConcern.assert_argument_not_null(self.status, "Status is required")
-        AssertionConcern.assert_argument_not_empty(self.status, "Status is required")
         AssertionConcern.assert_argument_in_set(
-            self.status, OrderStatus.ALLOWED_STATUSES, "Invalid order status"
+            self.status.status, OrderStatus.ALLOWED_STATUSES, "Invalid order status"
         )
 
     def update_status(self, new_status: str) -> None:
@@ -60,9 +60,9 @@ class Order(AggregateRoot):
         Raises:
             InvalidOrderStatusError: If the new status is invalid.
         """
-        if not OrderStatus.is_valid(new_status):
+        if not OrderStatus._is_valid(new_status):
             raise InvalidOrderStatusError(status=new_status)
-        self.status = new_status
+        self.status = OrderStatus(new_status)
         self.updated_at = datetime.utcnow()
 
 

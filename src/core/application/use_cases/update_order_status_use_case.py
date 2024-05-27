@@ -16,14 +16,14 @@ class UpdateOrderStatusUseCase:
         """
         self.repository = repository
 
-    def update_status(self, order_id: UUID, status: OrderStatus) -> Order:
+    def update_status(self, order_uuid: UUID, status: OrderStatus) -> Order:
         """Updates the status of an existing order.
 
         Args:
-            order_id (UUID): The ID of the order to be updated.
+            order_uuid (UUID): The uuid of the order to be updated.
             status (OrderStatus): The new status for the order.
 
         Returns:
             Order: The updated order.
         """
-        return self.repository.update_status(order_id, status)
+        return self.repository.update_status(order_uuid, status)
