@@ -94,11 +94,4 @@ class SQLAlchemyOrderRepository(OrderRepository):
         if order is None:
             return None
 
-        return Order(
-            uuid=order.uuid,
-            status=order.status,
-            products=order.products,
-            created_at=order.created_at,
-            updated_at=order.updated_at,
-            user_uuid=order.user_uuid,
-        )
+        return order.to_entity()

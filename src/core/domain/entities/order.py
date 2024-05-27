@@ -28,11 +28,6 @@ class Order(AggregateRoot):
     updated_at: Optional[datetime] = field(default=None)
     uuid: UUID = field(default_factory=uuid4)
 
-    def __post_init__(self):  # noqa: ANN204
-        self.validate()
-        for product in self.products:
-            product.validate()
-
     def validate(self) -> None:
         """Validates the order's attributes.
 
@@ -63,7 +58,6 @@ class Order(AggregateRoot):
         if not OrderStatus._is_valid(new_status):
             raise InvalidOrderStatusError(status=new_status)
         self.status = OrderStatus(new_status)
-        self.updated_at = datetime.utcnow()
 
 
 __all__ = ["Order"]
