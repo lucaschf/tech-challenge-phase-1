@@ -16,7 +16,7 @@ def checkout(
     controller: OrderController = Depends(lambda: injector.get(OrderController)),  # noqa: B008
 ) -> OrderOut:
     """Process a fake checkout by adding selected products to the order queue."""
-    order = controller.checkout(order_in.products, order_in.user_id)
+    order = controller.checkout(order_in)
     return OrderOut.from_entity(order)
 
 

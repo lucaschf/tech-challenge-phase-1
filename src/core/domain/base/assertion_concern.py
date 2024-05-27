@@ -21,6 +21,23 @@ class AssertionConcern:
             raise DomainError(message)
 
     @classmethod
+    def assert_argument_in_set(
+        cls: "AssertionConcern", string_value: str, valid_set: set, message: str
+    ) -> None:
+        """Asserts that a string value is within a specified set.
+
+        Args:
+            string_value: The string value to be validated.
+            valid_set: The set of valid values.
+            message: The error message to raise if the validation fails.
+
+        Raises:
+            DomainError: If the string value is not in the valid set.
+        """
+        if string_value not in valid_set:
+            cls._assert(False, message)
+
+    @classmethod
     def assert_argument_length(
         cls: "AssertionConcern",
         string_value: str,
