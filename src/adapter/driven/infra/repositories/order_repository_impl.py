@@ -82,3 +82,23 @@ class SQLAlchemyOrderRepository(OrderRepository):
         with self._session as session:
             result = session.execute(select(OrderPersistentModel))
             return [row.to_entity() for row in result.scalars().all()]
+
+    def get_by_uuid(self, order_uuid: UUID) -> Order | None:
+        """Retrieves an order by its uuid."""
+        order = (
+            self._session.query(OrderPersistentModel)
+            .filter(OrderPersistentModel.uuid == order_uuid)
+            .first()
+        )
+
+        if order is None:
+            return None
+
+        return Order(
+            uuid=order.uuid,
+            status=order.status,
+            products=order.products,
+            created_at=order.created_at,
+            updated_at=order.updated_at,
+            user_uuid=order.user_uuid,
+        )

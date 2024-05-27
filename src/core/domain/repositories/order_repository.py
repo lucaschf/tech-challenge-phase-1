@@ -45,3 +45,15 @@ class OrderRepository(ABC):
             List[Order]: A list of all orders.
         """
         pass
+
+    @abstractmethod
+    def get_by_uuid(self, order_uuid: UUID) -> Order | None:
+        """Retrieves an order by its uuid.
+
+        Args:
+            order_uuid (UUID): The uuid of the order to retrieve.
+
+        Returns:
+            Order: The order with the given uuid.
+        """
+        pass

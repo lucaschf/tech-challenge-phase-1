@@ -1,6 +1,7 @@
 from uuid import UUID
 
 from src.core.domain.entities.order import Order
+from src.core.domain.exceptions import OrderNotFoundError
 from src.core.domain.repositories.order_repository import OrderRepository
 from src.core.domain.value_objects.order_status import OrderStatus
 
@@ -26,4 +27,9 @@ class UpdateOrderStatusUseCase:
         Returns:
             Order: The updated order.
         """
+        order = self.repository.get_by_uuid(order_uuid)
+
+        if not order:
+            raise OrderNotFoundError(order_uuid)
+
         return self.repository.update_status(order_uuid, status)
