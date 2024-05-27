@@ -2,7 +2,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from src.adapter.driver.api.schemas.product_schema import ProductCreationIn
-from tests.factories.adpter.driver.api.schemas import ProductCreationInFactory
+from tests.factories.adapter.driver.api.schemas import ProductCreationInFactory
 
 
 @pytest.mark.parametrize(
@@ -50,9 +50,9 @@ def test_delete_product(client: TestClient) -> None:
     # First, create a product to delete
     product_data: ProductCreationIn = ProductCreationInFactory()
     create_response = client.post("/api/products", json=product_data.model_dump())
-    product_id = create_response.json()["uuid"]
+    product_uuid = create_response.json()["uuid"]
 
-    delete_response = client.delete(f"/api/products/{product_id}")
+    delete_response = client.delete(f"/api/products/{product_uuid}")
 
     assert delete_response.status_code == 204
 

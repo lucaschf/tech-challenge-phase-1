@@ -5,7 +5,7 @@ from typing import Callable, Coroutine
 from fastapi import FastAPI, Request, Response
 from starlette.responses import JSONResponse
 
-from src.adapter.driver.api.routers import customer_router, product_router
+from src.adapter.driver.api.routers import customer_router, order_router, product_router
 from src.config import settings
 from src.core.domain.exceptions import DomainError, NotFoundError
 
@@ -76,6 +76,7 @@ def handle_error(e: Exception) -> Response:
 
 app.include_router(customer_router, prefix="/api")
 app.include_router(product_router, prefix="/api")
+app.include_router(order_router, prefix="/api")
 app.middleware("http")(_exception_middleware)
 
 

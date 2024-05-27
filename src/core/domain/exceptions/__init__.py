@@ -10,15 +10,21 @@ exception types, enhancing error handling and debugging processes.
 
 from src.core.domain.base import DomainError
 
+from .category_error import InvalidCategoryError
 from .cpf_error import InvalidCpfError
 from .customer_error import CustomerNotFoundError
 from .email_error import InvalidEmailError
 from .not_found_error import NotFoundError
+from .order_not_found_error import OrderNotFoundError
+from .order_status_error import InvalidOrderStatusError
 
 __all__ = [
     "CustomerNotFoundError",
     "DomainError",
+    "InvalidCategoryError",
     "InvalidCpfError",
     "InvalidEmailError",
+    "InvalidOrderStatusError",
     "NotFoundError",
+    "OrderNotFoundError",
 ]

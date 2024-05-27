@@ -14,7 +14,7 @@ class PersistentModel(DeclarativeBase):
 
     Attributes:
     - id: An auto-incrementing integer primary key.
-    - external_id: A UUID field with a default value generated using `uuid4`.
+    - uuid: A UUID field with a default value generated using `uuid4`.
     - created_at: A DateTime field with the current timestamp when an instance is created.
     - updated_at: A DateTime field with the current timestamp when an instance is updated.
     """
