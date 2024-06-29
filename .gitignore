@@ -344,3 +344,4 @@ scripts/_test.*
 
 .tool-versions
 .poetry.lock
+test.py

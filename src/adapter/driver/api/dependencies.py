@@ -11,6 +11,7 @@ from src.adapter.driver.api.controllers import CustomerController
 from src.adapter.driver.api.controllers.order_controller import OrderController
 from src.core.application.use_cases import CustomerUseCase, CustomerUseCaseImpl
 from src.core.application.use_cases.checkout_use_case import CheckoutUseCase
+from src.core.application.use_cases.list_orders_by_status_use_case import ListOrdersByStatusUseCase
 from src.core.application.use_cases.list_orders_use_case import ListOrdersUseCase
 from src.core.application.use_cases.product_use_case import ProductUseCase
 from src.core.application.use_cases.update_order_status_use_case import UpdateOrderStatusUseCase
@@ -129,15 +130,27 @@ class AppModule(Module):
         return UpdateOrderStatusUseCase(order_repository)
 
     @provider
+    def provide_list_orders_sorted_by_status_use_case(
+        self,
+        order_repository: OrderRepository = Depends(),  # noqa: B008
+    ) -> ListOrdersByStatusUseCase:
+        """Provides a ListOrdersByStatusUseCase instance."""
+        return ListOrdersByStatusUseCase(order_repository)
+
+    @provider
     def provide_order_controller(
         self,
         checkout_use_case: CheckoutUseCase = Depends(),  # noqa: B008
         list_orders_use_case: ListOrdersUseCase = Depends(),  # noqa: B008
         update_order_status_use_case: UpdateOrderStatusUseCase = Depends(),  # noqa: B008
+        list_orders_sorted_by_status_use_case: ListOrdersByStatusUseCase = Depends(),  # noqa: B008
     ) -> OrderController:
         """Provides an OrderController instance."""
         return OrderController(
-            checkout_use_case, list_orders_use_case, update_order_status_use_case
+            checkout_use_case,
+            list_orders_use_case,
+            update_order_status_use_case,
+            list_orders_sorted_by_status_use_case,
         )
 
 

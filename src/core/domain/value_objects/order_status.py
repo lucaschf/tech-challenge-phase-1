@@ -7,13 +7,20 @@ from src.core.domain.exceptions.order_status_error import InvalidOrderStatusErro
 class OrderStatus(ValueObject):
     """A Value Object that represents an Order Status.
 
-    The status must be one of the predefined statuses: pending, completed, cancelled.
+    The status must be one of the predefined statuses: pending, preparing, ready, received, completed, cancelled.
 
     Attributes:
         _status: The current status of the order.
     """
 
-    ALLOWED_STATUSES: ClassVar[set[str]] = {"pending", "completed", "cancelled"}
+    ALLOWED_STATUSES: ClassVar[set[str]] = {
+        "pending",
+        "preparing",
+        "ready",
+        "received",
+        "completed",
+        "cancelled",
+    }
 
     def __init__(self, status: str) -> None:
         """Initializes an OrderStatus object after validating the input status.

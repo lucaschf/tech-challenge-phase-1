@@ -3,6 +3,7 @@ from uuid import UUID
 
 from src.adapter.driver.api.schemas.order_schema import OrderIn, OrderOut, OrderStatusUpdate
 from src.core.application.use_cases.checkout_use_case import CheckoutUseCase
+from src.core.application.use_cases.list_orders_by_status_use_case import ListOrdersByStatusUseCase
 from src.core.application.use_cases.list_orders_use_case import ListOrdersUseCase
 from src.core.application.use_cases.update_order_status_use_case import UpdateOrderStatusUseCase
 from src.core.domain.entities.order import OrderProduct
@@ -20,10 +21,12 @@ class OrderController:
         checkout_use_case: CheckoutUseCase,
         list_orders_use_case: ListOrdersUseCase,
         update_order_status_use_case: UpdateOrderStatusUseCase,
+        list_orders_sorted_by_status_use_case: ListOrdersByStatusUseCase,
     ) -> None:
         self.checkout_use_case = checkout_use_case
         self.list_orders_use_case = list_orders_use_case
         self.update_order_status_use_case = update_order_status_use_case
+        self.list_orders_sorted_by_status_use_case = list_orders_sorted_by_status_use_case
 
     def checkout(self, order_in: OrderIn) -> OrderOut:
         """Registers a new order in the system from the provided order data."""
@@ -45,3 +48,8 @@ class OrderController:
         """Update the status of an order in the system from the provided order ID and status."""
         order = self.update_order_status_use_case.update_status(order_uuid, status_update)
         return OrderOut.from_entity(order)
+
+    def list_orders_sorted_by_status(self) -> List[OrderOut]:
+        """Gets a list of orders by specif statuses."""
+        orders = self.list_orders_sorted_by_status_use_case.list_orders_sorted_by_status()
+        return [OrderOut.from_entity(order) for order in orders]

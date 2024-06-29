@@ -95,3 +95,13 @@ class SQLAlchemyOrderRepository(OrderRepository):
             return None
 
         return order.to_entity()
+
+    def list_orders_sorted_by_status(self, statuses: List[str]) -> List[Order]:
+        """Retrieves orders by specific statuses."""
+        with self._session as session:
+            orders = (
+                session.query(OrderPersistentModel)
+                .filter(OrderPersistentModel.status.in_(statuses))
+                .all()
+            )
+            return [row.to_entity() for row in orders]

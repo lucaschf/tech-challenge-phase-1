@@ -29,6 +29,15 @@ def list_orders(
     return [OrderOut.from_entity(order) for order in orders]
 
 
+@router.get("/orders-sorted-by-status", response_model=List[OrderOut])
+def list_orders_sorted_by_status(
+    controller: OrderController = Depends(lambda: injector.get(OrderController)),  # noqa: B008
+) -> List[OrderOut]:
+    """List orders ordered by status."""
+    orders = controller.list_orders_sorted_by_status()
+    return [OrderOut.from_entity(order) for order in orders]
+
+
 @router.put("/{order_uuid}/status", response_model=OrderOut)
 def update_order_status(
     order_uuid: UUID,

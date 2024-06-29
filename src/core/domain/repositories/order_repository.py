@@ -57,3 +57,15 @@ class OrderRepository(ABC):
             Order: The order with the given uuid.
         """
         pass
+
+    @abstractmethod
+    def list_orders_sorted_by_status(self, statuses: List[str]) -> List[Order]:
+        """Retrieves orders by specific statuses from the database.
+
+        Args:
+            statuses (List[str]): List of status strings to filter by.
+
+        Returns:
+            List[Order]: List of orders with the specified statuses.
+        """
+        pass
