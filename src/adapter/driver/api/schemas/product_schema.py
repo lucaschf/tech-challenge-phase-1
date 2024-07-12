@@ -4,18 +4,17 @@ from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from src.adapter.driver.api.types.category_str import CategoryStr
 from src.core.domain.entities.product import Product
-from src.core.domain.value_objects.category import Category
+from src.core.domain.value_objects import Category
 
 
 class _BaseProduct(BaseModel):
     name: str = Field(description="The product name", min_length=1, max_length=100)
-    category: CategoryStr = Field(description="The product category")
+    category: Category = Field(description="The product category")
     price: float = Field(description="The product price", gt=0)
     description: str = Field(description="The product description", max_length=255, min_length=10)
     images: List[str] = Field(
-        description="List of image URLs for the product", min_items=1, max_items=50
+        description="List of image URLs for the product", min_length=1, max_length=50
     )
 
 
@@ -37,11 +36,7 @@ class ProductOut(ProductCreationIn):
         """Creates a ProductOut instance from a Product entity."""
         return ProductOut(
             name=entity.name,
-            category=CategoryStr(
-                entity.category.category
-                if isinstance(entity.category, Category)
-                else entity.category
-            ),
+            category=entity.category,
             price=entity.price,
             description=entity.description,
             images=entity.images,
@@ -50,7 +45,8 @@ class ProductOut(ProductCreationIn):
             updated_at=entity.updated_at,
         )
 
-    __all__ = [
-        "ProductCreationIn",
-        "ProductOut",
-    ]
+
+__all__ = [
+    "ProductCreationIn",
+    "ProductOut",
+]

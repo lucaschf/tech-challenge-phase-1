@@ -6,9 +6,9 @@ from sqlalchemy.future import select
 from sqlalchemy.orm import Session
 
 from src.adapter.driven.infra.sqa_models.product_persistent_model import ProductPersistentModel
-from src.core.domain.entities.product import Product
+from src.core.domain.entities import Product
 from src.core.domain.repositories.product_repository import ProductRepository
-from src.core.domain.value_objects.category import Category
+from src.core.domain.value_objects import Category
 
 
 class SQLAlchemyProductRepository(ProductRepository):
@@ -36,7 +36,7 @@ class SQLAlchemyProductRepository(ProductRepository):
         """
         db_product = ProductPersistentModel(
             name=product.name,
-            category=product.category.category,
+            category=product.category,
             price=product.price,
             description=product.description,
             images=product.images,
@@ -151,3 +151,6 @@ class SQLAlchemyProductRepository(ProductRepository):
             created_at=result.created_at,
             updated_at=result.updated_at,
         )
+
+
+__all__ = ["SQLAlchemyProductRepository"]

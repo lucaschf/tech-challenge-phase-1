@@ -1,16 +1,7 @@
 import factory
 
 from src.core.domain.entities import Product
-from src.core.domain.value_objects.category import Category
-
-
-class CategoryFactory(factory.Factory):
-    """Category Factory."""
-
-    category = factory.Faker("random_element", elements=Category.ALLOWED_CATEGORIES)
-
-    class Meta:  # noqa: D106
-        model = Category
+from src.core.domain.value_objects import Category
 
 
 class ProductFactory(factory.Factory):
@@ -21,7 +12,7 @@ class ProductFactory(factory.Factory):
     description = factory.Faker("sentence")
     images = factory.List([factory.Faker("url") for _ in range(5)])
 
-    category = factory.SubFactory(CategoryFactory)
+    category = factory.Faker("random_element", elements=Category.values())
 
     class Meta:  # noqa: D106
         model = Product

@@ -3,12 +3,14 @@ from typing import List
 from uuid import UUID
 
 from src.core.domain.entities.product import Product
+from src.core.domain.value_objects import Category
 
 
 class ProductRepository(ABC):
-    """ProductRepository is an abstract base class that defines the contract for product persistence operations.
+    """ProductRepository defines the contract for product persistence operations.
 
-    This class outlines the methods that any concrete implementation of a product repository must provide.
+    This class outlines the methods that any concrete implementation of a product repository must
+     provide.
     """
 
     @abstractmethod
@@ -49,7 +51,7 @@ class ProductRepository(ABC):
         pass
 
     @abstractmethod
-    def get_by_category(self, category: str) -> List[Product]:
+    def get_by_category(self, category: Category) -> List[Product]:
         """Retrieves all products in a given category.
 
         Args:
@@ -70,3 +72,6 @@ class ProductRepository(ABC):
         Returns:
             Product: The product with the specified name.
         """
+
+
+__all__ = ["ProductRepository"]
