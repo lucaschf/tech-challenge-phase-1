@@ -2,8 +2,8 @@ from abc import ABC, abstractmethod
 from typing import List
 from uuid import UUID
 
-from src.core.domain.entities.order import Order
-from src.core.domain.value_objects.order_status import OrderStatus
+from src.core.domain.entities import Order
+from src.core.domain.value_objects import OrderStatus
 
 
 class OrderRepository(ABC):
@@ -57,3 +57,6 @@ class OrderRepository(ABC):
             Order: The order with the given uuid.
         """
         pass
+
+
+__all__ = ["OrderRepository"]

@@ -14,10 +14,12 @@ from src.core.domain.base import ValueObject
 from .category import Category
 from .cpf import CPF
 from .email import Email
+from .order_status import OrderStatus
 
 __all__ = [
     "CPF",
     "Category",
     "Email",
+    "OrderStatus",
     "ValueObject",
 ]
