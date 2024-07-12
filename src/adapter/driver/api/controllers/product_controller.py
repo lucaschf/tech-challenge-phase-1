@@ -3,8 +3,8 @@ from uuid import UUID
 
 from src.adapter.driver.api.schemas.product_schema import ProductCreationIn, ProductOut
 from src.core.application.use_cases.product_use_case import ProductUseCase
-from src.core.domain.entities.product import Product
-from src.core.domain.value_objects.category import Category
+from src.core.domain.entities import Product
+from src.core.domain.value_objects import Category
 
 
 class ProductController:
@@ -49,3 +49,6 @@ class ProductController:
         """Get a list of products in the system from the provided product category."""
         products = self.use_case.get_products_by_category(category)
         return [ProductOut.from_entity(product) for product in products]
+
+
+__all__ = ["ProductController"]

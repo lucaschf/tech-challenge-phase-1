@@ -12,7 +12,6 @@ def test_checkout(client: TestClient, create_customer_in_db, create_products_in_
     products = create_products_in_db
 
     order_products = [OrderProductInFactory(product_uuid=product.uuid) for product in products]
-    order_data = OrderInFactory(user_uuid=customer.uuid, products=order_products)
     order_data: OrderIn = OrderInFactory(user_uuid=customer.uuid, products=order_products)
     response = client.post("/api/orders/checkout", json=order_data.model_dump(mode="json"))
     assert response.status_code == 200
@@ -25,13 +24,11 @@ def test_list_orders(client: TestClient, create_customer_in_db, create_products_
     products = create_products_in_db
 
     order_products = [OrderProductInFactory(product_uuid=product.uuid) for product in products]
-    order_data = OrderInFactory(user_uuid=customer.uuid, products=order_products)
     order_data: OrderIn = OrderInFactory(user_uuid=customer.uuid, products=order_products)
 
     client.post("/api/orders/checkout", json=order_data.model_dump(mode="json"))
 
     response = client.get("/api/orders")
-
     assert response.status_code == 200
     assert len(response.json()) > 0
     assert response.json()[0]["user_uuid"] == str(order_data.user_uuid)
@@ -46,7 +43,6 @@ def test_update_order_status(
     products = create_products_in_db
 
     order_products = [OrderProductInFactory(product_uuid=product.uuid) for product in products]
-    order_data = OrderInFactory(user_uuid=customer.uuid, products=order_products)
     order_data: OrderIn = OrderInFactory(user_uuid=customer.uuid, products=order_products)
 
     create_response = client.post("/api/orders/checkout", json=order_data.model_dump(mode="json"))

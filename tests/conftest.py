@@ -1,7 +1,8 @@
 import pytest
 from fastapi.testclient import TestClient
+from sqlalchemy import MetaData, delete
 
-from src.adapter.driven.infra.config.database import Session, get_db_session
+from src.adapter.driven.infra.config.database import Session, engine, get_db_session
 from src.adapter.driven.infra.repositories.product_repository_impl import (
     SQLAlchemyProductRepository,
 )
@@ -21,6 +22,13 @@ def client():  # noqa: ANN201
 @pytest.fixture
 def db_session() -> Session:
     session = next(get_db_session())
+    metadata = MetaData()
+    metadata.reflect(bind=engine)
+    for table in reversed(metadata.sorted_tables):
+        if table.name != "alembic_version":
+            session.execute(delete(table))
+    session.commit()
+
     yield session
     session.close()
 

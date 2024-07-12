@@ -1,7 +1,8 @@
 from dataclasses import dataclass
 
 from src.core.domain.base import AggregateRoot, AssertionConcern
-from src.core.domain.value_objects.category import Category
+
+from ..value_objects import Category
 
 
 @dataclass(kw_only=True)
@@ -25,8 +26,10 @@ class Product(AggregateRoot):
     def validate(self) -> None:
         """Validates the product's attributes.
 
-        This method checks if the product's name, category, price, and description are not null or empty.
-        If any of these conditions are not met, a DomainError will be raised with a relevant message.
+        This method checks if the product's name,
+        category, price, and description are not null or empty.
+        If any of these conditions are not met, a DomainError will be raised with a relevant
+         message.
 
         Raises:
             DomainError: If any of the product's attributes are null or empty.
