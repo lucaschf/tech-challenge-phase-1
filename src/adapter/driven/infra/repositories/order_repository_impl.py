@@ -5,10 +5,7 @@ from sqlalchemy import update
 from sqlalchemy.future import select
 from sqlalchemy.orm import Session
 
-from src.adapter.driven.infra.sqa_models.order_persistent_model import OrderPersistentModel
-from src.adapter.driven.infra.sqa_models.order_product_persistent_model import (
-    OrderProductPersistentModel,
-)
+from src.adapter.driven.infra.sqa_models import OrderPersistentModel
 from src.core.domain.entities.order import Order
 from src.core.domain.repositories.order_repository import OrderRepository
 from src.core.domain.value_objects.order_status import OrderStatus
@@ -38,18 +35,11 @@ class SQLAlchemyOrderRepository(OrderRepository):
             Order: The created order with its uuid and other persistence details populated.
         """
         db_order = OrderPersistentModel.from_entity(order)
-        with self._session as session:
-            session.add(db_order)
-            session.flush()
-            for product in order.products:
-                db_order_product = OrderProductPersistentModel(
-                    order_uuid=db_order.uuid,
-                    product_uuid=product.product_uuid,
-                    quantity=product.quantity,
-                )
-                session.add(db_order_product)
-            session.commit()
-            return db_order.to_entity()
+
+        self._session.add(db_order)
+        self._session.commit()
+
+        return db_order.to_entity()
 
     def update_status(self, order_uuid: UUID, status: OrderStatus) -> Order:
         """Updates the status of an existing order in the repository.

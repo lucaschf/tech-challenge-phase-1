@@ -17,6 +17,7 @@ from .email_error import InvalidEmailError
 from .not_found_error import NotFoundError
 from .order_not_found_error import OrderNotFoundError
 from .order_status_error import InvalidOrderStatusError
+from .product_error import ProductNotFoundError
 
 __all__ = [
     "CustomerNotFoundError",
@@ -27,4 +28,5 @@ __all__ = [
     "InvalidOrderStatusError",
     "NotFoundError",
     "OrderNotFoundError",
+    "ProductNotFoundError",
 ]

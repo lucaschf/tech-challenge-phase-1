@@ -2,64 +2,97 @@ from datetime import datetime
 from typing import List
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
-from src.core.domain.entities.order import Order as OrderEntity
-from src.core.domain.entities.order import OrderProduct as OrderProductEntity
+from src.adapter.driver.api.types import CPFStr
+from src.core.domain.entities import Order, OrderItem
+from src.core.domain.value_objects import Category, OrderStatus
 
 
-class _BaseOrderProduct(BaseModel):
-    product_uuid: UUID = Field(description="The product uuid")
+class _BaseOrderItem(BaseModel):
     quantity: int = Field(description="The quantity of the product", gt=0)
 
 
-class OrderProductIn(_BaseOrderProduct):
+class OrderItemIn(_BaseOrderItem):
     """Schema for creating a new order product."""
 
-    model_config = ConfigDict(str_strip_whitespace=True)
+    product_uuid: UUID = Field(description="The product uuid")
 
 
-class OrderProductOut(_BaseOrderProduct):
+class OrderItemOut(_BaseOrderItem):
     """Schema for returning an order product."""
 
+    product: "ItemProductOut" = Field(description="The product")
+    uuid: UUID = Field(description="The order product uuid")
+    unit_price: float = Field(description="The unit price of the product")
+
+    class ItemProductOut(BaseModel):
+        """Schema for returning a product within an order item."""
+
+        name: str
+        category: Category
+        description: str
+        images: List[str]
+
     @staticmethod
-    def from_entity(entity: OrderProductEntity) -> "OrderProductOut":
+    def from_entity(entity: OrderItem) -> "OrderItemOut":
         """Creates an OrderProductOut instance from an OrderProduct entity."""
-        return OrderProductOut(
-            product_uuid=entity.product_uuid,
+        return OrderItemOut(
+            product=OrderItemOut.ItemProductOut(
+                name=entity.product.name,
+                category=entity.product.category,
+                description=entity.product.description,
+                images=entity.product.images,
+            ),
+            uuid=entity.uuid,
             quantity=entity.quantity,
+            unit_price=entity.unit_price,
         )
 
 
 class OrderIn(BaseModel):
     """Schema for creating a new order."""
 
-    user_uuid: UUID = Field(description="The user uuid")
-    products: List[OrderProductIn] = Field(description="List of products in the order")
+    customer_cpf: str = Field(description="The customer CPF")
+    items: List[OrderItemIn] = Field(description="List of products in the order")
 
-    model_config = ConfigDict(str_strip_whitespace=True, arbitrary_types_allowed=True)
+    model_config = ConfigDict(str_strip_whitespace=True)
+
+
+class OrderCustomerOut(BaseModel):
+    """Schema for returning a customer within an order."""
+
+    name: str
+    email: EmailStr
+    cpf: CPFStr
 
 
 class OrderOut(BaseModel):
     """Schema for returning an order."""
 
     uuid: UUID = Field(description="The order external uuid")
-    user_uuid: UUID = Field(description="The user uuid")
-    products: List[OrderProductOut] = Field(description="List of products in the order")
-    status: str = Field(description="The order status")  # Altere para string
+    customer: OrderCustomerOut = Field(description="The customer")
+    items: List[OrderItemOut] = Field(description="List of items in the order")
+    status: OrderStatus = Field(description="The order status")
     created_at: datetime = Field(description="The order creation date")
     updated_at: datetime = Field(description="The order last update date")
+    total_value: float = Field(description="The total value of the order")
 
     @staticmethod
-    def from_entity(entity: OrderEntity) -> "OrderOut":
+    def from_entity(entity: Order) -> "OrderOut":
         """Creates an OrderOut instance from an Order entity."""
         return OrderOut(
             uuid=entity.uuid,
-            user_uuid=entity.user_uuid,
-            products=[OrderProductOut.from_entity(product) for product in entity.products],
-            status=str(entity.status),  # Passe a string do status
+            customer=OrderCustomerOut(
+                name=entity.customer.name,
+                email=str(entity.customer.email),
+                cpf=CPFStr(str(entity.customer.cpf)),
+            ),
+            items=[OrderItemOut.from_entity(item) for item in entity.items],
+            status=entity.status,
             created_at=entity.created_at,
             updated_at=entity.updated_at,
+            total_value=entity.total_value,
         )
 
     model_config = ConfigDict(str_strip_whitespace=True, arbitrary_types_allowed=True)
@@ -68,6 +101,4 @@ class OrderOut(BaseModel):
 class OrderStatusUpdate(BaseModel):
     """Schema for updating the status of an order."""
 
-    status: str = Field(description="The new status of the order")  # Altere para string
-
-    model_config = ConfigDict(str_strip_whitespace=True, arbitrary_types_allowed=True)
+    status: OrderStatus = Field(description="The new status of the order")

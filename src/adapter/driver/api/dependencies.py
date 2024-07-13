@@ -108,9 +108,15 @@ class AppModule(Module):
     def provide_checkout_use_case(
         self,
         order_repository: OrderRepository = Depends(),  # noqa: B008
+        customer_repository: CustomerRepository = Depends(),  # noqa: B008
+        product_repository: ProductRepository = Depends(),  # noqa: B008
     ) -> CheckoutUseCase:
         """Provides a CheckoutUseCase instance."""
-        return CheckoutUseCase(order_repository)
+        return CheckoutUseCase(
+            order_repository,
+            customer_repository,
+            product_repository,
+        )
 
     @provider
     def provide_list_orders_use_case(

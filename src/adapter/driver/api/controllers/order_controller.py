@@ -2,10 +2,13 @@ from typing import List
 from uuid import UUID
 
 from src.adapter.driver.api.schemas.order_schema import OrderIn, OrderOut, OrderStatusUpdate
-from src.core.application.use_cases.checkout_use_case import CheckoutUseCase
-from src.core.application.use_cases.list_orders_use_case import ListOrdersUseCase
-from src.core.application.use_cases.update_order_status_use_case import UpdateOrderStatusUseCase
-from src.core.domain.entities.order import OrderProduct
+from src.core.application.use_cases import (
+    CheckoutUseCase,
+    ListOrdersUseCase,
+    UpdateOrderStatusUseCase,
+)
+from src.core.application.use_cases.checkout_use_case import OrderItemDTO
+from src.core.domain.value_objects import CPF
 
 
 class OrderController:
@@ -27,12 +30,13 @@ class OrderController:
 
     def checkout(self, order_in: OrderIn) -> OrderOut:
         """Registers a new order in the system from the provided order data."""
+        order_items_dto = [
+            OrderItemDTO(product_uuid=item.product_uuid, quantity=item.quantity)
+            for item in order_in.items
+        ]
         order = self.checkout_use_case.checkout(
-            order_in.user_uuid,
-            [
-                OrderProduct(product_uuid=product.product_uuid, quantity=product.quantity)
-                for product in order_in.products
-            ],
+            CPF(order_in.customer_cpf),
+            order_items_dto,
         )
         return OrderOut.from_entity(order)
 
@@ -43,5 +47,8 @@ class OrderController:
 
     def update_status(self, order_uuid: UUID, status_update: OrderStatusUpdate) -> OrderOut:
         """Update the status of an order in the system from the provided order ID and status."""
-        order = self.update_order_status_use_case.update_status(order_uuid, status_update)
+        order = self.update_order_status_use_case.update_status(order_uuid, status_update.status)
         return OrderOut.from_entity(order)
+
+
+__all__ = ["OrderController"]

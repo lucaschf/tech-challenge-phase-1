@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import List
+from typing import List, Set
 from uuid import UUID
 
 from src.core.domain.entities.product import Product
@@ -72,6 +72,18 @@ class ProductRepository(ABC):
         Returns:
             Product: The product with the specified name.
         """
+
+    @abstractmethod
+    def get_by_uuids(self, product_uuids: Set[UUID]) -> List[Product]:
+        """Retrieves a list of products by their UUIDs.
+
+        Args:
+            product_uuids: The UUIDs of the products to retrieve.
+
+        Returns:
+            List[Product]: A list of products with the specified UUIDs.
+        """
+        pass
 
 
 __all__ = ["ProductRepository"]

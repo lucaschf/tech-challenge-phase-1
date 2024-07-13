@@ -137,5 +137,24 @@ class AssertionConcern:
         cls.assert_argument_not_null(value, message)
         cls._assert(value > 0, message)
 
+    @classmethod
+    def assert_argument_greater_than_or_equal_to_zero(
+        cls: "AssertionConcern",
+        value: Union[int, float],
+        message: str,
+    ) -> None:
+        """Asserts that a numeric value is greater than or equal to zero.
+
+        Args:
+            value: The numeric value to be validated.
+            message: The error message to raise if the validation fails.
+
+        Raises:
+            DomainError: If the value is less than zero.
+            TypeError: If the value is not numeric (int or float).
+        """
+        cls.assert_argument_not_null(value, message)
+        cls._assert(value >= 0, message)
+
 
 __all__ = ["AssertionConcern"]
