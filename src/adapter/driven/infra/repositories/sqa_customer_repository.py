@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from sqlalchemy import or_, select
 from sqlalchemy.orm import Session
 
@@ -75,21 +77,26 @@ class SQACustomerRepository(CustomerRepository):
         Returns:
             Customer: The customer data if found, None otherwise.
         """
-        query = select(CustomerPersistentModel).where(CustomerPersistentModel.cpf == cpf.number)
-        customer: CustomerPersistentModel | None = self._session.execute(query).scalar()
-
-        if customer is None:
-            return None
-
-        return Customer(
-            name=customer.name,
-            cpf=CPF(customer.cpf),
-            email=Email(customer.email),
-            _id=customer.id,
-            uuid=customer.uuid,
-            created_at=customer.created_at,
-            updated_at=customer.updated_at,
+        customer: CustomerPersistentModel | None = (
+            self._session.query(CustomerPersistentModel).filter_by(cpf=cpf.number).first()
         )
+
+        return customer.to_entity() if customer else None
+
+    def get_by_uuid(self, uuid: UUID) -> Customer | None:
+        """Get a customer by their UUID.
+
+        Args:
+            uuid (UUID): The customer's UUID.
+
+        Returns:
+            Customer: The customer data if found, None otherwise.
+        """
+        customer: CustomerPersistentModel | None = (
+            self._session.query(CustomerPersistentModel).filter_by(uuid=uuid).first()
+        )
+
+        return customer.to_entity() if customer else None
 
 
 __all__ = ["SQACustomerRepository"]

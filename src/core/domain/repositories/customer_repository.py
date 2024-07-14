@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from uuid import UUID
 
 from src.core.domain.entities.customer import Customer
 from src.core.domain.value_objects import CPF, Email
@@ -25,6 +26,17 @@ class CustomerRepository(ABC):
 
         Args:
             cpf: The customer's CPF.
+
+        Returns:
+            Customer: The customer data if found, None otherwise.
+        """
+
+    @abstractmethod
+    def get_by_uuid(self, uuid: UUID) -> Customer | None:
+        """Get a customer by their UUID.
+
+        Args:
+            uuid: The customer's UUID.
 
         Returns:
             Customer: The customer data if found, None otherwise.

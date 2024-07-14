@@ -1,14 +1,17 @@
 from typing import List
 from uuid import UUID
 
-from src.adapter.driver.api.schemas.order_schema import OrderIn, OrderOut, OrderStatusUpdate
+from src.adapter.driver.api.schemas.order_schema import (
+    OrderCreationOut,
+    OrderIn,
+    OrderOut,
+    OrderStatusUpdate,
+)
 from src.core.application.use_cases import (
     CheckoutUseCase,
     ListOrdersUseCase,
     UpdateOrderStatusUseCase,
 )
-from src.core.application.use_cases.checkout_use_case import OrderItemDTO
-from src.core.domain.value_objects import CPF
 
 
 class OrderController:
@@ -28,17 +31,10 @@ class OrderController:
         self.list_orders_use_case = list_orders_use_case
         self.update_order_status_use_case = update_order_status_use_case
 
-    def checkout(self, order_in: OrderIn) -> OrderOut:
+    def checkout(self, order_in: OrderIn) -> OrderCreationOut:
         """Registers a new order in the system from the provided order data."""
-        order_items_dto = [
-            OrderItemDTO(product_uuid=item.product_uuid, quantity=item.quantity)
-            for item in order_in.items
-        ]
-        order = self.checkout_use_case.checkout(
-            CPF(order_in.customer_cpf),
-            order_items_dto,
-        )
-        return OrderOut.from_entity(order)
+        order = self.checkout_use_case.checkout(order_in.to_checkout_request())
+        return OrderCreationOut(number=order.number)
 
     def list_orders(self) -> List[OrderOut]:
         """Get a list of orders in the system."""

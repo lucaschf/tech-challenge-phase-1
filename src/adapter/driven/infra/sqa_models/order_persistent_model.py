@@ -32,7 +32,7 @@ class OrderPersistentModel(PersistentModel):
             _items=[item.to_entity() for item in self.items],
             _total_value=self.total_value,
             _status=self.status,
-            customer=self.customer.to_entity(),
+            _customer=self.customer.to_entity(),
             uuid=self.uuid,
             created_at=self.created_at,
             updated_at=self.updated_at,

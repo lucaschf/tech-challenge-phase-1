@@ -1,3 +1,4 @@
+import copy
 from dataclasses import dataclass, field
 from typing import List
 
@@ -11,13 +12,14 @@ from .order_item import OrderItem
 class Order(AggregateRoot):
     """Represents an order in the system."""
 
-    customer: Customer
+    _customer: Customer
     _items: List[OrderItem] = field(default_factory=list)
     _total_value: float = field(default=0.0)
     _status: OrderStatus = field(default_factory=lambda: OrderStatus.PENDING)
 
     def __post_init__(self) -> None:
-        self._total_value = sum(item.unit_price * item.quantity for item in self._items)
+        self.validate()
+        self._recalculate_total_value()
 
     @property
     def status(self) -> OrderStatus:  # noqa: D102
@@ -28,29 +30,17 @@ class Order(AggregateRoot):
         return self._total_value
 
     @property
-    def items(self) -> List[OrderItem]:  # noqa: D102
-        return [*self._items]
+    def items(self) -> List[OrderItem]:
+        """Returns a list of items in the order."""
+        return copy.deepcopy(self._items)
 
-    def add_item(self, new_item: OrderItem) -> None:
-        """Adds an item to the order and invalidates the total_value cache."""
-        for item in self._items:
-            if item.product == new_item.product:
-                item.quantity += new_item.quantity
-                self._total_value += new_item.unit_price * new_item.quantity
-                break
-        else:
-            self._items.append(new_item)
-            self._total_value += new_item.unit_price * new_item.quantity
+    @property
+    def customer(self) -> Customer:
+        """Returns the customer who made the order."""
+        return self._customer
 
-    def add_items(self, items: List[OrderItem]) -> None:
-        """Adds multiple items to the order and invalidates the total_value cache."""
-        for item in items:
-            self.add_item(item)
-
-    def remove_item(self, item: OrderItem) -> None:
-        """Removes an item from the order and invalidates the total_value cache."""
-        self._items.remove(item)
-        self._total_value -= item.unit_price * item.quantity
+    def _recalculate_total_value(self) -> None:
+        self._total_value = sum(item.unit_price * item.quantity for item in self._items)
 
     def update_status(self, new_status: OrderStatus) -> None:
         """Updates the status of the order.

@@ -6,16 +6,21 @@ from fastapi import APIRouter, Depends
 
 from src.adapter.driver.api.controllers.order_controller import OrderController
 from src.adapter.driver.api.dependencies import injector
-from src.adapter.driver.api.schemas.order_schema import OrderIn, OrderOut, OrderStatusUpdate
+from src.adapter.driver.api.schemas.order_schema import (
+    OrderCreationOut,
+    OrderIn,
+    OrderOut,
+    OrderStatusUpdate,
+)
 
 router = APIRouter(tags=["Order"], prefix="/orders")
 
 
-@router.post("/checkout", response_model=OrderOut, status_code=HTTPStatus.CREATED)
+@router.post("/checkout", response_model=OrderCreationOut, status_code=HTTPStatus.CREATED)
 def checkout(
     order_in: OrderIn,
     controller: OrderController = Depends(lambda: injector.get(OrderController)),  # noqa: B008
-) -> OrderOut:
+) -> OrderCreationOut:
     """Process a fake checkout by adding selected products to the order queue."""
     return controller.checkout(order_in)
 

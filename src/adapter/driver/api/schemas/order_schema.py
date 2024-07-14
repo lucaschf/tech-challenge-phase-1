@@ -5,6 +5,7 @@ from uuid import UUID
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
 from src.adapter.driver.api.types import CPFStr
+from src.core.application.use_cases.checkout_use_case import CheckoutItem, CheckoutOrder
 from src.core.domain.entities import Order, OrderItem
 from src.core.domain.value_objects import Category, OrderStatus
 
@@ -16,7 +17,7 @@ class _BaseOrderItem(BaseModel):
 class OrderItemIn(_BaseOrderItem):
     """Schema for creating a new order product."""
 
-    product_uuid: UUID = Field(description="The product uuid")
+    product_id: UUID = Field(description="The product id")
 
 
 class OrderItemOut(_BaseOrderItem):
@@ -53,10 +54,26 @@ class OrderItemOut(_BaseOrderItem):
 class OrderIn(BaseModel):
     """Schema for creating a new order."""
 
-    customer_cpf: str = Field(description="The customer CPF")
+    customer_id: UUID = Field(description="The customer identifier")
     items: List[OrderItemIn] = Field(description="List of products in the order")
 
     model_config = ConfigDict(str_strip_whitespace=True)
+
+    def to_checkout_request(self) -> CheckoutOrder:
+        """Converts the OrderIn instance to a CheckoutRequest instance."""
+        return CheckoutOrder(
+            customer_id=self.customer_id,
+            items=[
+                CheckoutItem(product_id=item.product_id, quantity=item.quantity)
+                for item in self.items
+            ],
+        )
+
+
+class OrderCreationOut(BaseModel):
+    """Schema for returning the result of creating an order."""
+
+    number: UUID = Field(description="The order number")
 
 
 class OrderCustomerOut(BaseModel):
