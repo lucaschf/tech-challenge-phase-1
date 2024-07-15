@@ -25,5 +25,10 @@ class AggregateRoot(ABC):
     def __post_init__(self) -> None:
         self.validate()
 
+    @property
+    def id(self) -> int | None:
+        """The aggregate root's ID."""
+        return self._id
+
 
 __all__ = ["AggregateRoot"]

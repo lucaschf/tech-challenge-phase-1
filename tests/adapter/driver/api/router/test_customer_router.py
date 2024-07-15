@@ -58,7 +58,7 @@ def test_get_customer_should_return_404_if_not_found(client: TestClient) -> None
     response = client.get(f"/api/customer/{cpf}")
 
     assert response.status_code == 404
-    assert response.json() == {"detail": f"Customer with CPF '{cpf}' not found."}
+    assert response.json() == {"detail": "Customer not found."}
 
 
 def test_create_customer_should_create_with_valid_location_header(client: TestClient) -> None:

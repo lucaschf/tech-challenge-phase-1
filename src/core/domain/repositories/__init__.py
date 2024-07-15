@@ -8,5 +8,7 @@ clean separation of concerns and enhancing the maintainability of the codebase.
 """
 
 from .customer_repository import CustomerRepository
+from .order_repository import OrderRepository
+from .product_repository import ProductRepository
 
-__all__ = ["CustomerRepository"]
+__all__ = ["CustomerRepository", "OrderRepository", "ProductRepository"]

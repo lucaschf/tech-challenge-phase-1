@@ -31,8 +31,8 @@ class CustomerOut(_BaseCustomer):
         """Creates a CustomerOut instance from a Customer entity."""
         return CustomerOut(
             name=entity.name,
-            cpf=entity.cpf.number,
-            email=entity.email.address,
+            cpf=CPFStr(str(entity.cpf)),
+            email=str(entity.email),
             uuid=entity.uuid,
             created_at=entity.created_at,
             updated_at=entity.updated_at,

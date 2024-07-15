@@ -46,7 +46,7 @@ class CustomerUseCaseImpl(CustomerUseCase):
         """
         customer = self.customer_repository.get_by_cpf(CPF(cpf))
         if not customer:
-            raise CustomerNotFoundError(cpf=cpf)
+            raise CustomerNotFoundError(search_params={"cpf": cpf})
 
         return customer
 

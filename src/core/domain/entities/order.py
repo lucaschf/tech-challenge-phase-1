@@ -1,31 +1,57 @@
+import copy
 from dataclasses import dataclass, field
-from datetime import datetime
-from typing import List, Optional
-from uuid import UUID, uuid4
+from typing import List
 
 from ..base import AggregateRoot, AssertionConcern
 from ..value_objects import OrderStatus
-from .order_product import OrderProduct
+from .customer import Customer
+from .order_item import OrderItem
 
 
 @dataclass(kw_only=True)
 class Order(AggregateRoot):
-    """Represents an order in the system.
+    """Represents an order in the system."""
 
-    Attributes:
-    user_uuid: The UUID of the user who placed the order.
-    products: The list of products in the order.
-    status: OrderStatus
-    created_at: The timestamp when the order was created.
-    updated_at: The timestamp when the order was last updated.
-    """
+    _customer: Customer
+    _items: List[OrderItem] = field(default_factory=list)
+    _total_value: float = field(default=0.0)
+    _status: OrderStatus = field(default_factory=lambda: OrderStatus.PENDING)
 
-    user_uuid: UUID
-    products: List[OrderProduct]
-    status: OrderStatus = field(default_factory=lambda: OrderStatus.PENDING)
-    created_at: datetime = field(default_factory=datetime.now)
-    updated_at: Optional[datetime] = field(default=None)
-    uuid: UUID = field(default_factory=uuid4)
+    def __post_init__(self) -> None:
+        self.validate()
+        self._recalculate_total_value()
+
+    @property
+    def status(self) -> OrderStatus:  # noqa: D102
+        return self._status
+
+    @property
+    def total_value(self) -> float:  # noqa: D102
+        return self._total_value
+
+    @property
+    def items(self) -> List[OrderItem]:
+        """Returns a list of items in the order."""
+        return copy.deepcopy(self._items)
+
+    @property
+    def customer(self) -> Customer:
+        """Returns the customer who made the order."""
+        return self._customer
+
+    def _recalculate_total_value(self) -> None:
+        self._total_value = sum(item.unit_price * item.quantity for item in self._items)
+
+    def update_status(self, new_status: OrderStatus) -> None:
+        """Updates the status of the order.
+
+        Args:
+            new_status: The new status of the order.
+
+        Raises:
+            InvalidOrderStatusError: If the new status is invalid.
+        """
+        self._status = new_status
 
     def validate(self) -> None:
         """Validates the order's attributes.
@@ -37,21 +63,10 @@ class Order(AggregateRoot):
         Raises:
             DomainError: If any of the order's attributes are invalid.
         """
-        AssertionConcern.assert_argument_not_null(self.user_uuid, "User uuid is required")
-        AssertionConcern.assert_argument_not_null(self.products, "Products are required")
-        AssertionConcern.assert_argument_not_empty(self.products, "Products are required")
+        AssertionConcern.assert_argument_not_null(self.customer, "Customer is required")
+        AssertionConcern.assert_argument_not_null(self.items, "Items are required")
+        AssertionConcern.assert_argument_not_empty(self.items, "Items are required")
         AssertionConcern.assert_argument_not_null(self.status, "Status is required")
-
-    def update_status(self, new_status: OrderStatus) -> None:
-        """Updates the status of the order.
-
-        Args:
-            new_status: The new status of the order.
-
-        Raises:
-            InvalidOrderStatusError: If the new status is invalid.
-        """
-        self.status = new_status
 
 
 __all__ = ["Order"]

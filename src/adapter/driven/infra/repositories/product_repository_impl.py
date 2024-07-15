@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Set
 from uuid import UUID
 
 from sqlalchemy import delete, update
@@ -44,7 +44,7 @@ class SQLAlchemyProductRepository(ProductRepository):
         with self._session as session:
             session.add(db_product)
             session.commit()
-            product.id = db_product.id
+            product._id = db_product.id
             product.created_at = db_product.created_at
             product.updated_at = db_product.updated_at
             product.uuid = db_product.uuid
@@ -151,6 +151,25 @@ class SQLAlchemyProductRepository(ProductRepository):
             created_at=result.created_at,
             updated_at=result.updated_at,
         )
+
+    def get_by_uuids(self, product_uuids: Set[UUID]) -> List[Product]:
+        """Retrieves a list of products by their UUIDs.
+
+        Args:
+            product_uuids: The UUIDs of the products to retrieve.
+
+        Returns:
+            List[Product]: A list of products with the specified UUIDs.
+        """
+        result = (
+            self._session.execute(
+                select(ProductPersistentModel).where(ProductPersistentModel.uuid.in_(product_uuids))
+            )
+            .scalars()
+            .all()
+        )
+
+        return [p.to_entity() for p in result]
 
 
 __all__ = ["SQLAlchemyProductRepository"]

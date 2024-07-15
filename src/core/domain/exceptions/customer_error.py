@@ -1,3 +1,6 @@
+from types import MappingProxyType
+from typing import Any
+
 from .not_found_error import NotFoundError
 
 
@@ -5,18 +8,27 @@ class CustomerNotFoundError(NotFoundError):
     """Raised when a customer with the given CPF is not found."""
 
     def __init__(
-        self, cpf: str, message: str | None = None, inner_error: Exception | None = None
+        self,
+        search_params: dict[str, Any],
+        message: str | None = None,
+        inner_error: Exception | None = None,
     ) -> None:
         """Constructs a new CustomerNotFound exception.
 
         Args:
-            cpf: The CPF of the customer that was not found.
+            search_params:
+             The search parameters that were used to search for the customer.
             message: A custom message to include in the exception.
             inner_error: An underlying exception that caused this exception.
         """
-        default_message = f"Customer with CPF '{cpf}' not found."
+        default_message = "Customer not found."
         super().__init__(message or default_message, inner_error)
-        self.cpf = cpf
+        self._search_params = MappingProxyType(search_params)
+
+    @property
+    def search_params(self) -> dict[str, Any]:
+        """The search parameters that were used to search for the customer."""
+        return dict(self._search_params)
 
 
 __all__ = ["CustomerNotFoundError"]
