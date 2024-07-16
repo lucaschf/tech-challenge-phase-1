@@ -3,13 +3,14 @@ from uuid import UUID
 from sqlalchemy import or_, select
 from sqlalchemy.orm import Session
 
-from src.adapter.driven.infra.sqa_models import CustomerPersistentModel
 from src.core.domain.entities.customer import Customer
 from src.core.domain.repositories import CustomerRepository
 from src.core.domain.value_objects import CPF, Email
 
+from ..persistent_models import CustomerPersistentModel
 
-class SQACustomerRepository(CustomerRepository):
+
+class SQlAlchemyCustomerRepository(CustomerRepository):
     """Repository for handling customer-related database operations.
 
     Attributes:
@@ -60,13 +61,9 @@ class SQACustomerRepository(CustomerRepository):
 
         self._session.add(db_customer)
         self._session.commit()
+        self._session.refresh(db_customer)
 
-        customer._id = db_customer.id
-        customer.created_at = db_customer.created_at
-        customer.updated_at = db_customer.updated_at
-        customer.uuid = db_customer.uuid
-
-        return customer
+        return db_customer.to_entity()
 
     def get_by_cpf(self, cpf: CPF) -> Customer | None:
         """Get a customer by their CPF.
@@ -99,4 +96,4 @@ class SQACustomerRepository(CustomerRepository):
         return customer.to_entity() if customer else None
 
 
-__all__ = ["SQACustomerRepository"]
+__all__ = ["SQlAlchemyCustomerRepository"]

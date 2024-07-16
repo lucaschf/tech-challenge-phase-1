@@ -1,7 +1,7 @@
-from src.core.application.use_cases import CreateCustomerUseCase, GetCustomerByCpfUseCase
 from src.core.domain.entities.customer import Customer
+from src.core.use_cases import CreateCustomerUseCase, GetCustomerByCpfUseCase
 
-from ..schemas import CustomerCreationIn, CustomerOut
+from ..schemas import CustomerCreationIn, CustomerDetailsOut
 
 
 class CustomerController:
@@ -23,7 +23,7 @@ class CustomerController:
         self._customer_use_case = create_customer_use_case
         self._get_customer_by_cpf_use_case = get_customer_by_cpf_use_case
 
-    def create_customer(self, customer: CustomerCreationIn) -> CustomerOut:
+    def create_customer(self, customer: CustomerCreationIn) -> CustomerDetailsOut:
         """Registers a new customer in the system from the provided customer data.
 
         Args:
@@ -31,29 +31,29 @@ class CustomerController:
              a new customer.
 
         Returns:
-            CustomerOut: The schema of the successfully registered customer.
+            CustomerDetailsOut: The schema of the successfully registered customer.
 
         Raises:
             HTTPException: If there's any business rule violation defined in DomainError.
         """
         created_customer: Customer = self._customer_use_case.execute(customer.to_customer_data())
-        return CustomerOut.from_entity(created_customer)
+        return CustomerDetailsOut.from_entity(created_customer)
 
-    def get_by_cpf(self, cpf: str) -> CustomerOut:
+    def get_by_cpf(self, cpf: str) -> CustomerDetailsOut:
         """Retrieves a customer from the system using their CPF.
 
         Args:
             cpf (str): The customer's CPF to find the matching customer.
 
         Returns:
-            CustomerOut: The schema of the customer found.
+            CustomerDetailsOut: The schema of the customer found.
 
         Raises:
             HTTPException: If a customer with the provided CPF could not be found or there's any
             business rule violation defined in DomainError.
         """
         customer: Customer | None = self._get_customer_by_cpf_use_case.execute(cpf)
-        return CustomerOut.from_entity(customer)
+        return CustomerDetailsOut.from_entity(customer)
 
 
 __all__ = ["CustomerController"]

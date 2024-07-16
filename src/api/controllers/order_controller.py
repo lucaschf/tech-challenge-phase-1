@@ -1,7 +1,7 @@
 from typing import List
 from uuid import UUID
 
-from src.core.application.use_cases import (
+from src.core.use_cases import (
     CheckoutUseCase,
     ListOrdersUseCase,
     UpdateOrderStatusUseCase,
@@ -11,7 +11,7 @@ from ..schemas.order_schema import (
     OrderCreationOut,
     OrderIn,
     OrderOut,
-    OrderStatusUpdate,
+    OrderStatusUpdateIn,
 )
 
 
@@ -42,7 +42,7 @@ class OrderController:
         orders = self.list_orders_use_case.list_orders()
         return [OrderOut.from_entity(order) for order in orders]
 
-    def update_status(self, order_uuid: UUID, status_update: OrderStatusUpdate) -> OrderOut:
+    def update_status(self, order_uuid: UUID, status_update: OrderStatusUpdateIn) -> OrderOut:
         """Update the status of an order in the system from the provided order ID and status."""
         order = self.update_order_status_use_case.update_status(order_uuid, status_update.status)
         return OrderOut.from_entity(order)

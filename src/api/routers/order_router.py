@@ -10,7 +10,7 @@ from ..schemas.order_schema import (
     OrderCreationOut,
     OrderIn,
     OrderOut,
-    OrderStatusUpdate,
+    OrderStatusUpdateIn,
 )
 
 router = APIRouter(tags=["Order"], prefix="/orders")
@@ -36,7 +36,7 @@ def list_orders(
 @router.put("/{order_uuid}/status", response_model=OrderOut)
 def update_order_status(
     order_uuid: UUID,
-    status_update: OrderStatusUpdate,
+    status_update: OrderStatusUpdateIn,
     controller: OrderController = Depends(lambda: injector.get(OrderController)),  # noqa: B008
 ) -> OrderOut:
     """Update the status of an existing order."""

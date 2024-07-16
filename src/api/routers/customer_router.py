@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, Response
 
 from ..controllers import CustomerController
 from ..dependencies import injector
-from ..schemas import CustomerCreationIn, CustomerOut
+from ..schemas import CustomerCreationIn, CustomerDetailsOut
 from ..schemas.http_error import HttpErrorOut
 from ..types import CPFStr
 
@@ -24,7 +24,7 @@ def create_customer(
     controller: CustomerController = Depends(  # noqa: B008
         lambda: injector.get(CustomerController)
     ),
-) -> CustomerOut:
+) -> CustomerDetailsOut:
     customer = controller.create_customer(inputs)
     response.headers["Location"] = f"{router.prefix}/{customer.cpf}"
     return customer
@@ -41,7 +41,7 @@ def get_by_cpf(
     controller: CustomerController = Depends(  # noqa: B008
         lambda: injector.get(CustomerController)
     ),
-) -> CustomerOut:
+) -> CustomerDetailsOut:
     return controller.get_by_cpf(cpf)
 
 

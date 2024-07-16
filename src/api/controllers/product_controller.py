@@ -1,11 +1,11 @@
 from typing import List
 from uuid import UUID
 
-from src.core.application.use_cases.product_use_case import ProductUseCase
 from src.core.domain.entities import Product
 from src.core.domain.value_objects import Category
+from src.core.use_cases import ProductUseCase
 
-from ..schemas.product_schema import ProductCreationIn, ProductOut
+from ..schemas import ProductCreationIn, ProductOut
 
 
 class ProductController:

@@ -17,11 +17,11 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 def get_db_session() -> Generator[Session, None, None]:
     """Get a database session."""
-    db = SessionLocal()
+    session = SessionLocal()
     try:
-        yield db
+        yield session
     finally:
-        db.close()
+        session.close()
 
 
 __all__ = ["get_db_session"]

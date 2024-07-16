@@ -5,10 +5,11 @@ from sqlalchemy import delete, update
 from sqlalchemy.future import select
 from sqlalchemy.orm import Session
 
-from src.adapter.driven.infra.sqa_models.product_persistent_model import ProductPersistentModel
 from src.core.domain.entities import Product
 from src.core.domain.repositories.product_repository import ProductRepository
 from src.core.domain.value_objects import Category
+
+from ..persistent_models.product_persistent_model import ProductPersistentModel
 
 
 class SQLAlchemyProductRepository(ProductRepository):

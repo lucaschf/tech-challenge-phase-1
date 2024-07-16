@@ -2,10 +2,9 @@ from fastapi import Depends
 from injector import Injector, Module, provider
 from sqlalchemy.orm import Session
 
-from src.adapter.driven.infra.config.database import get_db_session
-from src.adapter.driven.infra.repositories import SQACustomerRepository, SQLAlchemyProductRepository
 from src.api.controllers import CustomerController, OrderController
-from src.core.application.use_cases import (
+from src.core.domain.repositories import CustomerRepository, OrderRepository, ProductRepository
+from src.core.use_cases import (
     CheckoutUseCase,
     CreateCustomerUseCase,
     GetCustomerByCpfUseCase,
@@ -13,9 +12,13 @@ from src.core.application.use_cases import (
     ProductUseCase,
     UpdateOrderStatusUseCase,
 )
-from src.core.domain.repositories import CustomerRepository, OrderRepository, ProductRepository
+from src.infra.database.config import get_db_session
+from src.infra.database.repositories import (
+    SQlAlchemyCustomerRepository,
+    SQLAlchemyOrderRepository,
+    SQLAlchemyProductRepository,
+)
 
-from ..adapter.driven.infra.repositories.order_repository_impl import SQLAlchemyOrderRepository
 from .controllers import ProductController
 
 
@@ -40,7 +43,7 @@ class AppModule(Module):
 
         It depends on an SQLAlchemy session, which is injected by FastAPI's "Depends" mechanism.
         """
-        return SQACustomerRepository(session)
+        return SQlAlchemyCustomerRepository(session)
 
     @provider
     def provide_create_customer_use_case(

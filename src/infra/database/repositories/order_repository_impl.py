@@ -5,10 +5,11 @@ from sqlalchemy import update
 from sqlalchemy.future import select
 from sqlalchemy.orm import Session
 
-from src.adapter.driven.infra.sqa_models import OrderPersistentModel
 from src.core.domain.entities.order import Order
 from src.core.domain.repositories.order_repository import OrderRepository
 from src.core.domain.value_objects.order_status import OrderStatus
+
+from ..persistent_models import OrderPersistentModel
 
 
 class SQLAlchemyOrderRepository(OrderRepository):

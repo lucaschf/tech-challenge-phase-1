@@ -2,13 +2,13 @@ import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import MetaData, delete
 
-from src.adapter.driven.infra.config.database import Session, engine, get_db_session
-from src.adapter.driven.infra.repositories.product_repository_impl import (
-    SQLAlchemyProductRepository,
-)
-from src.adapter.driven.infra.repositories.sqa_customer_repository import SQACustomerRepository
 from src.api import app
 from src.core.domain.entities import Customer, Product
+from src.infra.database.config.database import Session, engine, get_db_session
+from src.infra.database.repositories import (
+    SQlAlchemyCustomerRepository,
+    SQLAlchemyProductRepository,
+)
 from tests.factories.core.domain.entities.customer_factory import CustomerFactory
 from tests.factories.core.domain.entities.product_factory import ProductFactory
 
@@ -36,7 +36,7 @@ def db_session() -> Session:
 @pytest.fixture
 def create_customer_in_db(db_session: Session):  # noqa: ANN201
     customer_data = CustomerFactory()
-    customer_repo = SQACustomerRepository(db_session)
+    customer_repo = SQlAlchemyCustomerRepository(db_session)
     customer = customer_repo.add(
         Customer(name=customer_data.name, email=customer_data.email, cpf=customer_data.cpf)
     )
