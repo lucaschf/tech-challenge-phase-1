@@ -3,10 +3,11 @@ from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
-from src.adapter.driver.api.types import CPFStr
 from src.core.application.use_cases.create_customer_use_case import CustomerData
 from src.core.domain.entities.customer import Customer
 from src.core.domain.value_objects import CPF, Email
+
+from ..types import CPFStr
 
 
 class _BaseCustomer(BaseModel):

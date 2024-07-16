@@ -1,16 +1,17 @@
 from typing import List
 from uuid import UUID
 
-from src.adapter.driver.api.schemas.order_schema import (
-    OrderCreationOut,
-    OrderIn,
-    OrderOut,
-    OrderStatusUpdate,
-)
 from src.core.application.use_cases import (
     CheckoutUseCase,
     ListOrdersUseCase,
     UpdateOrderStatusUseCase,
+)
+
+from ..schemas.order_schema import (
+    OrderCreationOut,
+    OrderIn,
+    OrderOut,
+    OrderStatusUpdate,
 )
 
 

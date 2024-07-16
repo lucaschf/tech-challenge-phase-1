@@ -2,7 +2,7 @@ from uuid import uuid4
 
 import factory
 
-from src.adapter.driver.api.schemas.order_schema import OrderIn, OrderItemIn
+from src.api.schemas.order_schema import OrderIn, OrderItemIn
 
 
 class OrderItemInFactory(factory.Factory):  # noqa: D101

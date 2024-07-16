@@ -4,9 +4,9 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends
 
-from src.adapter.driver.api.controllers.order_controller import OrderController
-from src.adapter.driver.api.dependencies import injector
-from src.adapter.driver.api.schemas.order_schema import (
+from ..controllers.order_controller import OrderController
+from ..dependencies import injector
+from ..schemas.order_schema import (
     OrderCreationOut,
     OrderIn,
     OrderOut,

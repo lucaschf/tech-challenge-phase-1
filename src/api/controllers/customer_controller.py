@@ -1,6 +1,7 @@
-from src.adapter.driver.api.schemas import CustomerCreationIn, CustomerOut
 from src.core.application.use_cases import CreateCustomerUseCase, GetCustomerByCpfUseCase
 from src.core.domain.entities.customer import Customer
+
+from ..schemas import CustomerCreationIn, CustomerOut
 
 
 class CustomerController:

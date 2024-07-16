@@ -4,10 +4,11 @@ from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
-from src.adapter.driver.api.types import CPFStr
 from src.core.application.use_cases.checkout_use_case import CheckoutItem, CheckoutOrder
 from src.core.domain.entities import Order, OrderItem
 from src.core.domain.value_objects import Category, OrderStatus
+
+from ..types import CPFStr
 
 
 class _BaseOrderItem(BaseModel):

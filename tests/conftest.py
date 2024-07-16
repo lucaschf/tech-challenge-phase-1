@@ -7,7 +7,7 @@ from src.adapter.driven.infra.repositories.product_repository_impl import (
     SQLAlchemyProductRepository,
 )
 from src.adapter.driven.infra.repositories.sqa_customer_repository import SQACustomerRepository
-from src.adapter.driver.api import app
+from src.api import app
 from src.core.domain.entities import Customer, Product
 from tests.factories.core.domain.entities.customer_factory import CustomerFactory
 from tests.factories.core.domain.entities.product_factory import ProductFactory

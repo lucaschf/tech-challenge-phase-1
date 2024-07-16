@@ -3,9 +3,8 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, status
 
-from src.adapter.driver.api.dependencies import injector
-
 from ..controllers import ProductController
+from ..dependencies import injector
 from ..schemas.product_schema import ProductCreationIn, ProductOut
 
 router = APIRouter(tags=["Product"])

@@ -3,7 +3,7 @@ from unittest.mock import ANY
 import pytest
 from fastapi.testclient import TestClient
 
-from src.adapter.driver.api.schemas import CustomerCreationIn
+from src.api.schemas import CustomerCreationIn
 from tests.factories import CPFProvider
 from tests.factories.adapter.driver.api.schemas import CustomerCreationInFactory
 

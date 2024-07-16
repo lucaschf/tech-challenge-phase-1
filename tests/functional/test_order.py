@@ -2,7 +2,7 @@ from unittest.mock import ANY
 
 from fastapi.testclient import TestClient
 
-from src.adapter.driver.api.schemas.order_schema import OrderIn
+from src.api.schemas.order_schema import OrderIn
 from tests.factories.adapter.driver.api.schemas.order_schema_factory import (
     OrderInFactory,
     OrderItemInFactory,

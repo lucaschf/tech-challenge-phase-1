@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 
 from src.adapter.driven.infra.config.database import get_db_session
 from src.adapter.driven.infra.repositories import SQACustomerRepository, SQLAlchemyProductRepository
-from src.adapter.driver.api.controllers import CustomerController, OrderController
+from src.api.controllers import CustomerController, OrderController
 from src.core.application.use_cases import (
     CheckoutUseCase,
     CreateCustomerUseCase,
@@ -15,7 +15,7 @@ from src.core.application.use_cases import (
 )
 from src.core.domain.repositories import CustomerRepository, OrderRepository, ProductRepository
 
-from ...driven.infra.repositories.order_repository_impl import SQLAlchemyOrderRepository
+from ..adapter.driven.infra.repositories.order_repository_impl import SQLAlchemyOrderRepository
 from .controllers import ProductController
 
 
@@ -110,7 +110,10 @@ class AppModule(Module):
         return ProductController(product_use_case)
 
     @provider
-    def provide_order_repository(self, session: Session = Depends()) -> OrderRepository:  # noqa: B008
+    def provide_order_repository(
+        self,
+        session: Session = Depends(),  # noqa: B008
+    ) -> OrderRepository:
         return SQLAlchemyOrderRepository(session)
 
     @provider

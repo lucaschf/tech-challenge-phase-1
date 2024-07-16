@@ -1,7 +1,7 @@
 import pytest
 from fastapi.testclient import TestClient
 
-from src.adapter.driver.api.schemas.product_schema import ProductCreationIn
+from src.api.schemas.product_schema import ProductCreationIn
 from tests.factories.adapter.driver.api.schemas import ProductCreationInFactory
 
 

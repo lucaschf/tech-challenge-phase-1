@@ -1,10 +1,11 @@
 from typing import List
 from uuid import UUID
 
-from src.adapter.driver.api.schemas.product_schema import ProductCreationIn, ProductOut
 from src.core.application.use_cases.product_use_case import ProductUseCase
 from src.core.domain.entities import Product
 from src.core.domain.value_objects import Category
+
+from ..schemas.product_schema import ProductCreationIn, ProductOut
 
 
 class ProductController:
