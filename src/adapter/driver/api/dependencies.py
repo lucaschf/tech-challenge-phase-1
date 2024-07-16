@@ -3,20 +3,17 @@ from injector import Injector, Module, provider
 from sqlalchemy.orm import Session
 
 from src.adapter.driven.infra.config.database import get_db_session
-from src.adapter.driven.infra.repositories import SQACustomerRepository
-from src.adapter.driven.infra.repositories.product_repository_impl import (
-    SQLAlchemyProductRepository,
+from src.adapter.driven.infra.repositories import SQACustomerRepository, SQLAlchemyProductRepository
+from src.adapter.driver.api.controllers import CustomerController, OrderController
+from src.core.application.use_cases import (
+    CheckoutUseCase,
+    CreateCustomerUseCase,
+    GetCustomerByCpfUseCase,
+    ListOrdersUseCase,
+    ProductUseCase,
+    UpdateOrderStatusUseCase,
 )
-from src.adapter.driver.api.controllers import CustomerController
-from src.adapter.driver.api.controllers.order_controller import OrderController
-from src.core.application.use_cases import CustomerUseCase, CustomerUseCaseImpl
-from src.core.application.use_cases.checkout_use_case import CheckoutUseCase
-from src.core.application.use_cases.list_orders_use_case import ListOrdersUseCase
-from src.core.application.use_cases.product_use_case import ProductUseCase
-from src.core.application.use_cases.update_order_status_use_case import UpdateOrderStatusUseCase
-from src.core.domain.repositories import CustomerRepository
-from src.core.domain.repositories.order_repository import OrderRepository
-from src.core.domain.repositories.product_repository import ProductRepository
+from src.core.domain.repositories import CustomerRepository, OrderRepository, ProductRepository
 
 from ...driven.infra.repositories.order_repository_impl import SQLAlchemyOrderRepository
 from .controllers import ProductController
@@ -46,26 +43,38 @@ class AppModule(Module):
         return SQACustomerRepository(session)
 
     @provider
-    def provide_customer_use_case(
+    def provide_create_customer_use_case(
         self,
         customer_repository: CustomerRepository = Depends(),  # noqa: B008
-    ) -> CustomerUseCase:
-        """Provides a CustomerUseCase instance.
+    ) -> CreateCustomerUseCase:
+        """Provides a CreateCustomerUseCase instance.
 
         It depends on a CustomerRepository, which is injected by FastAPI's "Depends" mechanism.
         """
-        return CustomerUseCaseImpl(customer_repository)
+        return CreateCustomerUseCase(customer_repository)
+
+    @provider
+    def provide_get_customer_by_cpf_use_case(
+        self,
+        customer_repository: CustomerRepository = Depends(),  # noqa: B008
+    ) -> GetCustomerByCpfUseCase:
+        """Provides a GetCustomerByCpfUseCase instance.
+
+        It depends on a CustomerRepository, which is injected by FastAPI's "Depends" mechanism.
+        """
+        return GetCustomerByCpfUseCase(customer_repository)
 
     @provider
     def provide_customer_controller(
         self,
-        customer_use_case: CustomerUseCase = Depends(),  # noqa: B008
+        create_customer_use_case: CreateCustomerUseCase = Depends(),  # noqa: B008
+        get_customer_by_cpf_use_case: GetCustomerByCpfUseCase = Depends(),  # noqa: B008
     ) -> CustomerController:
         """Provides a CustomerController instance.
 
         It depends on a CustomerUseCase, which is injected by FastAPI's "Depends" mechanism.
         """
-        return CustomerController(customer_use_case)
+        return CustomerController(create_customer_use_case, get_customer_by_cpf_use_case)
 
     @provider
     def provide_product_repository(

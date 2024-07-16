@@ -1,13 +1,15 @@
 from .checkout_use_case import CheckoutUseCase
-from .customer_use_case import CustomerUseCase
-from .customer_use_case_impl import CustomerUseCaseImpl
+from .create_customer_use_case import CreateCustomerUseCase
+from .get_customer_by_cpf_use_case import GetCustomerByCpfUseCase
 from .list_orders_use_case import ListOrdersUseCase
+from .product_use_case import ProductUseCase
 from .update_order_status_use_case import UpdateOrderStatusUseCase
 
 __all__ = [
     "CheckoutUseCase",
-    "CustomerUseCase",
-    "CustomerUseCaseImpl",
+    "CreateCustomerUseCase",
+    "GetCustomerByCpfUseCase",
     "ListOrdersUseCase",
+    "ProductUseCase",
     "UpdateOrderStatusUseCase",
 ]
