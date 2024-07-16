@@ -4,7 +4,9 @@ from uuid import UUID
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
 from src.adapter.driver.api.types import CPFStr
+from src.core.application.use_cases.create_customer_use_case import CustomerData
 from src.core.domain.entities.customer import Customer
+from src.core.domain.value_objects import CPF, Email
 
 
 class _BaseCustomer(BaseModel):
@@ -15,6 +17,14 @@ class _BaseCustomer(BaseModel):
 
 class CustomerCreationIn(_BaseCustomer):
     """Schema for creating a new customer."""
+
+    def to_customer_data(self) -> CustomerData:
+        """Converts the schema into a CustomerData instance."""
+        return CustomerData(
+            name=self.name,
+            cpf=CPF(self.cpf),
+            email=Email(self.email),
+        )
 
     model_config = ConfigDict(str_strip_whitespace=True)
 
