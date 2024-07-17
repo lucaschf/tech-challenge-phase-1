@@ -4,7 +4,7 @@ from src.api.types import CPFStr
 from src.core.use_cases.order import OrderResult
 
 
-class DetailedOrderPresenter(PydanticPresenter):
+class DetailedOrderPresenter(PydanticPresenter[OrderOut, OrderResult]):
     """Presenter for the OrderDetailsResult use case."""
 
     def present(self, data: OrderResult) -> OrderOut:

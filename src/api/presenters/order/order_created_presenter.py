@@ -3,7 +3,7 @@ from src.api.schemas import OrderCreationOut
 from src.core.use_cases.order import OrderResult
 
 
-class OrderCreatedPresenter(PydanticPresenter):
+class OrderCreatedPresenter(PydanticPresenter[OrderResult, OrderCreationOut]):
     """Presenter for the OrderCreated use case."""
 
     def present(self, data: OrderResult) -> OrderCreationOut:
