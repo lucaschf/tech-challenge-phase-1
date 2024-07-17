@@ -4,6 +4,7 @@ from uuid import UUID
 from sqlalchemy import delete, update
 from sqlalchemy.future import select
 from sqlalchemy.orm import Session
+from sqlalchemy.sql.operators import eq
 
 from src.core.domain.entities import Product
 from src.core.domain.repositories.product_repository import ProductRepository
@@ -171,6 +172,26 @@ class SQLAlchemyProductRepository(ProductRepository):
         )
 
         return [p.to_entity() for p in result]
+
+    def get_by_uuid(self, product_uuid: UUID) -> Product | None:
+        """Retrieves a product by its UUID.
+
+        Args:
+            product_uuid (UUID): The UUID of the product to retrieve.
+
+        Returns:
+            Product: The product with the specified UUID.
+        """
+        result: ProductPersistentModel | None = (
+            self._session.query(ProductPersistentModel)
+            .filter(eq(ProductPersistentModel.uuid, product_uuid))
+            .first()
+        )
+
+        if result is None:
+            return None
+
+        return result.to_entity()
 
 
 __all__ = ["SQLAlchemyProductRepository"]

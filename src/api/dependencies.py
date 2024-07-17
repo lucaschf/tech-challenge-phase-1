@@ -9,7 +9,7 @@ from src.core.use_cases import (
     CreateCustomerUseCase,
     GetCustomerByCpfUseCase,
     ListOrdersUseCase,
-    ProductUseCase,
+    ProductCreationUseCase,
     UpdateOrderStatusUseCase,
 )
 from src.infra.database.config import get_db_session
@@ -19,6 +19,8 @@ from src.infra.database.repositories import (
     SQLAlchemyProductRepository,
 )
 
+from ..core.use_cases.product import GetProductsByCategoryUseCase, ProductUpdateUseCase
+from ..core.use_cases.product.delete import ProductDeleteUseCase
 from .controllers import ProductController
 
 
@@ -91,26 +93,67 @@ class AppModule(Module):
         return SQLAlchemyProductRepository(session)
 
     @provider
-    def provide_product_use_case(
+    def provide_product_creation_use_case(
         self,
         product_repository: ProductRepository = Depends(),  # noqa: B008
-    ) -> ProductUseCase:
-        """Provides a ProductUseCase instance.
+    ) -> ProductCreationUseCase:
+        """Provides a ProductCreationUseCase instance.
 
         It depends on a ProductRepository, which is injected by FastAPI's "Depends" mechanism.
         """
-        return ProductUseCase(product_repository)
+        return ProductCreationUseCase(product_repository)
+
+    @provider
+    def provide_product_update_use_case(
+        self,
+        product_repository: ProductRepository = Depends(),  # noqa: B008
+    ) -> ProductUpdateUseCase:
+        """Provides a ProductUpdateUseCase instance.
+
+        It depends on a ProductRepository, which is injected by FastAPI's "Depends" mechanism.
+        """
+        return ProductUpdateUseCase(product_repository)
+
+    @provider
+    def provide_product_delete_use_case(
+        self,
+        product_repository: ProductRepository = Depends(),  # noqa: B008
+    ) -> ProductDeleteUseCase:
+        """Provides a ProductDeleteUseCase instance.
+
+        It depends on a ProductRepository, which is injected by FastAPI's "Depends" mechanism.
+        """
+        return ProductDeleteUseCase(product_repository)
+
+    @provider
+    def provide_get_products_by_category_use_case(
+        self,
+        product_repository: ProductRepository = Depends(),  # noqa: B008
+    ) -> GetProductsByCategoryUseCase:
+        """Provides a GetProductsByCategoryUseCase instance.
+
+        It depends on a ProductRepository, which is injected by FastAPI's "Depends" mechanism.
+        """
+        return GetProductsByCategoryUseCase(product_repository)
 
     @provider
     def provide_product_controller(
         self,
-        product_use_case: ProductUseCase = Depends(),  # noqa: B008
+        get_products_by_category_use_case: GetProductsByCategoryUseCase = Depends(),  # noqa: B008
+        product_creation_use_case: ProductCreationUseCase = Depends(),  # noqa: B008
+        product_update_use_case: ProductUpdateUseCase = Depends(),  # noqa: B008
+        product_delete_use_case: ProductDeleteUseCase = Depends(),  # noqa: B008
     ) -> ProductController:
         """Provides a ProductController instance.
 
         It depends on a ProductUseCase, which is injected by FastAPI's "Depends" mechanism.
         """
-        return ProductController(product_use_case)
+        return ProductController(
+            product_creation_use_case,
+            product_update_use_case,
+            product_delete_use_case,
+            get_products_by_category_use_case,
+        )
 
     @provider
     def provide_order_repository(
