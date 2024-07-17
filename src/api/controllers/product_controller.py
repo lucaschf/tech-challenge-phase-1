@@ -4,6 +4,7 @@ from uuid import UUID
 from src.core.use_cases import ProductCreationUseCase, ProductUseCase
 
 from ...core.use_cases.product import ProductUpdateUseCase
+from ...core.use_cases.product.delete import ProductDeleteUseCase
 from ..presenters.product import DetailedProductPresenter
 from ..schemas import ProductCreationIn, ProductOut
 from ..schemas.product_schema import ProductUpdateIn
@@ -21,10 +22,12 @@ class ProductController:
         use_case: ProductUseCase,
         product_creation_use_case: ProductCreationUseCase,
         product_update_use_case: ProductUpdateUseCase,
+        product_delete_use_case: ProductDeleteUseCase,
     ) -> None:
         self.use_case = use_case
         self._product_creation_use_case = product_creation_use_case
         self._product_update_use_case = product_update_use_case
+        self._product_delete_use_case = product_delete_use_case
 
     def create_product(self, product_in: ProductCreationIn) -> ProductOut:
         """Registers a new product in the system from the provided product data."""
@@ -41,8 +44,8 @@ class ProductController:
         return DetailedProductPresenter().present(updated_product)
 
     def delete_product(self, product_uuid: UUID) -> None:
-        """Delete a product in the system from the provided product id."""
-        self.use_case.delete_product(product_uuid)
+        """Delete a product in the system from the provided product uuid."""
+        self._product_delete_use_case.execute(product_uuid)
 
     def get_products_by_category(self, category: str) -> List[ProductOut]:
         """Get a list of products in the system from the provided product category."""

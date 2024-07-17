@@ -85,5 +85,17 @@ class ProductRepository(ABC):
         """
         pass
 
+    @abstractmethod
+    def get_by_uuid(self, product_uuid: UUID) -> Product | None:
+        """Retrieves a product by its UUID.
+
+        Args:
+            product_uuid (UUID): The UUID of the product to retrieve.
+
+        Returns:
+            Product: The product with the specified UUID.
+        """
+        pass
+
 
 __all__ = ["ProductRepository"]
