@@ -1,9 +1,10 @@
-from typing import List
+from typing import Iterable
 from uuid import UUID
 
-from src.core.use_cases import ProductCreationUseCase, ProductUseCase
+from src.core.use_cases import ProductCreationUseCase
 
-from ...core.use_cases.product import ProductUpdateUseCase
+from ...core.domain.value_objects import Category
+from ...core.use_cases.product import GetProductsByCategoryUseCase, ProductUpdateUseCase
 from ...core.use_cases.product.delete import ProductDeleteUseCase
 from ..presenters.product import DetailedProductPresenter
 from ..schemas import ProductCreationIn, ProductOut
@@ -19,15 +20,15 @@ class ProductController:
 
     def __init__(
         self,
-        use_case: ProductUseCase,
         product_creation_use_case: ProductCreationUseCase,
         product_update_use_case: ProductUpdateUseCase,
         product_delete_use_case: ProductDeleteUseCase,
+        get_products_by_category_use_case: GetProductsByCategoryUseCase,
     ) -> None:
-        self.use_case = use_case
         self._product_creation_use_case = product_creation_use_case
         self._product_update_use_case = product_update_use_case
         self._product_delete_use_case = product_delete_use_case
+        self._get_products_by_category_use_case = get_products_by_category_use_case
 
     def create_product(self, product_in: ProductCreationIn) -> ProductOut:
         """Registers a new product in the system from the provided product data."""
@@ -47,10 +48,10 @@ class ProductController:
         """Delete a product in the system from the provided product uuid."""
         self._product_delete_use_case.execute(product_uuid)
 
-    def get_products_by_category(self, category: str) -> List[ProductOut]:
+    def get_products_by_category(self, category: Category) -> Iterable[ProductOut]:
         """Get a list of products in the system from the provided product category."""
-        products = self.use_case.get_products_by_category(category)
-        return [ProductOut.from_entity(product) for product in products]
+        products = self._get_products_by_category_use_case.execute(category)
+        return DetailedProductPresenter().present_many(products)
 
 
 __all__ = ["ProductController"]

@@ -1,6 +1,6 @@
 from .customer import CreateCustomerUseCase, GetCustomerByCpfUseCase
 from .order import CheckoutUseCase, ListOrdersUseCase, UpdateOrderStatusUseCase
-from .product import ProductCreationUseCase, ProductUseCase
+from .product import ProductCreationUseCase
 
 __all__ = [
     "CheckoutUseCase",
@@ -8,6 +8,5 @@ __all__ = [
     "GetCustomerByCpfUseCase",
     "ListOrdersUseCase",
     "ProductCreationUseCase",
-    "ProductUseCase",
     "UpdateOrderStatusUseCase",
 ]
