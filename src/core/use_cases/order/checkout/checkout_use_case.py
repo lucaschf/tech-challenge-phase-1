@@ -9,11 +9,8 @@ from src.core.domain.exceptions import (
 )
 from src.core.domain.repositories import CustomerRepository, OrderRepository, ProductRepository
 
-from .checkout_dto import (
-    CheckoutItem,
-    CheckoutOrder,
-    CheckoutResult,
-)
+from ..shared_dtos import CustomerSummaryResult, OrderItemResult, OrderResult
+from .checkout_dto import CheckoutItem, CheckoutOrder
 
 
 class CheckoutUseCase:
@@ -36,7 +33,7 @@ class CheckoutUseCase:
         self._customer_repository = customer_repository
         self._product_repository = product_repository
 
-    def checkout(self, request: CheckoutOrder) -> CheckoutResult:
+    def checkout(self, request: CheckoutOrder) -> OrderResult:
         """Creates a new order in the system.
 
         Args:
@@ -58,7 +55,26 @@ class CheckoutUseCase:
         order = Order(_customer=customer, _items=list(order_items))
         created_order = self._order_repository.create(order)
 
-        return CheckoutResult(number=created_order.uuid)
+        return OrderResult(
+            uuid=created_order.uuid,
+            status=created_order.status,
+            total_value=created_order.total_value,
+            created_at=created_order.created_at,
+            updated_at=created_order.updated_at,
+            customer=CustomerSummaryResult(
+                name=created_order.customer.name,
+                email=str(created_order.customer.email),
+                cpf=str(created_order.customer.cpf),
+            ),
+            items=[
+                OrderItemResult(
+                    product_name=item.product.name,
+                    quantity=item.quantity,
+                    unit_price=item.unit_price,
+                )
+                for item in created_order.items
+            ],
+        )
 
     @staticmethod
     def _validate_items(items: Iterable[CheckoutItem]) -> None:

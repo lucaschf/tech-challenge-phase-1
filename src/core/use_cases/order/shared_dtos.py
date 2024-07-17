@@ -25,7 +25,7 @@ class CustomerSummaryResult:
 
 
 @dataclass
-class OrderDetailsResult:
+class OrderResult:
     """OrderDetails represents the details of an order."""
 
     uuid: UUID
@@ -37,4 +37,4 @@ class OrderDetailsResult:
     customer: CustomerSummaryResult
 
 
-__all__ = ["CustomerSummaryResult", "OrderDetailsResult", "OrderItemResult"]
+__all__ = ["CustomerSummaryResult", "OrderItemResult", "OrderResult"]

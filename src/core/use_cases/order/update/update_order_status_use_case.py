@@ -1,9 +1,10 @@
 from uuid import UUID
 
-from src.core.domain.entities.order import Order
 from src.core.domain.exceptions import OrderNotFoundError
 from src.core.domain.repositories.order_repository import OrderRepository
 from src.core.domain.value_objects.order_status import OrderStatus
+
+from ..shared_dtos import CustomerSummaryResult, OrderItemResult, OrderResult
 
 
 class UpdateOrderStatusUseCase:
@@ -17,7 +18,7 @@ class UpdateOrderStatusUseCase:
         """
         self.repository = repository
 
-    def update_status(self, order_uuid: UUID, status: OrderStatus) -> Order:
+    def update_status(self, order_uuid: UUID, status: OrderStatus) -> OrderResult:
         """Updates the status of an existing order.
 
         Args:
@@ -32,7 +33,27 @@ class UpdateOrderStatusUseCase:
         if not order:
             raise OrderNotFoundError(order_uuid)
 
-        return self.repository.update_status(order_uuid, status)
+        order = self.repository.update_status(order_uuid, status)
+        return OrderResult(
+            uuid=order.uuid,
+            status=order.status,
+            total_value=order.total_value,
+            created_at=order.created_at,
+            updated_at=order.updated_at,
+            customer=CustomerSummaryResult(
+                name=order.customer.name,
+                email=str(order.customer.email),
+                cpf=str(order.customer.cpf),
+            ),
+            items=[
+                OrderItemResult(
+                    product_name=item.product.name,
+                    quantity=item.quantity,
+                    unit_price=item.unit_price,
+                )
+                for item in order.items
+            ],
+        )
 
 
 __all__ = ["UpdateOrderStatusUseCase"]

@@ -1,13 +1,13 @@
 from src.api.presenters.pydantic_presenter import PydanticPresenter
 from src.api.schemas import CustomerSummaryOut, OrderItemOut, OrderOut
 from src.api.types import CPFStr
-from src.core.use_cases.order import OrderDetailsResult
+from src.core.use_cases.order import OrderResult
 
 
 class DetailedOrderPresenter(PydanticPresenter):
     """Presenter for the OrderDetailsResult use case."""
 
-    def present(self, data: OrderDetailsResult) -> OrderOut:
+    def present(self, data: OrderResult) -> OrderOut:
         """Converts the OrderDetailsResult instance into an OrderOut instance."""
         return OrderOut(
             uuid=data.uuid,

@@ -19,11 +19,4 @@ class CheckoutOrder:
     items: Iterable[CheckoutItem]
 
 
-@dataclass
-class CheckoutResult:
-    """CheckoutOrderResponse provides the outcome of the checkout operation."""
-
-    number: UUID
-
-
-__all__ = ["CheckoutItem", "CheckoutOrder", "CheckoutResult"]
+__all__ = ["CheckoutItem", "CheckoutOrder"]

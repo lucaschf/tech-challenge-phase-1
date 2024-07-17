@@ -2,7 +2,7 @@ from typing import Iterable
 
 from src.core.domain.repositories.order_repository import OrderRepository
 
-from ..shared_dtos import CustomerSummaryResult, OrderDetailsResult, OrderItemResult
+from ..shared_dtos import CustomerSummaryResult, OrderItemResult, OrderResult
 
 
 class ListOrdersUseCase:
@@ -16,7 +16,7 @@ class ListOrdersUseCase:
         """
         self.repository = repository
 
-    def list_orders(self) -> Iterable[OrderDetailsResult]:
+    def list_orders(self) -> Iterable[OrderResult]:
         """Retrieves all orders.
 
         Returns:
@@ -24,7 +24,7 @@ class ListOrdersUseCase:
         """
         orders = self.repository.list_all()
         return [
-            OrderDetailsResult(
+            OrderResult(
                 uuid=order.uuid,
                 status=order.status,
                 total_value=order.total_value,

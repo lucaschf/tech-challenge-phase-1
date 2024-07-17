@@ -1,10 +1,10 @@
-from .create import CreateCustomerUseCase, CreatedCustomer, CustomerCreationData
-from .find import FoundCustomer, GetCustomerByCpfUseCase
+from .create import CreateCustomerUseCase, CustomerCreationData
+from .find import GetCustomerByCpfUseCase
+from .shared_dtos import CustomerResult
 
 __all__ = [
     "CreateCustomerUseCase",
-    "CreatedCustomer",
     "CustomerCreationData",
-    "FoundCustomer",
+    "CustomerResult",
     "GetCustomerByCpfUseCase",
 ]

@@ -1,16 +1,15 @@
-from .checkout import CheckoutItem, CheckoutOrder, CheckoutResult, CheckoutUseCase
+from .checkout import CheckoutItem, CheckoutOrder, CheckoutUseCase
 from .list import ListOrdersUseCase
-from .shared_dtos import CustomerSummaryResult, OrderDetailsResult, OrderItemResult
+from .shared_dtos import CustomerSummaryResult, OrderItemResult, OrderResult
 from .update import UpdateOrderStatusUseCase
 
 __all__ = [
     "CheckoutItem",
     "CheckoutOrder",
-    "CheckoutResult",
     "CheckoutUseCase",
     "CustomerSummaryResult",
     "ListOrdersUseCase",
-    "OrderDetailsResult",
     "OrderItemResult",
+    "OrderResult",
     "UpdateOrderStatusUseCase",
 ]
