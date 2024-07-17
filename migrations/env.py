@@ -3,8 +3,8 @@ from logging.config import fileConfig
 from alembic import context
 from sqlalchemy import engine_from_config, pool
 
-from src.adapter.driven.infra.sqa_models import PersistentModel
 from src.config import settings
+from src.infra.database.persistent_models import PersistentModel
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

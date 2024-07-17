@@ -1,6 +1,6 @@
 import factory
 
-from src.adapter.driver.api.schemas.product_schema import ProductCreationIn
+from src.api.schemas.product_schema import ProductCreationIn
 from src.core.domain.value_objects import Category
 
 

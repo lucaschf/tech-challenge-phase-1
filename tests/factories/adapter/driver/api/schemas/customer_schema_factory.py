@@ -1,6 +1,6 @@
 import factory
 
-from src.adapter.driver.api.schemas import CustomerCreationIn
+from src.api.schemas import CustomerCreationIn
 
 
 class CustomerCreationInFactory(factory.Factory):  # noqa: D101

@@ -3,7 +3,7 @@ from typing import Dict
 import pytest
 from pydantic import BaseModel
 
-from src.adapter.driver.api.types import CPFStr
+from src.api.types import CPFStr
 
 valid_cpfs = [
     {"masked": "987.471.450-64", "plain": "98747145064"},
