@@ -1,6 +1,6 @@
-from src.core.domain.entities.customer import Customer
 from src.core.use_cases import CreateCustomerUseCase, GetCustomerByCpfUseCase
 
+from ..presenters.customer import DetailedCustomerPresenter
 from ..schemas import CustomerCreationIn, CustomerDetailsOut
 
 
@@ -36,10 +36,8 @@ class CustomerController:
         Raises:
             HTTPException: If there's any business rule violation defined in DomainError.
         """
-        created_customer: Customer = self._customer_use_case.execute(
-            customer.to_customer_creation_data()
-        )
-        return CustomerDetailsOut.from_entity(created_customer)
+        created_customer = self._customer_use_case.execute(customer.to_customer_creation_data())
+        return DetailedCustomerPresenter().present(created_customer)
 
     def get_by_cpf(self, cpf: str) -> CustomerDetailsOut:
         """Retrieves a customer from the system using their CPF.
@@ -54,8 +52,8 @@ class CustomerController:
             HTTPException: If a customer with the provided CPF could not be found or there's any
             business rule violation defined in DomainError.
         """
-        customer: Customer | None = self._get_customer_by_cpf_use_case.execute(cpf)
-        return CustomerDetailsOut.from_entity(customer)
+        customer = self._get_customer_by_cpf_use_case.execute(cpf)
+        return DetailedCustomerPresenter().present(customer)
 
 
 __all__ = ["CustomerController"]

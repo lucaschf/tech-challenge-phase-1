@@ -3,7 +3,6 @@ from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
-from src.core.domain.entities.customer import Customer
 from src.core.domain.value_objects import CPF, Email
 from src.core.use_cases.customer.create import CustomerCreationData
 
@@ -44,19 +43,6 @@ class CustomerDetailsOut(CustomerSummaryOut):
     uuid: UUID = Field(description="The customer external id")
     created_at: datetime = Field(description="The customer creation date")
     updated_at: datetime = Field(description="The customer last update date")
-
-    # TODO Remove this method from here. Move this to presenter layer.
-    @staticmethod
-    def from_entity(entity: Customer) -> "CustomerDetailsOut":
-        """Creates a CustomerOut instance from a Customer entity."""
-        return CustomerDetailsOut(
-            name=entity.name,
-            cpf=CPFStr(str(entity.cpf)),
-            email=str(entity.email),
-            uuid=entity.uuid,
-            created_at=entity.created_at,
-            updated_at=entity.updated_at,
-        )
 
 
 __all__ = [
