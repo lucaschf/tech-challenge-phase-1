@@ -4,11 +4,9 @@ from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from src.core.domain.entities import Order
 from src.core.domain.value_objects import OrderStatus
 from src.core.use_cases.order import CheckoutItem, CheckoutOrder
 
-from ..types import CPFStr
 from .customer_schema import CustomerSummaryOut
 from .order_item_schema import OrderItemIn, OrderItemOut
 
@@ -48,24 +46,6 @@ class OrderOut(BaseModel):
     created_at: datetime = Field(description="The order creation date")
     updated_at: datetime = Field(description="The order last update date")
     total_value: float = Field(description="The total value of the order")
-
-    # TODO: Remove this method from here. Move this to presenter layer.
-    @staticmethod
-    def from_entity(entity: Order) -> "OrderOut":
-        """Creates an OrderOut instance from an Order entity."""
-        return OrderOut(
-            uuid=entity.uuid,
-            customer=CustomerSummaryOut(
-                name=entity.customer.name,
-                email=str(entity.customer.email),
-                cpf=CPFStr(str(entity.customer.cpf)),
-            ),
-            items=[OrderItemOut.from_entity(item) for item in entity.items],
-            status=entity.status,
-            created_at=entity.created_at,
-            updated_at=entity.updated_at,
-            total_value=entity.total_value,
-        )
 
     model_config = ConfigDict(str_strip_whitespace=True, arbitrary_types_allowed=True)
 

@@ -1,4 +1,4 @@
-from typing import List
+from typing import Iterable
 from uuid import UUID
 
 from src.core.use_cases import (
@@ -7,6 +7,7 @@ from src.core.use_cases import (
     UpdateOrderStatusUseCase,
 )
 
+from ..presenters.order import DetailedOrderPresenter, OrderCreatedPresenter
 from ..schemas.order_schema import (
     OrderCreationOut,
     OrderIn,
@@ -35,17 +36,17 @@ class OrderController:
     def checkout(self, order_in: OrderIn) -> OrderCreationOut:
         """Registers a new order in the system from the provided order data."""
         order = self.checkout_use_case.checkout(order_in.to_checkout_request())
-        return OrderCreationOut(number=order.number)
+        return OrderCreatedPresenter().present(order)
 
-    def list_orders(self) -> List[OrderOut]:
+    def list_orders(self) -> Iterable[OrderOut]:
         """Get a list of orders in the system."""
         orders = self.list_orders_use_case.list_orders()
-        return [OrderOut.from_entity(order) for order in orders]
+        return DetailedOrderPresenter().present_many(orders)
 
     def update_status(self, order_uuid: UUID, status_update: OrderStatusUpdateIn) -> OrderOut:
         """Update the status of an order in the system from the provided order ID and status."""
         order = self.update_order_status_use_case.update_status(order_uuid, status_update.status)
-        return OrderOut.from_entity(order)
+        return DetailedOrderPresenter().present(order)
 
 
 __all__ = ["OrderController"]

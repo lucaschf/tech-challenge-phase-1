@@ -1,7 +1,8 @@
-from typing import List
+from typing import Iterable
 
-from src.core.domain.entities.order import Order
 from src.core.domain.repositories.order_repository import OrderRepository
+
+from ..shared_dtos import CustomerSummaryResult, OrderDetailsResult, OrderItemResult
 
 
 class ListOrdersUseCase:
@@ -15,10 +16,36 @@ class ListOrdersUseCase:
         """
         self.repository = repository
 
-    def list_orders(self) -> List[Order]:
+    def list_orders(self) -> Iterable[OrderDetailsResult]:
         """Retrieves all orders.
 
         Returns:
-            List[Order]: A list of all orders.
+            An iterable of all orders.
         """
-        return self.repository.list_all()
+        orders = self.repository.list_all()
+        return [
+            OrderDetailsResult(
+                uuid=order.uuid,
+                status=order.status,
+                total_value=order.total_value,
+                created_at=order.created_at,
+                updated_at=order.updated_at,
+                customer=CustomerSummaryResult(
+                    name=order.customer.name,
+                    email=str(order.customer.email),
+                    cpf=str(order.customer.cpf),
+                ),
+                items=[
+                    OrderItemResult(
+                        product_name=item.product.name,
+                        quantity=item.quantity,
+                        unit_price=item.unit_price,
+                    )
+                    for item in order.items
+                ],
+            )
+            for order in orders
+        ]
+
+
+__all__ = ["ListOrdersUseCase"]

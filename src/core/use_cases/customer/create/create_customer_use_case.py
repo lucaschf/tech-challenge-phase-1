@@ -3,7 +3,7 @@ from src.core.domain.entities import Customer
 from src.core.domain.repositories import CustomerRepository
 
 from ..shared_dtos import CustomerResult
-from .customer_dto import CustomerCreationData
+from .create_customer_dto import CustomerCreationData
 
 
 class CreateCustomerUseCase:
