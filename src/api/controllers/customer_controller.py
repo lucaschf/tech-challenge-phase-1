@@ -36,7 +36,9 @@ class CustomerController:
         Raises:
             HTTPException: If there's any business rule violation defined in DomainError.
         """
-        created_customer: Customer = self._customer_use_case.execute(customer.to_customer_data())
+        created_customer: Customer = self._customer_use_case.execute(
+            customer.to_customer_creation_data()
+        )
         return CustomerDetailsOut.from_entity(created_customer)
 
     def get_by_cpf(self, cpf: str) -> CustomerDetailsOut:

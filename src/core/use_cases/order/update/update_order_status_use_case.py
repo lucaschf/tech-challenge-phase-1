@@ -21,8 +21,8 @@ class UpdateOrderStatusUseCase:
         """Updates the status of an existing order.
 
         Args:
-            order_uuid (UUID): The uuid of the order to be updated.
-            status (OrderStatus): The new status for the order.
+            order_uuid: The uuid of the order to be updated.
+            status: The new status for the order.
 
         Returns:
             Order: The updated order.
@@ -33,3 +33,6 @@ class UpdateOrderStatusUseCase:
             raise OrderNotFoundError(order_uuid)
 
         return self.repository.update_status(order_uuid, status)
+
+
+__all__ = ["UpdateOrderStatusUseCase"]

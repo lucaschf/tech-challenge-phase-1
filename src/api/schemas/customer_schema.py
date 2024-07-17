@@ -5,7 +5,7 @@ from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
 from src.core.domain.entities.customer import Customer
 from src.core.domain.value_objects import CPF, Email
-from src.core.use_cases.create_customer_use_case import CustomerData
+from src.core.use_cases.customer.create import CustomerCreationData
 
 from ..types import CPFStr
 
@@ -27,9 +27,9 @@ class CustomerSummaryOut(BaseCustomer):
 class CustomerCreationIn(BaseCustomer):
     """Schema for creating a new customer."""
 
-    def to_customer_data(self) -> CustomerData:
+    def to_customer_creation_data(self) -> CustomerCreationData:
         """Converts the schema into a CustomerData instance."""
-        return CustomerData(
+        return CustomerCreationData(
             name=self.name,
             cpf=CPF(self.cpf),
             email=Email(self.email),

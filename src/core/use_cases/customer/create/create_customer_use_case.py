@@ -1,16 +1,9 @@
-from dataclasses import dataclass
-
 from src.core.domain.base import DomainError
 from src.core.domain.entities import Customer
 from src.core.domain.repositories import CustomerRepository
-from src.core.domain.value_objects import CPF, Email
 
-
-@dataclass
-class CustomerData:
-    name: str
-    cpf: CPF
-    email: Email
+from ..shared_dtos import CustomerResult
+from .customer_dto import CustomerCreationData
 
 
 class CreateCustomerUseCase:
@@ -19,7 +12,7 @@ class CreateCustomerUseCase:
     def __init__(self, customer_repository: CustomerRepository) -> None:
         self.customer_repository = customer_repository
 
-    def execute(self, customer_data: CustomerData) -> Customer:
+    def execute(self, customer_data: CustomerCreationData) -> CustomerResult:
         """Creates a new customer using the provided data and adds it to the repository.
 
         Args:
@@ -37,7 +30,15 @@ class CreateCustomerUseCase:
         if self.customer_repository.exists(customer.cpf, customer.email):
             raise DomainError(message="Customer already exists")
 
-        return self.customer_repository.add(customer)
+        db_customer = self.customer_repository.add(customer)
+        return CustomerResult(
+            name=db_customer.name,
+            cpf=db_customer.cpf,
+            email=db_customer.email,
+            created_at=db_customer.created_at,
+            updated_at=db_customer.updated_at,
+            uuid=db_customer.uuid,
+        )
 
 
 __all__ = ["CreateCustomerUseCase"]

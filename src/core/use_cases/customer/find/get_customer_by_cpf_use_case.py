@@ -1,7 +1,8 @@
-from src.core.domain.entities import Customer
 from src.core.domain.exceptions import CustomerNotFoundError
 from src.core.domain.repositories import CustomerRepository
 from src.core.domain.value_objects import CPF
+
+from ..shared_dtos import CustomerResult
 
 
 class GetCustomerByCpfUseCase:
@@ -10,7 +11,7 @@ class GetCustomerByCpfUseCase:
     def __init__(self, customer_repository: CustomerRepository) -> None:
         self.customer_repository = customer_repository
 
-    def execute(self, cpf: str) -> Customer:
+    def execute(self, cpf: str) -> CustomerResult:
         """Get a customer by their CPF.
 
         Args:
@@ -27,7 +28,14 @@ class GetCustomerByCpfUseCase:
         if not customer:
             raise CustomerNotFoundError(search_params={"cpf": cpf})
 
-        return customer
+        return CustomerResult(
+            name=customer.name,
+            cpf=customer.cpf,
+            email=customer.email,
+            created_at=customer.created_at,
+            updated_at=customer.updated_at,
+            uuid=customer.uuid,
+        )
 
 
 __all__ = ["GetCustomerByCpfUseCase"]

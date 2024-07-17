@@ -1,4 +1,3 @@
-from dataclasses import dataclass
 from typing import Iterable
 from uuid import UUID
 
@@ -10,28 +9,11 @@ from src.core.domain.exceptions import (
 )
 from src.core.domain.repositories import CustomerRepository, OrderRepository, ProductRepository
 
-
-@dataclass
-class CheckoutItem:
-    """CheckoutItem represents the data for an item in a checkout."""
-
-    product_id: UUID
-    quantity: int
-
-
-@dataclass
-class CheckoutOrder:
-    """CheckoutOrderRequest encapsulates all necessary data for performing a checkout."""
-
-    customer_id: UUID
-    items: Iterable[CheckoutItem]
-
-
-@dataclass
-class CheckoutResult:
-    """CheckoutOrderResponse provides the outcome of the checkout operation."""
-
-    number: UUID
+from .checkout_dto import (
+    CheckoutItem,
+    CheckoutOrder,
+    CheckoutResult,
+)
 
 
 class CheckoutUseCase:
@@ -137,4 +119,4 @@ class CheckoutUseCase:
         ]
 
 
-__all__ = ["CheckoutItem", "CheckoutOrder", "CheckoutResult", "CheckoutUseCase"]
+__all__ = ["CheckoutUseCase"]

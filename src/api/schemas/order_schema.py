@@ -6,7 +6,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from src.core.domain.entities import Order
 from src.core.domain.value_objects import OrderStatus
-from src.core.use_cases.checkout_use_case import CheckoutItem, CheckoutOrder
+from src.core.use_cases.order import CheckoutItem, CheckoutOrder
 
 from ..types import CPFStr
 from .customer_schema import CustomerSummaryOut
