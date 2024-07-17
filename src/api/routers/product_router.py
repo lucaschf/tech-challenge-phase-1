@@ -6,7 +6,7 @@ from fastapi import APIRouter, Depends, status
 from ...core.domain.value_objects import Category
 from ..controllers import ProductController
 from ..dependencies import injector
-from ..schemas.product_schema import ProductCreationIn, ProductOut
+from ..schemas.product_schema import ProductCreationIn, ProductOut, ProductUpdateIn
 
 router = APIRouter(tags=["Product"])
 
@@ -22,7 +22,7 @@ def create_product(
 @router.put("/products/{product_uuid}", response_model=ProductOut)
 def update_product(
     product_uuid: UUID,
-    product: ProductCreationIn,
+    product: ProductUpdateIn,
     controller: ProductController = Depends(lambda: injector.get(ProductController)),  # noqa: B008
 ) -> ProductOut:
     return controller.update_product(product_uuid, product)

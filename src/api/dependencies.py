@@ -20,6 +20,7 @@ from src.infra.database.repositories import (
     SQLAlchemyProductRepository,
 )
 
+from ..core.use_cases.product import ProductUpdateUseCase
 from .controllers import ProductController
 
 
@@ -107,23 +108,37 @@ class AppModule(Module):
         self,
         product_repository: ProductRepository = Depends(),  # noqa: B008
     ) -> ProductCreationUseCase:
-        """Provides a ProductUseCase instance.
+        """Provides a ProductCreationUseCase instance.
 
         It depends on a ProductRepository, which is injected by FastAPI's "Depends" mechanism.
         """
         return ProductCreationUseCase(product_repository)
 
     @provider
+    def provide_product_update_use_case(
+        self,
+        product_repository: ProductRepository = Depends(),  # noqa: B008
+    ) -> ProductUpdateUseCase:
+        """Provides a ProductUpdateUseCase instance.
+
+        It depends on a ProductRepository, which is injected by FastAPI's "Depends" mechanism.
+        """
+        return ProductUpdateUseCase(product_repository)
+
+    @provider
     def provide_product_controller(
         self,
         product_use_case: ProductUseCase = Depends(),  # noqa: B008
         product_creation_use_case: ProductCreationUseCase = Depends(),  # noqa: B008
+        product_update_use_case: ProductUpdateUseCase = Depends(),  # noqa: B008
     ) -> ProductController:
         """Provides a ProductController instance.
 
         It depends on a ProductUseCase, which is injected by FastAPI's "Depends" mechanism.
         """
-        return ProductController(product_use_case, product_creation_use_case)
+        return ProductController(
+            product_use_case, product_creation_use_case, product_update_use_case
+        )
 
     @provider
     def provide_order_repository(

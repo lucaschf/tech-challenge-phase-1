@@ -1,12 +1,12 @@
 from typing import List
 from uuid import UUID
 
-from src.core.domain.entities import Product
-from src.core.domain.value_objects import Category
 from src.core.use_cases import ProductCreationUseCase, ProductUseCase
 
+from ...core.use_cases.product import ProductUpdateUseCase
 from ..presenters.product import DetailedProductPresenter
 from ..schemas import ProductCreationIn, ProductOut
+from ..schemas.product_schema import ProductUpdateIn
 
 
 class ProductController:
@@ -17,10 +17,14 @@ class ProductController:
     """
 
     def __init__(
-        self, use_case: ProductUseCase, product_creation_use_case: ProductCreationUseCase
+        self,
+        use_case: ProductUseCase,
+        product_creation_use_case: ProductCreationUseCase,
+        product_update_use_case: ProductUpdateUseCase,
     ) -> None:
         self.use_case = use_case
         self._product_creation_use_case = product_creation_use_case
+        self._product_update_use_case = product_update_use_case
 
     def create_product(self, product_in: ProductCreationIn) -> ProductOut:
         """Registers a new product in the system from the provided product data."""
@@ -29,17 +33,12 @@ class ProductController:
         )
         return DetailedProductPresenter().present(created_product)
 
-    def update_product(self, product_uuid: UUID, product_in: ProductCreationIn) -> ProductOut:
+    def update_product(self, product_uuid: UUID, product_in: ProductUpdateIn) -> ProductOut:
         """Update a product in the system from the provided product data and id."""
-        product = Product(
-            name=product_in.name,
-            category=Category(product_in.category),
-            price=product_in.price,
-            description=product_in.description,
-            images=product_in.images,
+        updated_product = self._product_update_use_case.execute(
+            product_uuid, product_in.to_product_update_dto()
         )
-        updated_product = self.use_case.update_product(product_uuid, product)
-        return ProductOut.from_entity(updated_product)
+        return DetailedProductPresenter().present(updated_product)
 
     def delete_product(self, product_uuid: UUID) -> None:
         """Delete a product in the system from the provided product id."""
