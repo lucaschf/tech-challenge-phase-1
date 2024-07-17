@@ -3,8 +3,9 @@ from uuid import UUID
 
 from src.core.domain.entities import Product
 from src.core.domain.value_objects import Category
-from src.core.use_cases import ProductUseCase
+from src.core.use_cases import ProductCreationUseCase, ProductUseCase
 
+from ..presenters.product import DetailedProductPresenter
 from ..schemas import ProductCreationIn, ProductOut
 
 
@@ -15,20 +16,18 @@ class ProductController:
     handling HTTP requests related to product data.
     """
 
-    def __init__(self, use_case: ProductUseCase) -> None:
+    def __init__(
+        self, use_case: ProductUseCase, product_creation_use_case: ProductCreationUseCase
+    ) -> None:
         self.use_case = use_case
+        self._product_creation_use_case = product_creation_use_case
 
     def create_product(self, product_in: ProductCreationIn) -> ProductOut:
         """Registers a new product in the system from the provided product data."""
-        product = Product(
-            name=product_in.name,
-            category=Category(product_in.category),
-            price=product_in.price,
-            description=product_in.description,
-            images=product_in.images,
+        created_product = self._product_creation_use_case.execute(
+            product_in.to_product_creation_dto()
         )
-        created_product = self.use_case.create_product(product)
-        return ProductOut.from_entity(created_product)
+        return DetailedProductPresenter().present(created_product)
 
     def update_product(self, product_uuid: UUID, product_in: ProductCreationIn) -> ProductOut:
         """Update a product in the system from the provided product data and id."""

@@ -6,6 +6,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from src.core.domain.entities.product import Product
 from src.core.domain.value_objects import Category
+from src.core.use_cases.product import ProductCreation
 
 
 class _BaseProduct(BaseModel):
@@ -22,6 +23,16 @@ class ProductCreationIn(_BaseProduct):
     """Schema for creating a new product."""
 
     model_config = ConfigDict(str_strip_whitespace=True)
+
+    def to_product_creation_dto(self) -> ProductCreation:
+        """Converts the schema to a ProductCreation instance."""
+        return ProductCreation(
+            name=self.name,
+            category=self.category,
+            price=self.price,
+            description=self.description,
+            images=self.images,
+        )
 
 
 class ProductOut(ProductCreationIn):

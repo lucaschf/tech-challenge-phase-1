@@ -20,20 +20,6 @@ class ProductUseCase:
         """
         self.repository = repository
 
-    def create_product(self, product: Product) -> Product:
-        """Creates a new product.
-
-        Args:
-            product (Product): The product to be created.
-
-        Returns:
-            Product: The created product with its ID and other persistence details populated.
-        """
-        if self.repository.get_by_name(product.name):
-            raise DomainError(message="Product already exists")
-
-        return self.repository.create(product)
-
     def update_product(self, product_uuid: UUID, product: Product) -> Product:
         """Updates an existing product.
 

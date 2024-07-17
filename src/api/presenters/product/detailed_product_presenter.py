@@ -1,0 +1,23 @@
+from src.api.presenters.pydantic_presenter import PydanticPresenter
+from src.api.schemas import ProductOut
+from src.core.use_cases.product import ProductResult
+
+
+class DetailedProductPresenter(PydanticPresenter[ProductOut, ProductResult]):
+    """Presenter for the CustomerDetails."""
+
+    def present(self, data: ProductResult) -> ProductOut:
+        """Converts the CustomerResult instance into a CustomerDetailsOut instance."""
+        return ProductOut(
+            uuid=data.uuid,
+            name=data.name,
+            category=data.category,
+            price=data.price,
+            description=data.description,
+            images=data.images,
+            created_at=data.created_at,
+            updated_at=data.updated_at,
+        )
+
+
+__all__ = ["DetailedProductPresenter"]
