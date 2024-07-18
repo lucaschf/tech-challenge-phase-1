@@ -1,10 +1,11 @@
-from src.api.presenters.pydantic_presenter import PydanticPresenter
 from src.api.schemas import CustomerSummaryOut, OrderItemOut, OrderOut
 from src.api.types import CPFStr
 from src.core.use_cases.order import OrderResult
 
+from ..presenter import Presenter
 
-class DetailedOrderPresenter(PydanticPresenter[OrderOut, OrderResult]):
+
+class DetailedOrderPresenter(Presenter[OrderOut, OrderResult]):
     """Presenter for the OrderDetailsResult use case."""
 
     def present(self, data: OrderResult) -> OrderOut:

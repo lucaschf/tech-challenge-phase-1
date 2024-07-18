@@ -1,10 +1,11 @@
-from src.api.presenters.pydantic_presenter import PydanticPresenter
 from src.api.schemas import CustomerDetailsOut
 from src.api.types import CPFStr
 from src.core.use_cases.customer import CustomerResult
 
+from ..presenter import Presenter
 
-class DetailedCustomerPresenter(PydanticPresenter[CustomerDetailsOut, CustomerResult]):
+
+class DetailedCustomerPresenter(Presenter[CustomerDetailsOut, CustomerResult]):
     """Presenter for the CustomerDetails."""
 
     def present(self, data: CustomerResult) -> CustomerDetailsOut:

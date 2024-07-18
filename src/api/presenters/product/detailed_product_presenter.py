@@ -1,9 +1,10 @@
-from src.api.presenters.pydantic_presenter import PydanticPresenter
 from src.api.schemas import ProductOut
 from src.core.use_cases.product import ProductResult
 
+from ..presenter import Presenter
 
-class DetailedProductPresenter(PydanticPresenter[ProductOut, ProductResult]):
+
+class DetailedProductPresenter(Presenter[ProductOut, ProductResult]):
     """Presenter for the CustomerDetails."""
 
     def present(self, data: ProductResult) -> ProductOut:
