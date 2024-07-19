@@ -5,7 +5,7 @@ from src.core.use_cases.customer import CustomerResult
 from ..presenter import Presenter
 
 
-class DetailedCustomerPresenter(Presenter[CustomerDetailsOut, CustomerResult]):
+class CustomerDetailsPresenter(Presenter[CustomerDetailsOut, CustomerResult]):
     """Presenter for the CustomerDetails."""
 
     def present(self, data: CustomerResult) -> CustomerDetailsOut:
@@ -20,4 +20,4 @@ class DetailedCustomerPresenter(Presenter[CustomerDetailsOut, CustomerResult]):
         )
 
 
-__all__ = ["DetailedCustomerPresenter"]
+__all__ = ["CustomerDetailsPresenter"]

@@ -49,6 +49,9 @@ class ProductUpdateUseCase:
             ),
         )
 
+        if not db_product:
+            raise DomainError(message="Product not found")
+
         return ProductResult(
             uuid=db_product.uuid,
             name=db_product.name,

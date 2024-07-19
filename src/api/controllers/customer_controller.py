@@ -1,6 +1,7 @@
 from src.core.use_cases import CreateCustomerUseCase, GetCustomerByCpfUseCase
 
-from ..presenters.customer import DetailedCustomerPresenter
+from ...core.use_cases.customer import CustomerResult
+from ..presenters import Presenter
 from ..schemas import CustomerCreationIn, CustomerDetailsOut
 
 
@@ -19,9 +20,11 @@ class CustomerController:
         self,
         create_customer_use_case: CreateCustomerUseCase,
         get_customer_by_cpf_use_case: GetCustomerByCpfUseCase,
+        customer_details_presenter: Presenter[CustomerDetailsOut, CustomerResult],
     ) -> None:
         self._customer_use_case = create_customer_use_case
         self._get_customer_by_cpf_use_case = get_customer_by_cpf_use_case
+        self._customer_details_presenter = customer_details_presenter
 
     def create_customer(self, customer: CustomerCreationIn) -> CustomerDetailsOut:
         """Registers a new customer in the system from the provided customer data.
@@ -37,7 +40,7 @@ class CustomerController:
             HTTPException: If there's any business rule violation defined in DomainError.
         """
         created_customer = self._customer_use_case.execute(customer.to_customer_creation_data())
-        return DetailedCustomerPresenter().present(created_customer)
+        return self._customer_details_presenter.present(created_customer)
 
     def get_by_cpf(self, cpf: str) -> CustomerDetailsOut:
         """Retrieves a customer from the system using their CPF.
@@ -53,7 +56,7 @@ class CustomerController:
             business rule violation defined in DomainError.
         """
         customer = self._get_customer_by_cpf_use_case.execute(cpf)
-        return DetailedCustomerPresenter().present(customer)
+        return self._customer_details_presenter.present(customer)
 
 
 __all__ = ["CustomerController"]
