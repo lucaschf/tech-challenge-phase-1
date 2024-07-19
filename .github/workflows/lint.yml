@@ -20,4 +20,5 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         poetry install
-        make lint-check
+    - name: Run lint check
+      run: poetry run make lint-check
