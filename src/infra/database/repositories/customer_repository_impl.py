@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from sqlalchemy import or_, select
+from sqlalchemy import exists, or_, select
 from sqlalchemy.orm import Session
 
 from src.core.domain.entities.customer import Customer
@@ -29,17 +29,18 @@ class SQlAlchemyCustomerRepository(CustomerRepository):
 
         Returns:
            bool: True if the customer exists, False otherwise.
-
-        Raises:
-           DomainError: If both CPF and email are not provided.
         """
-        query = select(CustomerPersistentModel).where(
-            or_(
-                CustomerPersistentModel.cpf == cpf.number,
-                CustomerPersistentModel.email == email.address,
-            )
-        )
-        return self._session.execute(query).scalar() is not None
+        if not cpf and not email:  # Should not happen
+            return False
+
+        conditions = []
+        if cpf:
+            conditions.append(CustomerPersistentModel.cpf == cpf.number)
+        if email:
+            conditions.append(CustomerPersistentModel.email == email.address)
+
+        stmt = select(exists().where(or_(*conditions)))
+        return self._session.execute(stmt).scalar()
 
     def add(self, customer: Customer) -> Customer:
         """Add a new customer to the database.
