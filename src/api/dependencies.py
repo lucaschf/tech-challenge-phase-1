@@ -7,9 +7,15 @@ from src.core.domain.repositories import CustomerRepository, OrderRepository, Pr
 from src.core.use_cases import (
     CheckoutUseCase,
     CreateCustomerUseCase,
+    CustomerResult,
     GetCustomerByCpfUseCase,
+    GetProductsByCategoryUseCase,
     ListOrdersUseCase,
+    OrderResult,
     ProductCreationUseCase,
+    ProductDeleteUseCase,
+    ProductResult,
+    ProductUpdateUseCase,
     UpdateOrderStatusUseCase,
 )
 from src.infra.database.config import get_db_session
@@ -19,14 +25,6 @@ from src.infra.database.repositories import (
     SQLAlchemyProductRepository,
 )
 
-from ..core.use_cases.customer import CustomerResult
-from ..core.use_cases.order import OrderResult
-from ..core.use_cases.product import (
-    GetProductsByCategoryUseCase,
-    ProductResult,
-    ProductUpdateUseCase,
-)
-from ..core.use_cases.product.delete import ProductDeleteUseCase
 from .controllers import ProductController
 from .presenters import (
     CustomerDetailsPresenter,
