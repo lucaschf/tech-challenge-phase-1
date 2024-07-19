@@ -7,7 +7,8 @@ from src.core.use_cases import (
     UpdateOrderStatusUseCase,
 )
 
-from ..presenters.order import DetailedOrderPresenter, OrderCreatedPresenter
+from ...core.use_cases.order import OrderResult
+from ..presenters import Presenter
 from ..schemas.order_schema import (
     OrderCreationOut,
     OrderIn,
@@ -28,25 +29,29 @@ class OrderController:
         checkout_use_case: CheckoutUseCase,
         list_orders_use_case: ListOrdersUseCase,
         update_order_status_use_case: UpdateOrderStatusUseCase,
+        order_created_presenter: Presenter[OrderCreationOut, OrderResult],
+        order_details_presenter: Presenter[OrderOut, OrderResult],
     ) -> None:
-        self.checkout_use_case = checkout_use_case
-        self.list_orders_use_case = list_orders_use_case
-        self.update_order_status_use_case = update_order_status_use_case
+        self._checkout_use_case = checkout_use_case
+        self._list_orders_use_case = list_orders_use_case
+        self._update_order_status_use_case = update_order_status_use_case
+        self._order_created_presenter = order_created_presenter
+        self._order_details_presenter = order_details_presenter
 
     def checkout(self, order_in: OrderIn) -> OrderCreationOut:
         """Registers a new order in the system from the provided order data."""
-        order = self.checkout_use_case.checkout(order_in.to_checkout_request())
-        return OrderCreatedPresenter().present(order)
+        order = self._checkout_use_case.checkout(order_in.to_checkout_request())
+        return self._order_created_presenter.present(order)
 
     def list_orders(self) -> Iterable[OrderOut]:
         """Get a list of orders in the system."""
-        orders = self.list_orders_use_case.list_orders()
-        return DetailedOrderPresenter().present_many(orders)
+        orders = self._list_orders_use_case.list_orders()
+        return self._order_details_presenter.present_many(orders)
 
     def update_status(self, order_uuid: UUID, status_update: OrderStatusUpdateIn) -> OrderOut:
         """Update the status of an order in the system from the provided order ID and status."""
-        order = self.update_order_status_use_case.update_status(order_uuid, status_update.status)
-        return DetailedOrderPresenter().present(order)
+        order = self._update_order_status_use_case.update_status(order_uuid, status_update.status)
+        return self._order_details_presenter.present(order)
 
 
 __all__ = ["OrderController"]

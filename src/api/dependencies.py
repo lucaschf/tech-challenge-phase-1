@@ -19,9 +19,23 @@ from src.infra.database.repositories import (
     SQLAlchemyProductRepository,
 )
 
-from ..core.use_cases.product import GetProductsByCategoryUseCase, ProductUpdateUseCase
+from ..core.use_cases.customer import CustomerResult
+from ..core.use_cases.order import OrderResult
+from ..core.use_cases.product import (
+    GetProductsByCategoryUseCase,
+    ProductResult,
+    ProductUpdateUseCase,
+)
 from ..core.use_cases.product.delete import ProductDeleteUseCase
 from .controllers import ProductController
+from .presenters import (
+    CustomerDetailsPresenter,
+    OrderCreatedPresenter,
+    OrderDetailsPresenter,
+    Presenter,
+    ProductDetailsPresenter,
+)
+from .schemas import CustomerDetailsOut, OrderCreationOut, OrderOut, ProductOut
 
 
 class AppModule(Module):
@@ -74,12 +88,19 @@ class AppModule(Module):
         self,
         create_customer_use_case: CreateCustomerUseCase = Depends(),  # noqa: B008
         get_customer_by_cpf_use_case: GetCustomerByCpfUseCase = Depends(),  # noqa: B008
+        customer_details_presenter: CustomerDetailsPresenter = Depends(),  # noqa: B008
     ) -> CustomerController:
         """Provides a CustomerController instance.
 
         It depends on a CustomerUseCase, which is injected by FastAPI's "Depends" mechanism.
         """
-        return CustomerController(create_customer_use_case, get_customer_by_cpf_use_case)
+        return CustomerController(
+            create_customer_use_case, get_customer_by_cpf_use_case, customer_details_presenter
+        )
+
+    @provider
+    def provide_customer_details_presenter(self) -> Presenter[CustomerDetailsOut, CustomerResult]:
+        return CustomerDetailsPresenter()
 
     @provider
     def provide_product_repository(
@@ -137,12 +158,17 @@ class AppModule(Module):
         return GetProductsByCategoryUseCase(product_repository)
 
     @provider
+    def provide_product_details_presenter(self) -> Presenter[ProductOut, ProductResult]:
+        return ProductDetailsPresenter()
+
+    @provider
     def provide_product_controller(
         self,
         get_products_by_category_use_case: GetProductsByCategoryUseCase = Depends(),  # noqa: B008
         product_creation_use_case: ProductCreationUseCase = Depends(),  # noqa: B008
         product_update_use_case: ProductUpdateUseCase = Depends(),  # noqa: B008
         product_delete_use_case: ProductDeleteUseCase = Depends(),  # noqa: B008
+        product_details_presenter: Presenter[ProductOut, ProductResult] = Depends(),  # noqa: B008
     ) -> ProductController:
         """Provides a ProductController instance.
 
@@ -153,6 +179,7 @@ class AppModule(Module):
             product_update_use_case,
             product_delete_use_case,
             get_products_by_category_use_case,
+            product_details_presenter,
         )
 
     @provider
@@ -193,15 +220,31 @@ class AppModule(Module):
         return UpdateOrderStatusUseCase(order_repository)
 
     @provider
+    def provide_order_created_presenter(self) -> Presenter[OrderCreationOut, OrderResult]:
+        """Provides an OrderCreatedPresenter instance."""
+        return OrderCreatedPresenter()
+
+    @provider
+    def provide_order_details_presenter(self) -> Presenter[OrderOut, OrderResult]:
+        """Provides an OrderDetailsPresenter instance."""
+        return OrderDetailsPresenter()
+
+    @provider
     def provide_order_controller(
         self,
         checkout_use_case: CheckoutUseCase = Depends(),  # noqa: B008
         list_orders_use_case: ListOrdersUseCase = Depends(),  # noqa: B008
         update_order_status_use_case: UpdateOrderStatusUseCase = Depends(),  # noqa: B008
+        order_created_presenter: Presenter[OrderCreationOut, OrderResult] = Depends(),  # noqa: B008
+        order_details_presenter: Presenter[OrderOut, OrderResult] = Depends(),  # noqa: B008
     ) -> OrderController:
         """Provides an OrderController instance."""
         return OrderController(
-            checkout_use_case, list_orders_use_case, update_order_status_use_case
+            checkout_use_case,
+            list_orders_use_case,
+            update_order_status_use_case,
+            order_created_presenter,
+            order_details_presenter,
         )
 
 

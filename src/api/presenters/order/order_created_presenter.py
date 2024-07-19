@@ -4,7 +4,7 @@ from src.core.use_cases.order import OrderResult
 from ..presenter import Presenter
 
 
-class OrderCreatedPresenter(Presenter[OrderResult, OrderCreationOut]):
+class OrderCreatedPresenter(Presenter[OrderCreationOut, OrderResult]):
     """Presenter for the OrderCreated use case."""
 
     def present(self, data: OrderResult) -> OrderCreationOut:

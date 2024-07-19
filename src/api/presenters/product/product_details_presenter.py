@@ -4,8 +4,8 @@ from src.core.use_cases.product import ProductResult
 from ..presenter import Presenter
 
 
-class DetailedProductPresenter(Presenter[ProductOut, ProductResult]):
-    """Presenter for the CustomerDetails."""
+class ProductDetailsPresenter(Presenter[ProductOut, ProductResult]):
+    """Presenter for the product details."""
 
     def present(self, data: ProductResult) -> ProductOut:
         """Converts the CustomerResult instance into a CustomerDetailsOut instance."""
@@ -21,4 +21,4 @@ class DetailedProductPresenter(Presenter[ProductOut, ProductResult]):
         )
 
 
-__all__ = ["DetailedProductPresenter"]
+__all__ = ["ProductDetailsPresenter"]

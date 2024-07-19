@@ -5,7 +5,7 @@ from src.core.use_cases.order import OrderResult
 from ..presenter import Presenter
 
 
-class DetailedOrderPresenter(Presenter[OrderOut, OrderResult]):
+class OrderDetailsPresenter(Presenter[OrderOut, OrderResult]):
     """Presenter for the OrderDetailsResult use case."""
 
     def present(self, data: OrderResult) -> OrderOut:
@@ -32,4 +32,4 @@ class DetailedOrderPresenter(Presenter[OrderOut, OrderResult]):
         )
 
 
-__all__ = ["DetailedOrderPresenter"]
+__all__ = ["OrderDetailsPresenter"]

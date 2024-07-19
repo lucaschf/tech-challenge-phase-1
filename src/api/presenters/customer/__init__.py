@@ -1,3 +1,3 @@
-from .detailed_customer_presenter import DetailedCustomerPresenter
+from .customer_details_presenter import CustomerDetailsPresenter
 
-__all__ = ["DetailedCustomerPresenter"]
+__all__ = ["CustomerDetailsPresenter"]

@@ -1,3 +1,3 @@
-from .detailed_product_presenter import DetailedProductPresenter
+from .product_details_presenter import ProductDetailsPresenter
 
-__all__ = ["DetailedProductPresenter"]
+__all__ = ["ProductDetailsPresenter"]

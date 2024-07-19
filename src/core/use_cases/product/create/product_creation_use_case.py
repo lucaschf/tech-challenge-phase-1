@@ -36,8 +36,8 @@ class ProductCreationUseCase:
             name=product_data.name,
             category=product_data.category,
             price=product_data.price,
-            description=product_data.description,
-            images=product_data.images,
+            description=product_data.description or "No description",
+            images=product_data.images or ["https://via.placeholder.com/150"],
         )
 
         product = self.repository.create(product)
