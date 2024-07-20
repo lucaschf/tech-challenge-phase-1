@@ -17,6 +17,7 @@ from src.core.use_cases import (
     GetProductsByCategoryUseCase,
     ListOrdersUseCase,
     OrderResult,
+    PaymentProcessingUseCase,
     ProductCreationUseCase,
     ProductDeleteUseCase,
     ProductResult,
@@ -206,21 +207,27 @@ class AppModule(Module):
         return MercadoPagoGateway()
 
     @provider
+    def provide_payment_use_case(
+        self,
+        payment_gateway: IPaymentGateway = Depends(),  # noqa: B008
+        payment_repository: PaymentRepository = Depends(),  # noqa: B008
+    ) -> PaymentProcessingUseCase:
+        return PaymentProcessingUseCase(payment_gateway, payment_repository)
+
+    @provider
     def provide_checkout_use_case(
         self,
         order_repository: OrderRepository = Depends(),  # noqa: B008
         customer_repository: CustomerRepository = Depends(),  # noqa: B008
         product_repository: ProductRepository = Depends(),  # noqa: B008
-        payment_repository: PaymentRepository = Depends(),  # noqa: B008
-        payment_gateway: IPaymentGateway = Depends(),  # noqa: B008
+        payment_use_case: PaymentProcessingUseCase = Depends(),  # noqa: B008
     ) -> CheckoutUseCase:
         """Provides a CheckoutUseCase instance."""
         return CheckoutUseCase(
             order_repository,
             customer_repository,
             product_repository,
-            payment_repository,
-            payment_gateway,
+            payment_use_case,
         )
 
     @provider

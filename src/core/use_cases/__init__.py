@@ -1,5 +1,6 @@
 from .customer import CreateCustomerUseCase, CustomerResult, GetCustomerByCpfUseCase
 from .order import CheckoutUseCase, ListOrdersUseCase, OrderResult, UpdateOrderStatusUseCase
+from .payment import PaymentProcessingUseCase
 from .product import (
     GetProductsByCategoryUseCase,
     ProductCreationUseCase,
@@ -16,6 +17,7 @@ __all__ = [
     "GetProductsByCategoryUseCase",
     "ListOrdersUseCase",
     "OrderResult",
+    "PaymentProcessingUseCase",
     "ProductCreationUseCase",
     "ProductDeleteUseCase",
     "ProductResult",

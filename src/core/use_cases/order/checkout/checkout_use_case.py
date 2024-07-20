@@ -10,11 +10,10 @@ from src.core.domain.exceptions import (
 from src.core.domain.repositories import (
     CustomerRepository,
     OrderRepository,
-    PaymentRepository,
     ProductRepository,
 )
-from src.payment import IPaymentGateway
 
+from ...payment import PaymentProcessingUseCase
 from ..shared_dtos import CustomerSummaryResult, OrderItemResult, OrderResult
 from .checkout_dto import CheckoutItem, CheckoutOrder
 
@@ -27,8 +26,7 @@ class CheckoutUseCase:
         order_repository: OrderRepository,
         customer_repository: CustomerRepository,
         product_repository: ProductRepository,
-        payment_repository: PaymentRepository,
-        payment_gateway: IPaymentGateway,
+        payment_use_case: PaymentProcessingUseCase,
     ) -> None:
         """Initializes a new instance of the CheckoutUseCase class.
 
@@ -36,14 +34,12 @@ class CheckoutUseCase:
             order_repository: The repository instance for order persistence operations.
             customer_repository: The repository instance for customer persistence operations.
             product_repository: The repository instance for product persistence operations.
-            payment_gateway: The payment gateway to process the order payment.
-            payment_repository: The repository instance for payment persistence operations.
+            payment_use_case: The use case for processing payments.
         """
         self._order_repository = order_repository
         self._customer_repository = customer_repository
         self._product_repository = product_repository
-        self._payment_gateway = payment_gateway
-        self._payment_repository = payment_repository
+        self._payment_use_case = payment_use_case
 
     def checkout(self, request: CheckoutOrder) -> OrderResult:
         """Creates a new order in the system.
@@ -67,7 +63,7 @@ class CheckoutUseCase:
         order = Order(_customer=customer, _items=list(order_items))
         created_order = self._order_repository.create(order)
 
-        created_order = self._process_payment(created_order)
+        created_order = self._payment_use_case.process_payment(created_order)
 
         return OrderResult(
             uuid=created_order.uuid,
@@ -147,12 +143,6 @@ class CheckoutUseCase:
             )
             for item in items
         ]
-
-    def _process_payment(self, order: Order) -> Order:
-        payment = self._payment_gateway.process(order)
-        self._payment_repository.add(payment)
-        # TODO: Update order status
-        return order
 
 
 __all__ = ["CheckoutUseCase"]
