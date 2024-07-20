@@ -19,6 +19,7 @@ from .order_error import EmptyOrderError, OrderCreationFailedDueToMissingProduct
 from .order_not_found_error import OrderNotFoundError
 from .order_status_error import InvalidOrderStatusError
 from .product_error import ProductNotFoundError
+from .status_error import InvalidStatusTransitionError
 
 __all__ = [
     "CustomerNotFoundError",
@@ -28,6 +29,7 @@ __all__ = [
     "InvalidCpfError",
     "InvalidEmailError",
     "InvalidOrderStatusError",
+    "InvalidStatusTransitionError",
     "NotFoundError",
     "OrderCreationFailedDueToMissingProductsError",
     "OrderNotFoundError",

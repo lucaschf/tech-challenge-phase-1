@@ -3,6 +3,7 @@ from dataclasses import dataclass, field
 from typing import List
 
 from ..base import AggregateRoot, AssertionConcern
+from ..exceptions import InvalidStatusTransitionError
 from ..value_objects import OrderStatus
 from .customer import Customer
 from .order_item import OrderItem
@@ -15,7 +16,7 @@ class Order(AggregateRoot):
     _customer: Customer
     _items: List[OrderItem] = field(default_factory=list)
     _total_value: float = field(default=0.0)
-    _status: OrderStatus = field(default_factory=lambda: OrderStatus.PENDING)
+    _status: OrderStatus = field(default_factory=lambda: OrderStatus.PAYMENT_PENDING)
 
     def __post_init__(self) -> None:
         self.validate()
@@ -49,8 +50,10 @@ class Order(AggregateRoot):
             new_status: The new status of the order.
 
         Raises:
-            InvalidOrderStatusError: If the new status is invalid.
+            InvalidStatusTransitionError: If the new status is invalid.
         """
+        if new_status not in self.status.get_allowed_transitions():
+            raise InvalidStatusTransitionError(self.status, new_status)
         self._status = new_status
 
     def validate(self) -> None:
