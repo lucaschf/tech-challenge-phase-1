@@ -3,7 +3,12 @@ from injector import Injector, Module, provider
 from sqlalchemy.orm import Session
 
 from src.api.controllers import CustomerController, OrderController
-from src.core.domain.repositories import CustomerRepository, OrderRepository, ProductRepository
+from src.core.domain.repositories import (
+    CustomerRepository,
+    OrderRepository,
+    PaymentRepository,
+    ProductRepository,
+)
 from src.core.use_cases import (
     CheckoutUseCase,
     CreateCustomerUseCase,
@@ -22,9 +27,11 @@ from src.infra.database.config import get_db_session
 from src.infra.database.repositories import (
     SQlAlchemyCustomerRepository,
     SQLAlchemyOrderRepository,
+    SQLAlchemyPaymentRepository,
     SQLAlchemyProductRepository,
 )
 
+from ..payment import IPaymentGateway, MercadoPagoGateway
 from .controllers import ProductController
 from .presenters import (
     CustomerDetailsPresenter,
@@ -188,17 +195,32 @@ class AppModule(Module):
         return SQLAlchemyOrderRepository(session)
 
     @provider
+    def provide_payment_repository(
+        self,
+        session: Session = Depends(),  # noqa: B008
+    ) -> PaymentRepository:
+        return SQLAlchemyPaymentRepository(session)
+
+    @provider
+    def provide_payment_gateway(self) -> IPaymentGateway:
+        return MercadoPagoGateway()
+
+    @provider
     def provide_checkout_use_case(
         self,
         order_repository: OrderRepository = Depends(),  # noqa: B008
         customer_repository: CustomerRepository = Depends(),  # noqa: B008
         product_repository: ProductRepository = Depends(),  # noqa: B008
+        payment_repository: PaymentRepository = Depends(),  # noqa: B008
+        payment_gateway: IPaymentGateway = Depends(),  # noqa: B008
     ) -> CheckoutUseCase:
         """Provides a CheckoutUseCase instance."""
         return CheckoutUseCase(
             order_repository,
             customer_repository,
             product_repository,
+            payment_repository,
+            payment_gateway,
         )
 
     @provider
