@@ -2,7 +2,7 @@ from fastapi import Depends
 from injector import Injector, Module, provider
 from sqlalchemy.orm import Session
 
-from src.api.controllers import CustomerController, OrderController
+from src.api.controllers import CustomerController, OrderController, PaymentConfirmationController
 from src.core.domain.repositories import (
     CustomerRepository,
     OrderRepository,
@@ -17,6 +17,7 @@ from src.core.use_cases import (
     GetProductsByCategoryUseCase,
     ListOrdersUseCase,
     OrderResult,
+    PaymentConfirmationUseCase,
     PaymentProcessingUseCase,
     ProductCreationUseCase,
     ProductDeleteUseCase,
@@ -273,6 +274,21 @@ class AppModule(Module):
             order_created_presenter,
             order_details_presenter,
         )
+
+    @provider
+    def provide_payment_confirmation_use_case(
+        self,
+        payment_repository: PaymentRepository = Depends(),  # noqa: B008
+        update_order_status_use_case: UpdateOrderStatusUseCase = Depends(),  # noqa: B008
+    ) -> PaymentConfirmationUseCase:
+        return PaymentConfirmationUseCase(payment_repository, update_order_status_use_case)
+
+    @provider
+    def provide_payment_confirmation_controller(
+        self,
+        payment_confirmation_use_case: PaymentConfirmationUseCase = Depends(),  # noqa: B008
+    ) -> PaymentConfirmationController:
+        return PaymentConfirmationController(payment_confirmation_use_case)
 
 
 def configure_injector(binder) -> None:  # noqa: ANN001

@@ -17,8 +17,8 @@ def test_checkout(
     customer = create_customer_in_db
     products = create_products_in_db
 
-    order_products = [OrderItemInFactory(product_id=product.uuid) for product in products]
-    order_data: OrderIn = OrderInFactory(customer_id=customer.uuid, items=order_products)
+    order_products = [OrderItemInFactory(product_id=product.number) for product in products]
+    order_data: OrderIn = OrderInFactory(customer_id=customer.number, items=order_products)
 
     response = client.post("/api/orders/checkout", json=order_data.model_dump(mode="json"))
 
@@ -34,8 +34,8 @@ def test_list_orders(
     customer = create_customer_in_db
     products = create_products_in_db
 
-    order_products = [OrderItemInFactory(product_id=product.uuid) for product in products]
-    order_data: OrderIn = OrderInFactory(customer_id=customer.uuid, items=order_products)
+    order_products = [OrderItemInFactory(product_id=product.number) for product in products]
+    order_data: OrderIn = OrderInFactory(customer_id=customer.number, items=order_products)
 
     client.post("/api/orders/checkout", json=order_data.model_dump(mode="json"))
 
@@ -52,8 +52,8 @@ def test_update_order_status(
     customer = create_customer_in_db
     products = create_products_in_db
 
-    order_products = [OrderItemInFactory(product_id=product.uuid) for product in products]
-    order_data: OrderIn = OrderInFactory(customer_id=customer.uuid, items=order_products)
+    order_products = [OrderItemInFactory(product_id=product.number) for product in products]
+    order_data: OrderIn = OrderInFactory(customer_id=customer.number, items=order_products)
 
     create_response = client.post("/api/orders/checkout", json=order_data.model_dump(mode="json"))
     order_uuid = create_response.json()["number"]

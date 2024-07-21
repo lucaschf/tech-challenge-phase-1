@@ -33,6 +33,7 @@ class UpdateOrderStatusUseCase:
         if not order:
             raise OrderNotFoundError(order_uuid)
 
+        order.status = status
         order = self.repository.update_status(order_uuid, status)
         return OrderResult(
             uuid=order.uuid,

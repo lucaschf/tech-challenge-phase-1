@@ -20,7 +20,11 @@ class PaymentStatus(StrEnum):
     def get_allowed_transitions(self) -> Iterable["PaymentStatus"]:
         """Returns the allowed transitions for the given status."""
         _transitions: Dict["PaymentStatus", Iterable["PaymentStatus"]] = {
-            PaymentStatus.PENDING: [PaymentStatus.PROCESSING],
+            PaymentStatus.PENDING: [
+                PaymentStatus.PROCESSING,
+                PaymentStatus.APPROVED,
+                PaymentStatus.REJECTED,
+            ],
             PaymentStatus.PROCESSING: [
                 PaymentStatus.APPROVED,
                 PaymentStatus.REJECTED,

@@ -18,6 +18,7 @@ from .not_found_error import NotFoundError
 from .order_error import EmptyOrderError, OrderCreationFailedDueToMissingProductsError
 from .order_not_found_error import OrderNotFoundError
 from .order_status_error import InvalidOrderStatusError
+from .payment_error import PaymentNotFoundError
 from .product_error import ProductNotFoundError
 from .status_error import InvalidStatusTransitionError
 
@@ -33,5 +34,6 @@ __all__ = [
     "NotFoundError",
     "OrderCreationFailedDueToMissingProductsError",
     "OrderNotFoundError",
+    "PaymentNotFoundError",
     "ProductNotFoundError",
 ]

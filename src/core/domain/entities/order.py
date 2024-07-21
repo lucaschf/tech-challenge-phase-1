@@ -43,7 +43,8 @@ class Order(AggregateRoot):
     def _recalculate_total_value(self) -> None:
         self._total_value = sum(item.unit_price * item.quantity for item in self._items)
 
-    def update_status(self, new_status: OrderStatus) -> None:
+    @status.setter
+    def status(self, new_status: OrderStatus) -> None:
         """Updates the status of the order.
 
         Args:
