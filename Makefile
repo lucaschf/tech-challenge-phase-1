@@ -52,7 +52,7 @@ dev:
 
 ## run: Run the production server.
 run:
-	set -e &&export ENVIRONMENT='production' && gunicorn -w 1 -k uvicorn.workers.UvicornWorker --access-logfile - --error-logfile - $(SRC_DIRS).main:app
+	set -e &&export ENVIRONMENT='production' && gunicorn -w 1 -k uvicorn.workers.UvicornWorker --access-logfile - --error-logfile - $(SRC_DIRS).api:app
 
 ## test: Run tests.
 test:
