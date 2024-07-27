@@ -11,7 +11,7 @@ class OrderDetailsPresenter(Presenter[OrderOut, OrderResult]):
     def present(self, data: OrderResult) -> OrderOut:
         """Converts the OrderDetailsResult instance into an OrderOut instance."""
         return OrderOut(
-            uuid=data.uuid,
+            number=data.uuid,
             customer=CustomerSummaryOut(
                 name=data.customer.name,
                 email=data.customer.email,

@@ -39,7 +39,7 @@ class OrderCreationOut(BaseModel):
 class OrderOut(BaseModel):
     """Schema for returning an order."""
 
-    uuid: UUID = Field(description="The order external uuid")
+    number: UUID = Field(description="The order external uuid")
     customer: CustomerSummaryOut = Field(description="The customer")
     items: List[OrderItemOut] = Field(description="List of items in the order")
     status: OrderStatus = Field(description="The order status")

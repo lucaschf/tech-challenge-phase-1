@@ -7,8 +7,13 @@ from src.core.domain.exceptions import (
     EmptyOrderError,
     OrderCreationFailedDueToMissingProductsError,
 )
-from src.core.domain.repositories import CustomerRepository, OrderRepository, ProductRepository
+from src.core.domain.repositories import (
+    CustomerRepository,
+    OrderRepository,
+    ProductRepository,
+)
 
+from ...payment import PaymentProcessingUseCase
 from ..shared_dtos import CustomerSummaryResult, OrderItemResult, OrderResult
 from .checkout_dto import CheckoutItem, CheckoutOrder
 
@@ -21,6 +26,7 @@ class CheckoutUseCase:
         order_repository: OrderRepository,
         customer_repository: CustomerRepository,
         product_repository: ProductRepository,
+        payment_use_case: PaymentProcessingUseCase,
     ) -> None:
         """Initializes a new instance of the CheckoutUseCase class.
 
@@ -28,10 +34,12 @@ class CheckoutUseCase:
             order_repository: The repository instance for order persistence operations.
             customer_repository: The repository instance for customer persistence operations.
             product_repository: The repository instance for product persistence operations.
+            payment_use_case: The use case for processing payments.
         """
         self._order_repository = order_repository
         self._customer_repository = customer_repository
         self._product_repository = product_repository
+        self._payment_use_case = payment_use_case
 
     def checkout(self, request: CheckoutOrder) -> OrderResult:
         """Creates a new order in the system.
@@ -54,6 +62,8 @@ class CheckoutUseCase:
         order_items = self._create_order_items(request.items, product_map)
         order = Order(_customer=customer, _items=list(order_items))
         created_order = self._order_repository.create(order)
+
+        created_order = self._payment_use_case.process_payment(created_order)
 
         return OrderResult(
             uuid=created_order.uuid,

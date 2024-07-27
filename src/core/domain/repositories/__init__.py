@@ -9,6 +9,12 @@ clean separation of concerns and enhancing the maintainability of the codebase.
 
 from .customer_repository import CustomerRepository
 from .order_repository import OrderRepository
+from .payment_repository import PaymentRepository
 from .product_repository import ProductRepository
 
-__all__ = ["CustomerRepository", "OrderRepository", "ProductRepository"]
+__all__ = [
+    "CustomerRepository",
+    "OrderRepository",
+    "PaymentRepository",
+    "ProductRepository",
+]
