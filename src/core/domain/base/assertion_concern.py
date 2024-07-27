@@ -1,4 +1,4 @@
-from typing import Any, Union
+from typing import Any, Iterable, Union
 
 from .domain_error import DomainError
 
@@ -82,24 +82,24 @@ class AssertionConcern:
     @classmethod
     def assert_argument_not_empty(
         cls: "AssertionConcern",
-        value: Union[str, list, tuple],
+        value: object,
         message: str,
     ) -> None:
-        """Asserts that a string or a list/tuple is not null or empty after trimming if it's a string.
+        """Asserts that an iterable or string is not null or empty. For strings, it checks after trimming.
 
         Args:
-            value: The value to be validated.
+            value: The value to be validated, can be any iterable or string.
             message: The error message to raise if the validation fails.
 
         Raises:
             DomainError: If the value is null or empty.
         """
         if isinstance(value, str):
-            cls._assert(bool(value and value.strip()), message)
-        elif isinstance(value, (list, tuple)):
+            cls._assert(bool(value.strip()), message)
+        elif isinstance(value, Iterable):
             cls._assert(bool(value), message)
         else:
-            cls._assert(False, "assert_argument_not_empty only supports str, list, and tuple")
+            cls._assert(False, f"Unsupported type for assert_argument_not_empty: {type(value)}")
 
     @classmethod
     def assert_argument_not_null(

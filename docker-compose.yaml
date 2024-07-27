@@ -10,7 +10,7 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    command: bash -c "source /src/.venv/bin/activate && poetry run alembic upgrade head && poetry run uvicorn src.adapter.driver.api:app --log-level info --host 0.0.0.0 --port 80 --reload"
+    command: bash -c "source /src/.venv/bin/activate && poetry run alembic upgrade head && poetry run uvicorn src.api:app --log-level info --host 0.0.0.0 --port 80"
 
   db:
     image: postgres:16.3-alpine

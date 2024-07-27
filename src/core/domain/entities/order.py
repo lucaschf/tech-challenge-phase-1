@@ -3,6 +3,7 @@ from dataclasses import dataclass, field
 from typing import List
 
 from ..base import AggregateRoot, AssertionConcern
+from ..exceptions import InvalidStatusTransitionError
 from ..value_objects import OrderStatus
 from .customer import Customer
 from .order_item import OrderItem
@@ -42,15 +43,18 @@ class Order(AggregateRoot):
     def _recalculate_total_value(self) -> None:
         self._total_value = sum(item.unit_price * item.quantity for item in self._items)
 
-    def update_status(self, new_status: OrderStatus) -> None:
+    @status.setter
+    def status(self, new_status: OrderStatus) -> None:
         """Updates the status of the order.
 
         Args:
             new_status: The new status of the order.
 
         Raises:
-            InvalidOrderStatusError: If the new status is invalid.
+            InvalidStatusTransitionError: If the new status is invalid.
         """
+        if new_status not in self.status.get_allowed_transitions():
+            raise InvalidStatusTransitionError(self.status, new_status)
         self._status = new_status
 
     def validate(self) -> None:

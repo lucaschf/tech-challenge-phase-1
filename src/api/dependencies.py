@@ -2,8 +2,13 @@ from fastapi import Depends
 from injector import Injector, Module, provider
 from sqlalchemy.orm import Session
 
-from src.api.controllers import CustomerController, OrderController
-from src.core.domain.repositories import CustomerRepository, OrderRepository, ProductRepository
+from src.api.controllers import CustomerController, OrderController, PaymentConfirmationController
+from src.core.domain.repositories import (
+    CustomerRepository,
+    OrderRepository,
+    PaymentRepository,
+    ProductRepository,
+)
 from src.core.use_cases import (
     CheckoutUseCase,
     CreateCustomerUseCase,
@@ -13,6 +18,8 @@ from src.core.use_cases import (
     ListOrdersByStatusUseCase,
     ListOrdersUseCase,
     OrderResult,
+    PaymentConfirmationUseCase,
+    PaymentProcessingUseCase,
     ProductCreationUseCase,
     ProductDeleteUseCase,
     ProductResult,
@@ -23,9 +30,11 @@ from src.infra.database.config import get_db_session
 from src.infra.database.repositories import (
     SQlAlchemyCustomerRepository,
     SQLAlchemyOrderRepository,
+    SQLAlchemyPaymentRepository,
     SQLAlchemyProductRepository,
 )
 
+from ..payment import IPaymentGateway, MercadoPagoGateway
 from .controllers import ProductController
 from .presenters import (
     CustomerDetailsPresenter,
@@ -189,17 +198,38 @@ class AppModule(Module):
         return SQLAlchemyOrderRepository(session)
 
     @provider
+    def provide_payment_repository(
+        self,
+        session: Session = Depends(),  # noqa: B008
+    ) -> PaymentRepository:
+        return SQLAlchemyPaymentRepository(session)
+
+    @provider
+    def provide_payment_gateway(self) -> IPaymentGateway:
+        return MercadoPagoGateway()
+
+    @provider
+    def provide_payment_use_case(
+        self,
+        payment_gateway: IPaymentGateway = Depends(),  # noqa: B008
+        payment_repository: PaymentRepository = Depends(),  # noqa: B008
+    ) -> PaymentProcessingUseCase:
+        return PaymentProcessingUseCase(payment_gateway, payment_repository)
+
+    @provider
     def provide_checkout_use_case(
         self,
         order_repository: OrderRepository = Depends(),  # noqa: B008
         customer_repository: CustomerRepository = Depends(),  # noqa: B008
         product_repository: ProductRepository = Depends(),  # noqa: B008
+        payment_use_case: PaymentProcessingUseCase = Depends(),  # noqa: B008
     ) -> CheckoutUseCase:
         """Provides a CheckoutUseCase instance."""
         return CheckoutUseCase(
             order_repository,
             customer_repository,
             product_repository,
+            payment_use_case,
         )
 
     @provider
@@ -255,6 +285,21 @@ class AppModule(Module):
             order_details_presenter,
             list_orders_sorted_by_status_use_case,
         )
+
+    @provider
+    def provide_payment_confirmation_use_case(
+        self,
+        payment_repository: PaymentRepository = Depends(),  # noqa: B008
+        update_order_status_use_case: UpdateOrderStatusUseCase = Depends(),  # noqa: B008
+    ) -> PaymentConfirmationUseCase:
+        return PaymentConfirmationUseCase(payment_repository, update_order_status_use_case)
+
+    @provider
+    def provide_payment_confirmation_controller(
+        self,
+        payment_confirmation_use_case: PaymentConfirmationUseCase = Depends(),  # noqa: B008
+    ) -> PaymentConfirmationController:
+        return PaymentConfirmationController(payment_confirmation_use_case)
 
 
 def configure_injector(binder) -> None:  # noqa: ANN001

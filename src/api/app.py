@@ -9,6 +9,7 @@ from src.config import settings
 from src.core.domain.exceptions import DomainError, NotFoundError
 
 from .routers import customer_router, order_router, product_router
+from .routers.webhooks import payment_router
 
 app = FastAPI(
     docs_url=settings.DOCS_URL,
@@ -78,6 +79,9 @@ def handle_error(e: Exception) -> Response:
 app.include_router(customer_router, prefix="/api")
 app.include_router(product_router, prefix="/api")
 app.include_router(order_router, prefix="/api")
+
+app.include_router(payment_router.router, prefix="/webhooks")
+
 app.middleware("http")(_exception_middleware)
 
 
