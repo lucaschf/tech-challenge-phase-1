@@ -1,12 +1,13 @@
 from uuid import UUID
 
 from sqlalchemy.orm import Session
+from sqlalchemy import select
 
 from src.core.domain.entities import Payment
 from src.core.domain.entities.payment import PaymentStatus
 from src.core.domain.repositories import PaymentRepository
 from src.infra.database.persistent_models.payment_persistent_model import PaymentPersistentModel
-
+from src.infra.database.persistent_models.order_persistent_model import OrderPersistentModel
 
 class SQLAlchemyPaymentRepository(PaymentRepository):
     """Implementation of the PaymentRepository using SQLAlchemy."""
@@ -36,6 +37,23 @@ class SQLAlchemyPaymentRepository(PaymentRepository):
         self._session.refresh(db_payment)
 
         return db_payment.to_entity()
+    
+    def get_payment_status(self, order_uuid: UUID) -> PaymentStatus | None:
+        """Get a payment status by its UUID.
+        
+        Args:
+            uuid: The payment's UUID.
+            
+        Returns:
+            Payment Status if found, None otherwise."""
+        result: OrderPersistentModel | None = (
+            self._session.query(
+                OrderPersistentModel).where(OrderPersistentModel.uuid==order_uuid).first())
+        if result is None: return None
+        db_payment: PaymentPersistentModel | None = (
+            self._session.query(PaymentPersistentModel).filter_by(order_id=result.id).first()
+        )
+        return db_payment.status if db_payment else None
 
     def update_status(self, payment_id: int, status: PaymentStatus) -> Payment | None:
         """Updates the status of an existing payment in the repository."""

@@ -2,7 +2,6 @@ from typing import Literal
 
 from pydantic import BaseModel
 
-
 class PaymentConfirmationIn(BaseModel):
     """Represents the incoming data for a payment confirmation."""
 
