@@ -10,6 +10,7 @@ from src.core.use_cases import (
     CustomerResult,
     GetCustomerByCpfUseCase,
     GetProductsByCategoryUseCase,
+    ListOrdersByStatusUseCase,
     ListOrdersUseCase,
     OrderResult,
     ProductCreationUseCase,
@@ -210,6 +211,14 @@ class AppModule(Module):
         return ListOrdersUseCase(order_repository)
 
     @provider
+    def provide_list_orders_sorted_by_status_use_case(
+        self,
+        order_repository: OrderRepository = Depends(),  # noqa: B008
+    ) -> ListOrdersByStatusUseCase:
+        """Provides a ListOrdersByStatusUseCase instance."""
+        return ListOrdersByStatusUseCase(order_repository)
+
+    @provider
     def provide_update_order_status_use_case(
         self,
         order_repository: OrderRepository = Depends(),  # noqa: B008
@@ -235,6 +244,7 @@ class AppModule(Module):
         update_order_status_use_case: UpdateOrderStatusUseCase = Depends(),  # noqa: B008
         order_created_presenter: Presenter[OrderCreationOut, OrderResult] = Depends(),  # noqa: B008
         order_details_presenter: Presenter[OrderOut, OrderResult] = Depends(),  # noqa: B008
+        list_orders_sorted_by_status_use_case: ListOrdersByStatusUseCase = Depends(),  # noqa: B008
     ) -> OrderController:
         """Provides an OrderController instance."""
         return OrderController(
@@ -243,6 +253,7 @@ class AppModule(Module):
             update_order_status_use_case,
             order_created_presenter,
             order_details_presenter,
+            list_orders_sorted_by_status_use_case,
         )
 
 

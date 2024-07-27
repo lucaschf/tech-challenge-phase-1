@@ -48,6 +48,11 @@ class OrderController:
         orders = self._list_orders_use_case.list_orders()
         return self._order_details_presenter.present_many(orders)
 
+    def list_orders_sorted_by_status(self) -> Iterable[OrderOut]:
+        """Gets a list of orders by specif statuses."""
+        orders = self.list_orders_sorted_by_status_use_case.list_orders_sorted_by_status()
+        return self._order_details_presenter.present_many(orders)
+
     def update_status(self, order_uuid: UUID, status_update: OrderStatusUpdateIn) -> OrderOut:
         """Update the status of an order in the system from the provided order ID and status."""
         order = self._update_order_status_use_case.update_status(order_uuid, status_update.status)

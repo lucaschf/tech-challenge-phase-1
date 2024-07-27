@@ -1,5 +1,11 @@
 from .customer import CreateCustomerUseCase, CustomerResult, GetCustomerByCpfUseCase
-from .order import CheckoutUseCase, ListOrdersUseCase, OrderResult, UpdateOrderStatusUseCase
+from .order import (
+    CheckoutUseCase,
+    ListOrdersByStatusUseCase,
+    ListOrdersUseCase,
+    OrderResult,
+    UpdateOrderStatusUseCase,
+)
 from .product import (
     GetProductsByCategoryUseCase,
     ProductCreationUseCase,
@@ -14,6 +20,7 @@ __all__ = [
     "CustomerResult",
     "GetCustomerByCpfUseCase",
     "GetProductsByCategoryUseCase",
+    "ListOrdersByStatusUseCase",
     "ListOrdersUseCase",
     "OrderResult",
     "ProductCreationUseCase",

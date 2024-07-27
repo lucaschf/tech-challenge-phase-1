@@ -6,6 +6,9 @@ class OrderStatus(StrEnum):
     """An Enum that represents an Order Status."""
 
     PENDING = auto()
+    PREPARING = auto()
+    READY = auto()
+    RECEIVED = auto()
     COMPLETED = auto()
     CANCELED = auto()
 

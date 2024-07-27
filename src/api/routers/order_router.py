@@ -33,6 +33,14 @@ def list_orders(
     return controller.list_orders()
 
 
+@router.get("/orders-sorted-by-status", response_model=List[OrderOut])
+def list_orders_sorted_by_status(
+    controller: OrderController = Depends(lambda: injector.get(OrderController)),  # noqa: B008
+) -> List[OrderOut]:
+    """List orders ordered by status."""
+    return controller.list_orders_sorted_by_status()
+
+
 @router.put("/{order_uuid}/status", response_model=OrderOut)
 def update_order_status(
     order_uuid: UUID,

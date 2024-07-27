@@ -1,8 +1,11 @@
 from abc import ABC, abstractmethod
-from typing import Iterable
+from typing import Generic, Iterable, TypeVar
+
+OutputModel = TypeVar("OutputModel")
+InputData = TypeVar("InputData")
 
 
-class Presenter[OutputModel, InputData](ABC):
+class Presenter(ABC, Generic[OutputModel, InputData]):
     """An abstract base class that defines a template for presenting data.
 
     This class is designed to be subclassed with specific implementations of the `present` method
