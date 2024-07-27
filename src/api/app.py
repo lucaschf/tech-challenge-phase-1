@@ -8,7 +8,7 @@ from starlette.responses import JSONResponse
 from src.config import settings
 from src.core.domain.exceptions import DomainError, NotFoundError
 
-from .routers import customer_router, order_router, product_router, payment_router
+from .routers import customer_router, order_router, payment_router, product_router
 from .routers.webhooks import payment_router as webhook_payment_router
 
 app = FastAPI(

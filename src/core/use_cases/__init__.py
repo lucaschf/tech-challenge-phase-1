@@ -1,4 +1,3 @@
-from .payment.find.get_payment_status_use_case import GetPaymentStatusUseCase
 from .customer import CreateCustomerUseCase, CustomerResult, GetCustomerByCpfUseCase
 from .order import (
     CheckoutUseCase,
@@ -9,6 +8,7 @@ from .order import (
     UpdateOrderStatusUseCase,
 )
 from .payment import PaymentProcessingUseCase
+from .payment.find.get_payment_status_use_case import GetPaymentStatusUseCase
 from .product import (
     GetProductsByCategoryUseCase,
     ProductCreationUseCase,

@@ -1,14 +1,15 @@
 from uuid import UUID
 
-from sqlalchemy.orm import Session
 from sqlalchemy import select
+from sqlalchemy.orm import Session
 from sqlalchemy.sql.operators import eq
 
 from src.core.domain.entities import Payment
 from src.core.domain.entities.payment import PaymentStatus
 from src.core.domain.repositories import PaymentRepository
-from src.infra.database.persistent_models.payment_persistent_model import PaymentPersistentModel
 from src.infra.database.persistent_models.order_persistent_model import OrderPersistentModel
+from src.infra.database.persistent_models.payment_persistent_model import PaymentPersistentModel
+
 
 class SQLAlchemyPaymentRepository(PaymentRepository):
     """Implementation of the PaymentRepository using SQLAlchemy."""
@@ -38,12 +39,12 @@ class SQLAlchemyPaymentRepository(PaymentRepository):
         self._session.refresh(db_payment)
 
         return db_payment.to_entity()
-    
+
     def get_payment_status(self, order_uuid: UUID) -> PaymentStatus | None:
+        """Retrieves the status of a payment by the order UUID."""
         stmt = (
             select(PaymentPersistentModel)
-            .join(OrderPersistentModel,
-                  PaymentPersistentModel.order_id == OrderPersistentModel.id)
+            .join(OrderPersistentModel, PaymentPersistentModel.order_id == OrderPersistentModel.id)
             .where(eq(OrderPersistentModel.uuid, order_uuid))
         )
         result = self._session.execute(stmt).scalar_one_or_none()
