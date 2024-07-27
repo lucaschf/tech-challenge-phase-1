@@ -1,8 +1,8 @@
 from .customer import CreateCustomerUseCase, CustomerResult, GetCustomerByCpfUseCase
 from .order import (
     CheckoutUseCase,
-    ListOrdersUseCase,
     ListOrdersByStatusUseCase,
+    ListOrdersUseCase,
     OrderResult,
     PaymentConfirmationUseCase,
     UpdateOrderStatusUseCase,
