@@ -30,7 +30,9 @@ class ListOrdersByStatusUseCase:
         filtered_orders = [order for order in orders if order.status in status_order]
 
         # Sort orders based on the defined order of statuses
-        sorted_orders = sorted(filtered_orders, key=lambda order: status_order[order.status])
+        sorted_orders = sorted(
+            filtered_orders, key=lambda order: (status_order[order.status], order.created_at)
+        )
 
         return [
             OrderResult(
