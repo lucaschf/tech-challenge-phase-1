@@ -50,9 +50,24 @@ cc:
 dev:
 	set -e &&export ENVIRONMENT='development' && uvicorn $(SRC_DIRS).api:app --host 0.0.0.0 --reload
 
-## run: Run the production server.
-run:
-	set -e &&export ENVIRONMENT='production' && gunicorn -w 1 -k uvicorn.workers.UvicornWorker --access-logfile - --error-logfile - $(SRC_DIRS).api:app
+## docker-build: Build the Docker image.
+docker-build:
+	@ docker-compose build
+
+## docker-up: Run the Docker container.
+docker-up:
+	@ docker-compose up
+
+## migrate-db: Migrate the database.
+migrate-db:
+	@ alembic upgrade head
+
+## up: Run the Docker container with or without build.
+up:
+	@ if [ "$(build)" = "true" ]; then \
+		$(MAKE) docker-build; \
+	fi; \
+	$(MAKE) docker-up
 
 ## test: Run tests.
 test:
@@ -63,4 +78,4 @@ test-cov:
 	set -e &&export ENVIRONMENT='test' && coverage run -m pytest --capture=no &&coverage report &&coverage html
 
 
-.PHONY: install lint-check lint-fix lint-check-tests lint-fix-tests cc dev test test-cov run help
+.PHONY: help install lint-check lint-fix lint-check-tests lint-fix-tests cc dev run docker-build docker-up migrate-db up test test-cov
