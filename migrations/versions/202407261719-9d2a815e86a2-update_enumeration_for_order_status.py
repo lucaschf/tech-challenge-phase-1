@@ -1,8 +1,8 @@
 """update_enumeration_for_order_status.
 
-Revision ID: bc1eb1c06dda
+Revision ID: 9d2a815e86a2
 Revises: ef950d606aa3
-Create Date: 2024-07-26 20:18:37.292118
+Create Date: 2024-07-26 17:19:30.383979
 
 """
 
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 from alembic import op
 
 # revision identifiers, used by Alembic.
-revision: str = "bc1eb1c06dda"
+revision: str = "9d2a815e86a2"
 down_revision: Union[str, None] = "ef950d606aa3"
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
