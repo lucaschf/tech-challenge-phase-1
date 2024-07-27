@@ -1,8 +1,8 @@
-"""update_enumeration_for_order_status.
+"""add PAYMENT_PENDING and PROCESSING to order_status enum.
 
-Revision ID: 9d2a815e86a2
-Revises: ef950d606aa3
-Create Date: 2024-07-26 17:19:30.383979
+Revision ID: e4134fa90001
+Revises: 9d2a815e86a2
+Create Date: 2024-07-27 18:16:54.479962
 
 """
 
@@ -12,8 +12,8 @@ import sqlalchemy as sa
 from alembic import op
 
 # revision identifiers, used by Alembic.
-revision: str = "9d2a815e86a2"
-down_revision: Union[str, None] = "ef950d606aa3"
+revision: str = "e4134fa90001"
+down_revision: Union[str, None] = "9d2a815e86a2"
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 

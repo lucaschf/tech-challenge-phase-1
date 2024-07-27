@@ -17,16 +17,16 @@ class ListOrdersByStatusUseCase:
         self.repository = repository
 
     def list_orders_sorted_by_status(self) -> Iterable[OrderResult]:
-        """Retrieves orders sorted by a custom status order: READY, PREPARING, RECEIVED and sorted py the creation date.
+        """Retrieves orders sorted by a custom status order: READY, PROCESSING, RECEIVED and sorted py the creation date.
 
         Returns:
             List[Order]: List of orders sorted by custom status order and .
         """
         orders = self.repository.list_all()
 
-        status_order = {"ready": 1, "preparing": 2, "received": 3}
+        status_order = {"ready": 1, "processing": 2, "received": 3}
 
-        # Filter orders to include only those with statuses READY, PREPARING, RECEIVED
+        # Filter orders to include only those with statuses READY, PROCESSING, RECEIVED
         filtered_orders = [order for order in orders if order.status in status_order]
 
         # Sort orders based on the defined order of statuses

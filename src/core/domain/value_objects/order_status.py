@@ -5,8 +5,8 @@ from typing import List
 class OrderStatus(StrEnum):
     """An Enum that represents an Order Status."""
 
-    PENDING = auto()
-    PREPARING = auto()
+    PAYMENT_PENDING = auto()
+    PROCESSING = auto()
     READY = auto()
     RECEIVED = auto()
     COMPLETED = auto()

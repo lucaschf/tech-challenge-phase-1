@@ -15,7 +15,7 @@ class Order(AggregateRoot):
     _customer: Customer
     _items: List[OrderItem] = field(default_factory=list)
     _total_value: float = field(default=0.0)
-    _status: OrderStatus = field(default_factory=lambda: OrderStatus.PENDING)
+    _status: OrderStatus = field(default_factory=lambda: OrderStatus.PAYMENT_PENDING)
 
     def __post_init__(self) -> None:
         self.validate()
