@@ -18,7 +18,7 @@ class OrderCreationFailedDueToMissingProductsError(DomainError):
         self.missing_product_uuids = missing_product_uuids
         message = (
             f"Order creation failed due to missing products: "
-            f"{', '.join([f"'{uuid.hex}'" for uuid in missing_product_uuids])}"
+            f"{', '.join([uuid.hex for uuid in missing_product_uuids])}"
         )
         super().__init__(message)
 

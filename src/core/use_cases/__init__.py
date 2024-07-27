@@ -2,6 +2,7 @@ from .payment.find.get_payment_status_use_case import GetPaymentStatusUseCase
 from .customer import CreateCustomerUseCase, CustomerResult, GetCustomerByCpfUseCase
 from .order import (
     CheckoutUseCase,
+    ListOrdersByStatusUseCase,
     ListOrdersUseCase,
     OrderResult,
     PaymentConfirmationUseCase,
@@ -23,6 +24,7 @@ __all__ = [
     "GetCustomerByCpfUseCase",
     "GetPaymentStatusUseCase",
     "GetProductsByCategoryUseCase",
+    "ListOrdersByStatusUseCase",
     "ListOrdersUseCase",
     "OrderResult",
     "PaymentConfirmationUseCase",

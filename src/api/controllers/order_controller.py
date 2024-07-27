@@ -3,6 +3,7 @@ from uuid import UUID
 
 from src.core.use_cases import (
     CheckoutUseCase,
+    ListOrdersByStatusUseCase,
     ListOrdersUseCase,
     UpdateOrderStatusUseCase,
 )
@@ -31,12 +32,14 @@ class OrderController:
         update_order_status_use_case: UpdateOrderStatusUseCase,
         order_created_presenter: Presenter[OrderCreationOut, OrderResult],
         order_details_presenter: Presenter[OrderOut, OrderResult],
+        list_orders_sorted_by_status_use_case: ListOrdersByStatusUseCase,
     ) -> None:
         self._checkout_use_case = checkout_use_case
-        self._list_orders_use_case = list_orders_use_case
         self._update_order_status_use_case = update_order_status_use_case
         self._order_created_presenter = order_created_presenter
         self._order_details_presenter = order_details_presenter
+        self._list_orders_use_case = list_orders_use_case
+        self._list_orders_sorted_by_status_use_case = list_orders_sorted_by_status_use_case
 
     def checkout(self, order_in: OrderIn) -> OrderCreationOut:
         """Registers a new order in the system from the provided order data."""
@@ -46,6 +49,11 @@ class OrderController:
     def list_orders(self) -> Iterable[OrderOut]:
         """Get a list of orders in the system."""
         orders = self._list_orders_use_case.list_orders()
+        return self._order_details_presenter.present_many(orders)
+
+    def list_orders_sorted_by_status(self) -> Iterable[OrderOut]:
+        """Gets a list of orders by specific statuses."""
+        orders = self._list_orders_sorted_by_status_use_case.list_orders_sorted_by_status()
         return self._order_details_presenter.present_many(orders)
 
     def update_status(self, order_uuid: UUID, status_update: OrderStatusUpdateIn) -> OrderOut:
