@@ -16,6 +16,6 @@ class PaymentController:
         self._get_payment_status_use_case = get_payment_status_use_case
     
 
-    def get_payment_status(self, payment_uuid: UUID) -> PaymentStatus:
+    def get_payment_status(self, order_uuid: UUID) -> PaymentStatus:
         """Get the status of an payment in the system from the provided order ID."""
-        return self._get_payment_status_use_case.execute(payment_uuid).payment_status
+        return self._get_payment_status_use_case.execute(order_uuid).payment_status

@@ -1,13 +1,14 @@
 from src.core.domain.base import DomainError
 
 class PaymentStatusNotFoundError(DomainError):
-    """uashdfuahsdufhsfuhdf"""
-    def __init__(self, status: str, message: str = "Payment status not found") -> None:
-        super().__init__(message)
-        self.status = status
+    """Exception raised for invalid payment status.
 
-    def __str__(self) -> str:
-        return f"{self.status} -> {self.message}"
+    Attributes:
+        search_params -- input params which caused the error
+        message -- explanation of the error"""
+    def __init__(self, search_params: dict, message: str = "Payment status not found") -> None:
+        super().__init__(message)
+        self.search_params = search_params
 
 
 __all__ = ["PaymentStatusNotFoundError"]

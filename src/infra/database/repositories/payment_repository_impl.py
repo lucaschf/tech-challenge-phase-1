@@ -2,6 +2,7 @@ from uuid import UUID
 
 from sqlalchemy.orm import Session
 from sqlalchemy import select
+from sqlalchemy.sql.operators import eq
 
 from src.core.domain.entities import Payment
 from src.core.domain.entities.payment import PaymentStatus
@@ -39,21 +40,14 @@ class SQLAlchemyPaymentRepository(PaymentRepository):
         return db_payment.to_entity()
     
     def get_payment_status(self, order_uuid: UUID) -> PaymentStatus | None:
-        """Get a payment status by its UUID.
-        
-        Args:
-            uuid: The payment's UUID.
-            
-        Returns:
-            Payment Status if found, None otherwise."""
-        result: OrderPersistentModel | None = (
-            self._session.query(
-                OrderPersistentModel).where(OrderPersistentModel.uuid==order_uuid).first())
-        if result is None: return None
-        db_payment: PaymentPersistentModel | None = (
-            self._session.query(PaymentPersistentModel).filter_by(order_id=result.id).first()
+        stmt = (
+            select(PaymentPersistentModel)
+            .join(OrderPersistentModel,
+                  PaymentPersistentModel.order_id == OrderPersistentModel.id)
+            .where(eq(OrderPersistentModel.uuid, order_uuid))
         )
-        return db_payment.status if db_payment else None
+        result = self._session.execute(stmt).scalar_one_or_none()
+        return result.status if result else None
 
     def update_status(self, payment_id: int, status: PaymentStatus) -> Payment | None:
         """Updates the status of an existing payment in the repository."""
