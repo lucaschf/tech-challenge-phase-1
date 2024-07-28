@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from src.core.domain.exceptions.payment_status_not_found_error import PaymentStatusNotFoundError
+from src.core.domain.exceptions import PaymentNotFoundError
 from src.core.domain.repositories import PaymentRepository
 
 from ..shared_dtos import PaymentResult
@@ -24,12 +24,12 @@ class GetPaymentStatusUseCase:
         Raises:
             PaymentStatusNotFoundError: If the customer is not found.
         """
-        payment_status = self.payment_repository.get_payment_status(order_uuid)
+        payment = self.payment_repository.get_payment_details(order_uuid)
 
-        if not payment_status:
-            raise PaymentStatusNotFoundError(search_params={"uuid": order_uuid})
+        if not payment:
+            raise PaymentNotFoundError(search_params={"order_uuid": order_uuid})
 
-        return PaymentResult(payment_status)
+        return PaymentResult(payment.uuid, payment.status)
 
 
 __all__ = ["GetPaymentStatusUseCase"]

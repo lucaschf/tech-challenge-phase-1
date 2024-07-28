@@ -40,15 +40,21 @@ class SQLAlchemyPaymentRepository(PaymentRepository):
 
         return db_payment.to_entity()
 
-    def get_payment_status(self, order_uuid: UUID) -> PaymentStatus | None:
-        """Retrieves the status of a payment by the order UUID."""
+    def get_payment_details(self, order_uuid: UUID) -> Payment | None:
+        """Get a payment by Order UUID.
+
+        Args:
+            order_uuid: The order's UUID.
+
+        Returns:
+            Payment if found, None otherwise.
+        """
         stmt = (
             select(PaymentPersistentModel)
             .join(OrderPersistentModel, PaymentPersistentModel.order_id == OrderPersistentModel.id)
             .where(eq(OrderPersistentModel.uuid, order_uuid))
         )
-        result = self._session.execute(stmt).scalar_one_or_none()
-        return result.status if result else None
+        return self._session.execute(stmt).scalar_one_or_none()
 
     def update_status(self, payment_id: int, status: PaymentStatus) -> Payment | None:
         """Updates the status of an existing payment in the repository."""

@@ -1,7 +1,9 @@
 from uuid import UUID
 
-from src.core.domain.entities.payment import PaymentStatus
-from src.core.use_cases.payment.find.get_payment_status_use_case import GetPaymentStatusUseCase
+from src.api.presenters import Presenter
+from src.api.schemas import PaymentSummaryOut
+from src.core.use_cases import GetPaymentStatusUseCase
+from src.core.use_cases.payment.shared_dtos import PaymentResult
 
 
 class PaymentController:
@@ -14,9 +16,15 @@ class PaymentController:
     def __init__(
         self,
         get_payment_status_use_case: GetPaymentStatusUseCase,
+        payment_summary_presenter: Presenter[PaymentSummaryOut, PaymentResult],
     ) -> None:
         self._get_payment_status_use_case = get_payment_status_use_case
+        self._payment_summary_presenter = payment_summary_presenter
 
-    def get_payment_status(self, order_uuid: UUID) -> PaymentStatus:
-        """Get the status of an payment in the system from the provided order ID."""
-        return self._get_payment_status_use_case.execute(order_uuid).payment_status
+    def get_payment_status(self, order_uuid: UUID) -> PaymentSummaryOut:
+        """Get the status of a payment in the system from the provided order ID."""
+        payment = self._get_payment_status_use_case.execute(order_uuid)
+        return self._payment_summary_presenter.present(payment)
+
+
+__all__ = ["PaymentController"]
