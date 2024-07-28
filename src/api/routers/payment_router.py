@@ -3,10 +3,10 @@ from uuid import UUID
 from fastapi import APIRouter, Depends
 
 from src.api.controllers.payment_controller import PaymentController
-from src.core.domain.entities.payment import PaymentStatus
 
 from ..dependencies import injector
 from ..schemas.http_error import HttpErrorOut
+from ..schemas.payment_schema import PaymentSummaryOut
 
 router = APIRouter(tags=["Payment"], prefix="/payment")
 
@@ -23,6 +23,6 @@ def get_payment_status(
     controller: PaymentController = Depends(  # noqa: B008
         lambda: injector.get(PaymentController)
     ),
-) -> PaymentStatus | None:
+) -> PaymentSummaryOut:
     """Retrieves a payment status from the system using the payment_uuid."""
     return controller.get_payment_status(order_uuid)

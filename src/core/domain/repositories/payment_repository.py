@@ -20,14 +20,14 @@ class PaymentRepository(ABC):
         """
 
     @abstractmethod
-    def get_payment_status(self, order_uuid: UUID) -> PaymentStatus | None:
-        """Get a payment status by Order UUID.
+    def get_payment_details(self, order_uuid: UUID) -> Payment | None:
+        """Get a payment by Order UUID.
 
         Args:
             order_uuid: The order's UUID.
 
         Returns:
-        Payment Status if found, None otherwise.
+            Payment if found, None otherwise.
         """
 
     @abstractmethod

@@ -1,6 +1,9 @@
 from typing import Literal
+from uuid import UUID
 
 from pydantic import BaseModel
+
+from src.core.domain.entities.payment import PaymentStatus
 
 
 class PaymentConfirmationIn(BaseModel):
@@ -9,4 +12,11 @@ class PaymentConfirmationIn(BaseModel):
     status: Literal["approved", "rejected", "failed"]  # see the PaymentStatus enum in the domain
 
 
-__all__ = ["PaymentConfirmationIn"]
+class PaymentSummaryOut(BaseModel):
+    """Represents the outgoing data for a payment confirmation."""
+
+    status: PaymentStatus
+    number: UUID
+
+
+__all__ = ["PaymentConfirmationIn", "PaymentSummaryOut"]

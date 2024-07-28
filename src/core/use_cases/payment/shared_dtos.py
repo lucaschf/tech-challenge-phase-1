@@ -1,9 +1,9 @@
 from dataclasses import dataclass
+from uuid import UUID
 
 from src.core.domain.entities.payment import PaymentStatus
 
 
-@dataclass
 @dataclass
 class PaymentResult:
     """Data structure for holding data of a Payment status.
@@ -12,7 +12,8 @@ class PaymentResult:
     payment_status: Enum with Payment Status
     """
 
-    payment_status: PaymentStatus
+    number: UUID
+    status: PaymentStatus
 
 
 __all__ = ["PaymentResult"]

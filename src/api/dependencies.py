@@ -40,6 +40,7 @@ from src.infra.database.repositories import (
     SQLAlchemyProductRepository,
 )
 
+from ..core.use_cases.payment.shared_dtos import PaymentResult
 from ..payment import IPaymentGateway, MercadoPagoGateway
 from .controllers import ProductController
 from .presenters import (
@@ -49,7 +50,8 @@ from .presenters import (
     Presenter,
     ProductDetailsPresenter,
 )
-from .schemas import CustomerDetailsOut, OrderCreationOut, OrderOut, ProductOut
+from .presenters.payment.payment_summary_presenter import PaymentSummaryPresenter
+from .schemas import CustomerDetailsOut, OrderCreationOut, OrderOut, PaymentSummaryOut, ProductOut
 
 
 class AppModule(Module):
@@ -311,8 +313,12 @@ class AppModule(Module):
     def provide_payment_controller(
         self,
         get_payment_status_use_case: GetPaymentStatusUseCase = Depends(),  # noqa: B008
+        payment_summary_presenter: Presenter[PaymentSummaryOut, PaymentResult] = Depends(),  # noqa: B008
     ) -> PaymentController:
-        return PaymentController(get_payment_status_use_case)
+        return PaymentController(
+            get_payment_status_use_case,
+            payment_summary_presenter,
+        )
 
     @provider
     def provide_get_payment_status_use_case(
@@ -320,6 +326,11 @@ class AppModule(Module):
         payment_repository: PaymentRepository = Depends(),  # noqa: B008
     ) -> GetPaymentStatusUseCase:
         return GetPaymentStatusUseCase(payment_repository)
+
+    @provider
+    def provide_payment_summary_presenter(self) -> Presenter[PaymentSummaryOut, PaymentResult]:
+        """Provides a PaymentSummaryPresenter instance."""
+        return PaymentSummaryPresenter()
 
 
 def configure_injector(binder) -> None:  # noqa: ANN001
