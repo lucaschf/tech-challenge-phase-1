@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tech-challenge-phase-1-api
+  labels:
+    app: tech-challenge-phase-1-api
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: tech-challenge-phase-1-api
+  template:
+    metadata:
+      labels:
+        app: tech-challenge-phase-1-api
+    spec:
+      containers:
+      - name: tech-challenge-phase-1-api
+        image: 195041288846.dkr.ecr.us-east-1.amazonaws.com/project-01:latest
+        ports:
+        - containerPort: 80
