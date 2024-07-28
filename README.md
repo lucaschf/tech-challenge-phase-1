@@ -10,6 +10,7 @@
   * [Running the Application](#running-the-application)
   * [Usage](#usage)
   * [API Documentation](#api-documentation)
+  * [Simplified flow](#simplified-flow)
 <!-- TOC -->
 
 ## Description
@@ -121,3 +122,33 @@ After running the application, you can access the interactive API documentation 
 
 Additionally, you can access the ReDoc documentation at
 `http://localhost:8000/REDOC_URL` (e.g., `http://localhost:8000/redoc`).
+
+## Simplified flow
+
+A simplified test flow highlighting the main features is illustrated below:
+
+```mermaid
+flowchart TD
+    subgraph Registration
+        A1[Create products]
+        A2[Create customer]
+        A3[Get customer data by CPF]
+    end
+
+    subgraph Checkout
+        B1[Checkout with product list and customer number]
+    end
+
+    subgraph Payment
+        C1[Check payment status by order ID]
+        C2[Update order payment status via webhook]
+        C3[Update order status]
+    end
+
+    A1 --> B1
+    A2 --> A3
+    A3 --> B1
+    B1 --> C1
+    C1 --> C2
+    C2 --> C3
+```
