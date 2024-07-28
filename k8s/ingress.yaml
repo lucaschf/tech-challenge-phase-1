@@ -1,12 +1,12 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: project-01
+  name: tech-challenge-phase-1-api-ingress
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
-    - host: order.example.com
+    - host: order.tech-challenge.com
       http:
         paths:
           - path: /

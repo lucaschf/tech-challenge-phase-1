@@ -5,7 +5,7 @@ metadata:
   labels:
     app: tech-challenge-phase-1-api
 spec:
-  replicas: 2
+  replicas: 3
   selector:
     matchLabels:
       app: tech-challenge-phase-1-api
