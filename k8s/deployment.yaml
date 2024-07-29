@@ -16,6 +16,14 @@ spec:
     spec:
       containers:
       - name: tech-challenge-phase-1-api
-        image: 195041288846.dkr.ecr.us-east-1.amazonaws.com/project-01:latest
+        image: tech-challenge-phase-1-api:latest
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 80
+        resources:
+          requests:
+            cpu: "100m"   # Adicione esta linha
+            memory: "200Mi"
+          limits:
+            cpu: "500m"   # Adicione esta linha, opcionalmente
+            memory: "500Mi"

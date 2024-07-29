@@ -34,4 +34,4 @@ COPY . .
 EXPOSE $PORT
 
 # Inicia a aplicação com Uvicorn em modo de produção, usando referências de variáveis de ambiente
-CMD ["poetry", "run", "uvicorn", "src.adapter.driver.api:app", "--host", "0.0.0.0", "--port", "80"]
+CMD ["poetry", "run", "uvicorn", "src.api:app", "--host", "0.0.0.0", "--port", "80"]
