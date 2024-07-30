@@ -20,16 +20,17 @@ RUN apt-get update \
 # Copia apenas os arquivos necessários para a instalação do Poetry
 COPY pyproject.toml poetry.lock ./
 
-# Instala o Poetry e as dependências do projeto
+# Instala o Poetry e as dependências do projeto, incluindo alembic
 RUN pip install --no-cache-dir poetry \
     && python -m venv .venv  \
     && . .venv/bin/activate \
     && poetry install --no-interaction --no-ansi --only main \
+    && poetry add alembic \
     && poetry self add poetry-dotenv-plugin
 
 # Copia o restante do código da aplicação para o contêiner
 COPY . .
-
+    
 # Expõe a porta especificada para o FastAPI
 EXPOSE $PORT
 

@@ -5,7 +5,6 @@ metadata:
   labels:
     app: tech-challenge-phase-1-api
 spec:
-  replicas: 3
   selector:
     matchLabels:
       app: tech-challenge-phase-1-api
@@ -14,6 +13,27 @@ spec:
       labels:
         app: tech-challenge-phase-1-api
     spec:
+      initContainers:
+      - name: init-migrate
+        image: tech-challenge-phase-1-api:latest
+        imagePullPolicy: IfNotPresent
+        command: ["poetry", "run", "alembic", "upgrade", "head"]
+        env:
+        - name: DATABASE_HOST
+          value: postgres-service
+        - name: DATABASE_PORT
+          value: "5432"
+        - name: DATABASE_NAME
+          value: myappdb
+        - name: DATABASE_USER
+          value: myappuser
+        - name: DATABASE_PASSWORD
+          value: mypassword
+        - name: ALEMBIC_CONFIG
+          value: /app/alembic.ini
+        volumeMounts:
+        - name: config-volume
+          mountPath: /app
       containers:
       - name: tech-challenge-phase-1-api
         image: tech-challenge-phase-1-api:latest
@@ -22,8 +42,12 @@ spec:
         - containerPort: 80
         resources:
           requests:
-            cpu: "100m"   # Adicione esta linha
+            cpu: "100m"
             memory: "200Mi"
           limits:
-            cpu: "500m"   # Adicione esta linha, opcionalmente
+            cpu: "500m"
             memory: "500Mi"
+      volumes:
+      - name: config-volume
+        configMap:
+          name: alembic-config
