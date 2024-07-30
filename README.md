@@ -61,6 +61,15 @@ customer management, order processing, and payment integration.
 * Docker
 * Alembic
 
+## Video Explaining the Last Architecture
+    
+    https://youtu.be/yiEs5J9wbUU
+
+
+## Context Diagram Of the Architecture
+
+![alt text](SOA.drawio.png)
+
 ## Installation
 
 First, clone the repository: `git clone https://github.com/lucaschf/tech-challenge-phase-1.git`
