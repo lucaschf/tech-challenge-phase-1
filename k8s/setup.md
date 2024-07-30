@@ -7,7 +7,7 @@
 
    2.1. **Taguear a Imagem:**
    ```bash
-   docker tag tech-challenge-phase-1-api:latest 195041288846.dkr.ecr.us-east-1.amazonaws.com/project-01:latest
+   docker tag tech-challenge-phase-1-api:latest <<aws_id>>.dkr.ecr.us-east-1.amazonaws.com/project-01:latest
    ```
    2.2. **Login no ECR:**
       ```bash
@@ -61,8 +61,6 @@
    kubectl get hpa -w
    kubectl delete pod load-generator
    ```
-
-
 
 6. **Acessar o banco de dados**
 Para realizar uma operação de GET (consulta) nos bancos de dados em um ambiente Kubernetes, você precisará acessar os bancos de dados de dentro dos pods ou usar uma ferramenta de administração de banco de dados que possa se conectar ao seu banco de dados rodando no Kubernetes. Aqui está um guia geral para diferentes bancos de dados:

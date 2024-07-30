@@ -41,12 +41,12 @@ spec:
         ports:
         - containerPort: 80
         resources:
-          requests:
-            cpu: "100m"
-            memory: "200Mi"
           limits:
             cpu: "500m"
-            memory: "500Mi"
+            memory: "512Mi"
+          requests:
+            cpu: "200m"
+            memory: "256Mi"
       volumes:
       - name: config-volume
         configMap:
