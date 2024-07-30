@@ -68,7 +68,7 @@ customer management, order processing, and payment integration.
 
 ## Context Diagram Of the Architecture
 
-![alt text](SOA.drawio.png)
+![alt text](docs/SOA.drawio.png)
 
 ## Installation
 
