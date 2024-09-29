@@ -5,7 +5,6 @@ metadata:
   labels:
     app: tech-challenge-phase-1-api
 spec:
-  progressDeadlineSeconds: 600
   selector:
     matchLabels:
       app: tech-challenge-phase-1-api
