@@ -1,0 +1,54 @@
+name: Deploy Application
+
+on:
+  workflow_run:
+    workflows: ["Database Migrations"]
+    types:
+      - completed
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: "us-east-1"
+
+      - name: Login to ECR
+        run: |
+          aws ecr get-login-password --region "us-east-1" | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr."us-east-1".amazonaws.com
+
+      - name: Build and Push Docker Image
+        working-directory: app
+        run: |
+          docker build -t tech-challenge-phase-1-api:latest .
+          docker tag tech-challenge-phase-1-api:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr."us-east-1".amazonaws.com/project-01:latest 
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr."us-east-1".amazonaws.com/project-01:latest
+
+      - name: Get kubeconfig
+        run: |
+          aws eks --region "us-east-1" update-kubeconfig --name ${{ secrets.CLUSTER_NAME }}
+
+      - name: Deploy Application
+        working-directory: app/k8s
+        run: |
+          kubectl apply -f . 
+
+      - name: Verify Deployment
+        run: |
+          kubectl get all
+          kubectl rollout status deployment/tech-challenge-phase-1-api
+          kubectl get pods -w
+          kubectl get nodes
