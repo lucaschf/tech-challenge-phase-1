@@ -15,7 +15,7 @@ spec:
     spec:
       initContainers:
       - name: init-migrate
-        image: tech-challenge-phase-1-api:latest
+        image: 717145188069.dkr.ecr.us-east-1.amazonaws.com/project-01:latest
         imagePullPolicy: IfNotPresent
         command: ["poetry", "run", "alembic", "upgrade", "head"]
         env:
@@ -36,7 +36,7 @@ spec:
           mountPath: /app
       containers:
       - name: tech-challenge-phase-1-api
-        image: tech-challenge-phase-1-api:latest
+        image: 717145188069.dkr.ecr.us-east-1.amazonaws.com/project-01:latest
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 80
