@@ -47,7 +47,3 @@ spec:
           requests:
             cpu: "200m"
             memory: "256Mi"
-      volumes:
-      - name: config-volume
-        configMap:
-          name: alembic-config
