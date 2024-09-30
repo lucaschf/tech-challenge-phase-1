@@ -14,33 +14,33 @@ spec:
         app: tech-challenge-phase-1-api
     spec:
       initContainers:
-      - name: init-migrate
-        image: tech-challenge-phase-1-api:latest
-        imagePullPolicy: IfNotPresent
-        command: ["poetry", "run", "alembic", "upgrade", "head"]
-        env:
-        - name: DATABASE_HOST
-          value: postgres-service
-        - name: DATABASE_PORT
-          value: "5432"
-        - name: DATABASE_NAME
-          value: myappdb
-        - name: DATABASE_USER
-          value: myappuser
-        - name: DATABASE_PASSWORD
-          value: mypassword
-        - name: ALEMBIC_CONFIG
-          value: /app/alembic.ini
+        - name: init-migrate
+          image: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/project-01:latest
+          imagePullPolicy: IfNotPresent
+          command: ["poetry", "run", "alembic", "upgrade", "head"]
+          env:
+          - name: DATABASE_HOST
+            value: postgres-service
+          - name: DATABASE_PORT
+            value: "5432"
+          - name: DATABASE_NAME
+            value: myappdb
+          - name: DATABASE_USER
+            value: myappuser
+          - name: DATABASE_PASSWORD
+            value: mypassword
+          - name: ALEMBIC_CONFIG
+            value: /app/alembic.ini
       containers:
-      - name: tech-challenge-phase-1-api
-        image: tech-challenge-phase-1-api:latest
-        imagePullPolicy: IfNotPresent
-        ports:
-        - containerPort: 80
-        resources:
-          limits:
-            cpu: "500m"
-            memory: "512Mi"
-          requests:
-            cpu: "200m"
-            memory: "256Mi"
+        - name: tech-challenge-phase-1-api
+          image: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/project-01:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+          - containerPort: 80
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+            requests:
+              cpu: "200m"
+              memory: "256Mi"
