@@ -13,27 +13,6 @@ spec:
       labels:
         app: tech-challenge-phase-1-api
     spec:
-      initContainers:
-      - name: init-migrate
-        image: 717145188069.dkr.ecr.us-east-1.amazonaws.com/project-01:latest
-        imagePullPolicy: IfNotPresent
-        command: ["poetry", "run", "alembic", "upgrade", "head"]
-        env:
-        - name: DATABASE_HOST
-          value: postgres-service
-        - name: DATABASE_PORT
-          value: "5432"
-        - name: DATABASE_NAME
-          value: myappdb
-        - name: DATABASE_USER
-          value: myappuser
-        - name: DATABASE_PASSWORD
-          value: mypassword
-        - name: ALEMBIC_CONFIG
-          value: /app/alembic.ini
-        volumeMounts:
-        - name: config-volume
-          mountPath: /app
       containers:
       - name: tech-challenge-phase-1-api
         image: 717145188069.dkr.ecr.us-east-1.amazonaws.com/project-01:latest
@@ -47,7 +26,18 @@ spec:
           requests:
             cpu: "200m"
             memory: "256Mi"
-      volumes:
-      - name: config-volume
-        configMap:
-          name: alembic-config
+        env:
+        - name: DB_HOST
+          value: meu-cluster-aurora.cluster-cq38yxucn72w.us-east-1.rds.amazonaws.com
+        - name: DB_PORT
+          value: "5432"
+        - name: DB_NAME
+          value: tech_challenge_dev
+        - name: DB_USER
+          value: postgres
+        - name: DB_PASSWORD
+          value: postgres
+        - name: DB_DRIVER
+          value: postgresql
+        command: ["bash", "-c", "poetry run alembic upgrade head && poetry run uvicorn src.api:app --log-level info --host 0.0.0.0 --port 80"]
+
