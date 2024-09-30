@@ -35,7 +35,7 @@ jobs:
       - name: Build and Push Docker Image
         run: |
           docker build -t tech-challenge-phase-1-api:latest .
-          docker tag tech-challenge-phase-1-api:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.REGION_DEFAULT }}.amazonaws.com/project-01:latest  # Remover espaço em branco
+          docker tag tech-challenge-phase-1-api:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.REGION_DEFAULT }}.amazonaws.com/project-01:latest
           docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.REGION_DEFAULT }}.amazonaws.com/project-01:latest
 
       - name: Get kubeconfig
@@ -46,9 +46,9 @@ jobs:
         working-directory: k8s
         run: |
           kubectl apply -f . 
+          kubectl set image deployment/tech-challenge-phase-1-api tech-challenge-phase-1-api=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/project-01:latest
+          kubectl rollout restart
 
       - name: Verify Deployment
         run: |
           kubectl get all
-          kubectl get pods -w
-          kubectl get nodes
