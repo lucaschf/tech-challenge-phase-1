@@ -45,7 +45,6 @@ jobs:
       - name: Deploy Application
         working-directory: k8s
         run: |
-          kubectl get configmap alembic-config -o yaml
           kubectl apply -f . 
 
       - name: Verify Deployment
