@@ -30,30 +30,26 @@ jobs:
 
       - name: Login to ECR
         run: |
-          set -e  # Tratar erros
           aws ecr get-login-password --region ${{ env.REGION_DEFAULT }} | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.REGION_DEFAULT }}.amazonaws.com
 
       - name: Build and Push Docker Image
         run: |
-          set -e  # Tratar erros
           docker build -t tech-challenge-phase-1-api:latest .
           docker tag tech-challenge-phase-1-api:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.REGION_DEFAULT }}.amazonaws.com/project-01:latest  # Remover espaço em branco
           docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.REGION_DEFAULT }}.amazonaws.com/project-01:latest
 
       - name: Get kubeconfig
         run: |
-          set -e  # Tratar erros
           aws eks --region ${{ env.REGION_DEFAULT }} update-kubeconfig --name ${{ secrets.CLUSTER_NAME }}
 
       - name: Deploy Application
         working-directory: k8s
         run: |
-          set -e  # Tratar erros
+          kubectl get configmap alembic-config -o yaml
           kubectl apply -f . 
 
       - name: Verify Deployment
         run: |
-          set -e  # Tratar erros
           kubectl get all
           kubectl rollout status deployment/tech-challenge-phase-1-api
           kubectl get pods -w
