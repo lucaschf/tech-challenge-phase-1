@@ -50,6 +50,6 @@ jobs:
       - name: Verify Deployment
         run: |
           kubectl get all
-          kubectl rollout status deployment/tech-challenge-phase-1-api
           kubectl get pods -w
           kubectl get nodes
+          kubectl rollout status deployment/tech-challenge-phase-1-api
