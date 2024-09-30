@@ -1,12 +1,11 @@
 name: Deploy Application
 
 on:
-  workflow_run:
-    workflows: ["Database Migrations"]
-    types:
-      - completed
+  pull_request:
     branches:
       - main
+    types:
+      - closed
 env:
   REGION_DEFAULT: "us-east-1"
 
@@ -15,6 +14,7 @@ jobs:
     name: Deploy
     runs-on: ubuntu-latest
     environment: production
+    if: github.event.pull_request.merged == true
 
     steps:
       - name: Checkout
