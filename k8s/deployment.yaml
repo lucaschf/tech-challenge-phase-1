@@ -15,28 +15,42 @@ spec:
     spec:
       initContainers:
         - name: init-migrate
-          image: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/project-01:latest
+          image: $(IMAGE_NAME)
           imagePullPolicy: IfNotPresent
           command: ["poetry", "run", "alembic", "upgrade", "head"]
           env:
-          - name: DATABASE_HOST
-            value: postgres-service
-          - name: DATABASE_PORT
-            value: "5432"
-          - name: DATABASE_NAME
-            value: myappdb
-          - name: DATABASE_USER
-            value: myappuser
-          - name: DATABASE_PASSWORD
-            value: mypassword
-          - name: ALEMBIC_CONFIG
-            value: /app/alembic.ini
+            - name: DATABASE_HOST
+              value: postgres-service
+            - name: DATABASE_PORT
+              value: "5432"
+            - name: DATABASE_NAME
+              value: myappdb
+            - name: DATABASE_USER
+              value: myappuser
+            - name: DATABASE_PASSWORD
+              value: mypassword
+            - name: ALEMBIC_CONFIG
+              value: /app/alembic.ini
+            - name: IMAGE_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: image-config
+                  key: IMAGE_NAME
+          volumeMounts:
+          - name: config-volume
+            mountPath: /app
       containers:
         - name: tech-challenge-phase-1-api
-          image: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/project-01:latest
+          image: $(IMAGE_NAME)
           imagePullPolicy: IfNotPresent
           ports:
           - containerPort: 80
+          env:
+            - name: IMAGE_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: image-config
+                  key: IMAGE_NAME
           resources:
             limits:
               cpu: "500m"
@@ -44,3 +58,7 @@ spec:
             requests:
               cpu: "200m"
               memory: "256Mi"
+      volumes:
+      - name: config-volume
+        configMap:
+          name: image-config
