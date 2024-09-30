@@ -31,9 +31,6 @@ spec:
           value: mypassword
         - name: ALEMBIC_CONFIG
           value: /app/alembic.ini
-        volumeMounts:
-        - name: config-volume
-          mountPath: /app
       containers:
       - name: tech-challenge-phase-1-api
         image: tech-challenge-phase-1-api:latest
