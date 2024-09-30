@@ -46,9 +46,9 @@ jobs:
         working-directory: k8s
         run: |
           kubectl apply -f . 
-          kubectl set image deployment/tech-challenge-phase-1-api tech-challenge-phase-1-api=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/project-01:latest
-          kubectl rollout restart deployment/tech-challenge-phase-1-api 
+          kubectl set image deployment/tech-challenge-phase-1-api tech-challenge-phase-1-api=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.REGION_DEFAULT }}.amazonaws.com/project-01:latest
 
       - name: Verify Deployment
         run: |
           kubectl get all
+          kubectl rollout status deployment/tech-challenge-phase-1-api
