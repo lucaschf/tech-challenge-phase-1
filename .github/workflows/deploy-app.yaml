@@ -45,7 +45,6 @@ jobs:
       - name: Deploy Application
         working-directory: k8s
         run: |
-          kubectl apply -f image-config.yaml
           kubectl apply -f service.yaml
           kubectl apply -f ingress.yaml
           kubectl apply -f hpa.yaml
