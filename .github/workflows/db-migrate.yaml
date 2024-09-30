@@ -21,26 +21,6 @@ jobs:
       - name: Checkout application repository
         uses: actions/checkout@v3
 
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.REGION_DEFAULT }}
-
-      - name: Get DB Connection Details (from remote state)
-        uses: aws-actions/aws-cli@v1
-        with:
-          args: >-
-            terraform output -json 
-            --state=s3://seu-bucket-terraform-state/terraform.tfstate 
-            --no-color
-
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.REGION_DEFAULT }}
-
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -55,4 +35,4 @@ jobs:
         run: |
           alembic upgrade head
         env:
-          DATABASE_URL: postgresql://${{ fromJson(steps.get_db_details.outputs.stdout).db_username }}:${{ secrets.DB_PASSWORD }}@${{ fromJson(steps.get_db_details.outputs.stdout).db_endpoint }}:${{ fromJson(steps.get_db_details.outputs.stdout).db_port }}/${{ fromJson(steps.get_db_details.outputs.stdout).db_name }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
