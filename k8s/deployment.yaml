@@ -15,7 +15,7 @@ spec:
     spec:
       initContainers:
         - name: init-migrate
-          image: $(IMAGE_NAME)
+          image: 717145188069.dkr.ecr.us-east-1.amazonaws.com/project-01:latest
           imagePullPolicy: IfNotPresent
           command: ["poetry", "run", "alembic", "upgrade", "head"]
           env:
@@ -31,17 +31,12 @@ spec:
               value: mypassword
             - name: ALEMBIC_CONFIG
               value: /app/alembic.ini
-            - name: IMAGE_NAME
-              valueFrom:
-                configMapKeyRef:
-                  name: image-config
-                  key: IMAGE_NAME
           volumeMounts:
           - name: config-volume
             mountPath: /app
       containers:
         - name: tech-challenge-phase-1-api
-          image: $(IMAGE_NAME)
+          image: 717145188069.dkr.ecr.us-east-1.amazonaws.com/project-01:latest
           imagePullPolicy: IfNotPresent
           ports:
           - containerPort: 80
@@ -52,7 +47,3 @@ spec:
             requests:
               cpu: "200m"
               memory: "256Mi"
-      volumes:
-      - name: config-volume
-        configMap:
-          name: image-config

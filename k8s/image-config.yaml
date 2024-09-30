@@ -1,6 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: image-config
-data:
-  IMAGE_NAME: 717145188069.dkr.ecr.us-east-1.amazonaws.com/project-01:latest
