@@ -30,7 +30,7 @@ spec:
             - name: DATABASE_PASSWORD
               value: mypassword
             - name: ALEMBIC_CONFIG
-              value: /app/alembic.ini
+              value: alembic.ini
       containers:
         - name: tech-challenge-phase-1-api
           image: 717145188069.dkr.ecr.us-east-1.amazonaws.com/project-01:latest
